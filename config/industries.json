@@ -1,0 +1,244 @@
+{
+  "industries": [
+    {
+      "id": "restaurants",
+      "name": "Restaurants & Food Service",
+      "name_es": "Restaurantes y Servicio de Comida",
+      "slug": "restaurants",
+      "keywords": ["restaurant", "food service", "kitchen", "catering", "bakery", "cafe", "diner"],
+      "pain_points": [
+        "Paper invoices lost or misfiled weekly",
+        "Scheduling conflicts from handwritten rosters",
+        "No visibility on food costs or waste trends",
+        "Health inspection records disorganized — inspection week is dreaded"
+      ],
+      "solutions": [
+        "Digital filing system for all supplier invoices — searchable in seconds",
+        "Automated weekly schedule templates with conflict alerts",
+        "Digital inventory tracking with cost-per-dish visibility",
+        "Compliance document folder with expiry reminders — always inspection-ready"
+      ],
+      "results": [
+        "6 hours saved per week",
+        "Zero lost invoices",
+        "Food cost tracked in real time",
+        "Inspection-ready in under 5 minutes"
+      ],
+      "quote": "I used to dread inspection week. Now everything is one click away.",
+      "quote_attr": "Maria G. — Restaurant owner, Miami",
+      "content_pillar": "digital_transformation",
+      "viral_keywords": ["restaurant tech", "food business automation", "paperless kitchen", "health inspection", "restaurant invoice", "food cost tracking"],
+      "website_slug": "/industries/restaurants"
+    },
+    {
+      "id": "retail",
+      "name": "Retail & Boutiques",
+      "name_es": "Comercio y Boutiques",
+      "slug": "retail",
+      "keywords": ["retail", "boutique", "clothing store", "shop", "store", "merchandise", "inventory"],
+      "pain_points": [
+        "Inventory tracked on paper cards — no real-time visibility",
+        "Supplier orders made by phone with no written record",
+        "Customer receipts stored in binders by month",
+        "No system for tracking returns or exchanges"
+      ],
+      "solutions": [
+        "Digital inventory with low-stock alerts sent automatically",
+        "Automated supplier order emails with digital confirmation trail",
+        "Customer transaction archive — any receipt found in under 10 seconds",
+        "Return and exchange tracking workflow with approval steps"
+      ],
+      "results": [
+        "Stock-outs reduced by 80%",
+        "Order errors eliminated",
+        "Customer lookup under 10 seconds",
+        "Returns processed 3x faster"
+      ],
+      "quote": "I stopped losing money on items I forgot I had.",
+      "quote_attr": "Carmen L. — Boutique owner, Los Angeles",
+      "content_pillar": "digital_transformation",
+      "viral_keywords": ["inventory AI", "paperless POS", "small business ops tools", "retail automation", "boutique management", "stock tracking"],
+      "website_slug": "/industries/retail"
+    },
+    {
+      "id": "construction",
+      "name": "Construction & Contracting",
+      "name_es": "Construcción y Contratistas",
+      "slug": "construction",
+      "keywords": ["construction", "contractor", "general contractor", "subcontractor", "job site", "building", "renovation"],
+      "pain_points": [
+        "Work orders handwritten on site — illegible or lost",
+        "Timesheets collected via text message photos every Friday",
+        "Subcontractor invoices missing, duplicated, or disputed",
+        "Project cost overruns discovered only after the job ends"
+      ],
+      "solutions": [
+        "Mobile-friendly digital work orders submitted directly from job site",
+        "Automated timesheet collection with manager approval workflow",
+        "Subcontractor invoice portal with status tracking and duplicate detection",
+        "Real-time project cost dashboard vs. original budget — alerts at 80%"
+      ],
+      "results": [
+        "Billing cycle cut from 3 weeks to 3 days",
+        "Zero missing timesheets",
+        "Subcontractor disputes eliminated",
+        "Budget overruns caught before they happen"
+      ],
+      "quote": "We used to bill late every single month. Now invoices go out the same day the job is done.",
+      "quote_attr": "Roberto M. — General contractor, Houston",
+      "content_pillar": "work_smarter",
+      "viral_keywords": ["job site apps", "contractor billing automation", "mobile workforce tools", "construction management", "subcontractor portal", "project cost tracking"],
+      "website_slug": "/industries/construction"
+    },
+    {
+      "id": "health-wellness",
+      "name": "Health & Wellness",
+      "name_es": "Salud y Bienestar",
+      "slug": "health-wellness",
+      "keywords": ["health", "wellness", "physical therapy", "clinic", "medical", "healthcare", "chiropractic", "dental"],
+      "pain_points": [
+        "Patient files spread across physical folders — retrieval takes minutes",
+        "Double-bookings from a shared paper calendar",
+        "Pre-authorization requests tracked with sticky notes — delays and misses",
+        "HIPAA compliance difficult to demonstrate during audits"
+      ],
+      "solutions": [
+        "Secure digital patient record system — any file in under 5 seconds",
+        "Online scheduling with real-time availability sync across all staff",
+        "Automated pre-auth tracking dashboard with status and deadline alerts",
+        "Audit-ready HIPAA compliance documentation folder with access logs"
+      ],
+      "results": [
+        "Patient lookup under 5 seconds",
+        "Zero double-bookings",
+        "Auth approvals 40% faster",
+        "HIPAA audit passed with zero findings"
+      ],
+      "quote": "Our front desk used to be chaos. Now new patients comment on how organized we are.",
+      "quote_attr": "Dr. Ana P. — Physical therapy clinic, Phoenix",
+      "content_pillar": "digital_transformation",
+      "viral_keywords": ["HIPAA tech", "patient experience", "healthcare admin automation", "clinic scheduling", "medical records digital", "pre-authorization tracking"],
+      "website_slug": "/industries/health-wellness"
+    },
+    {
+      "id": "real-estate",
+      "name": "Real Estate & Property Management",
+      "name_es": "Bienes Raíces y Administración de Propiedades",
+      "slug": "real-estate",
+      "keywords": ["real estate", "property management", "landlord", "rental", "tenant", "lease", "property manager"],
+      "pain_points": [
+        "Lease agreements in physical folders — one copy, no backup",
+        "Maintenance requests received by text with no tracking system",
+        "Rent payment spreadsheet with conflicting versions across staff",
+        "Lease renewal deadlines missed — tenants stay month-to-month by accident"
+      ],
+      "solutions": [
+        "Digital lease archive with automatic 60-day renewal alerts",
+        "Maintenance request portal with ticket numbers, status, and photo documentation",
+        "Centralized rent payment log with automated reminder messages to tenants",
+        "Renewal workflow: automated notice → signature → new lease filed digitally"
+      ],
+      "results": [
+        "Zero missed renewals in 12 months",
+        "Maintenance resolved 2x faster",
+        "Rent collection disputes eliminated",
+        "1 staff hour saved per property per month"
+      ],
+      "quote": "We grew from 20 to 40 units without hiring extra staff. The system does the tracking for us.",
+      "quote_attr": "Luis T. — Property manager, Dallas",
+      "content_pillar": "work_smarter",
+      "viral_keywords": ["property management apps", "landlord automation", "lease management", "tenant portal", "rent tracking", "maintenance requests"],
+      "website_slug": "/industries/real-estate"
+    },
+    {
+      "id": "professional-services",
+      "name": "Professional Services",
+      "name_es": "Servicios Profesionales",
+      "slug": "professional-services",
+      "keywords": ["accounting", "CPA", "law firm", "lawyer", "consultant", "professional services", "tax", "bookkeeper"],
+      "pain_points": [
+        "Client documents scattered across physical folders and email attachments",
+        "No system to track which clients have submitted required documents",
+        "Staff confusion about who is responsible for each client case",
+        "Deadlines managed on a shared whiteboard calendar — easy to miss"
+      ],
+      "solutions": [
+        "Digital client portal for secure document submission with auto-confirmation",
+        "Per-client document checklist with real-time submission status visible to all staff",
+        "Task assignment system with staff accountability and deadline tracking",
+        "Deadline management workflow with automated 30-day and 7-day reminder emails"
+      ],
+      "results": [
+        "Tax season prep cut from 2 weeks to 3 days",
+        "100% document submission visibility across all clients",
+        "Zero missed client deadlines in first season",
+        "Client satisfaction measurably improved"
+      ],
+      "quote": "We stopped having the 'where is that document?' conversation. It just exists, where it should be.",
+      "quote_attr": "Patricia S. — CPA firm owner, Chicago",
+      "content_pillar": "work_smarter",
+      "viral_keywords": ["CPA automation", "legal tech for small firms", "document AI", "client portal", "tax document management", "accounting workflow"],
+      "website_slug": "/industries/professional-services"
+    },
+    {
+      "id": "salons-beauty",
+      "name": "Salons & Beauty",
+      "name_es": "Salones y Belleza",
+      "slug": "salons-beauty",
+      "keywords": ["salon", "hair salon", "beauty", "barber", "spa", "nail salon", "stylist", "esthetician"],
+      "pain_points": [
+        "Appointments in a paper book — one eraser ruins the day's schedule",
+        "Client color formulas and preferences not documented anywhere",
+        "No-shows tracked with sticky notes — no follow-up system",
+        "Retail product inventory counted by eye once a week"
+      ],
+      "solutions": [
+        "Digital appointment system with automated SMS reminders 24 hours before",
+        "Client profile cards with full service history, color formulas, and preferences",
+        "Automated no-show follow-up with rebooking offer — recovers lost revenue",
+        "Retail inventory system with reorder alerts before products run out"
+      ],
+      "results": [
+        "No-shows reduced by 60%",
+        "Client retention protected after stylist turnover",
+        "Rebooking rate increased significantly",
+        "Retail never out of stock on top sellers"
+      ],
+      "quote": "When my top stylist left, I was terrified. But we had every client's history saved. Not one client was lost.",
+      "quote_attr": "Diana V. — Salon owner, Miami",
+      "content_pillar": "owner_stories",
+      "viral_keywords": ["client retention tools", "appointment tech", "beauty business growth", "salon management", "stylist turnover", "SMS reminders"],
+      "website_slug": "/industries/salons-beauty"
+    },
+    {
+      "id": "logistics",
+      "name": "Logistics & Delivery",
+      "name_es": "Logística y Entregas",
+      "slug": "logistics",
+      "keywords": ["logistics", "delivery", "courier", "dispatch", "driver", "transport", "shipping", "last-mile"],
+      "pain_points": [
+        "Dispatch by phone — no written record of instructions",
+        "Paper delivery manifest lost if driver loses it or truck breaks down",
+        "Proof of delivery buried in a chaotic group chat with 300+ messages",
+        "Driver hours tracked by verbal report — disputes about pay are common"
+      ],
+      "solutions": [
+        "Digital dispatch board with real-time driver assignment and route tracking",
+        "Digital manifest accessible on any phone — survives any hardware failure",
+        "Structured proof-of-delivery workflow: photo + GPS timestamp + customer signature",
+        "Driver timesheet system with documented hours — eliminates pay disputes"
+      ],
+      "results": [
+        "Delivery disputes resolved in under 5 minutes",
+        "Zero lost manifests in first 90 days",
+        "Customer complaints reduced by 70%",
+        "Driver pay disputes eliminated completely"
+      ],
+      "quote": "A customer claimed we never delivered. We showed the photo, the GPS timestamp, and the signature. Case closed in two minutes.",
+      "quote_attr": "Jorge A. — Delivery company owner, Orlando",
+      "content_pillar": "work_smarter",
+      "viral_keywords": ["delivery proof tech", "driver management", "last-mile automation", "dispatch software", "proof of delivery", "fleet tracking"],
+      "website_slug": "/industries/logistics"
+    }
+  ]
+}

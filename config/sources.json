@@ -1,0 +1,98 @@
+{
+  "youtube": {
+    "channels": [
+      {
+        "name": "Valuetainment",
+        "note": "Entrepreneurship + small business — high Latino audience",
+        "niche": "entrepreneurship"
+      },
+      {
+        "name": "SCORE Small Business",
+        "note": "Official SCORE channel — SMB operations and advice",
+        "niche": "small_business"
+      },
+      {
+        "name": "Shopify",
+        "note": "Small business digital tools and ecommerce",
+        "niche": "digital_tools"
+      },
+      {
+        "name": "HubSpot",
+        "note": "Business automation and workflow content",
+        "niche": "automation"
+      },
+      {
+        "name": "Automating Profits",
+        "note": "Business automation for small businesses",
+        "niche": "automation"
+      },
+      {
+        "name": "Small Business Revolution",
+        "note": "Transformation stories for small businesses",
+        "niche": "transformation"
+      }
+    ],
+    "search_terms": [
+      "small business automation 2026",
+      "digital transformation small business",
+      "workflow automation for small business",
+      "Latino entrepreneur",
+      "negocio digital",
+      "small business AI tools",
+      "paperless business",
+      "business operations tips"
+    ],
+    "window_hours": 48
+  },
+  "reddit": {
+    "subreddits": [
+      {
+        "name": "r/smallbusiness",
+        "note": "Primary — small business owners sharing real problems"
+      },
+      {
+        "name": "r/Entrepreneur",
+        "note": "Broader entrepreneurship community"
+      },
+      {
+        "name": "r/Automation",
+        "note": "Workflow and process automation discussions"
+      },
+      {
+        "name": "r/DigitalMarketing",
+        "note": "Digital strategy and content trends"
+      },
+      {
+        "name": "r/Restaurant",
+        "note": "Restaurant industry — pain points and solutions"
+      },
+      {
+        "name": "r/PropertyManagement",
+        "note": "Property management operations"
+      },
+      {
+        "name": "r/Construction",
+        "note": "Construction and contracting"
+      }
+    ],
+    "sort": "hot",
+    "window_hours": 48,
+    "min_upvotes": 50
+  },
+  "google_trends": {
+    "categories": ["business", "technology"],
+    "geo": "US",
+    "timeframe": "now 2-d",
+    "breakout_threshold": 100,
+    "keywords_to_monitor": [
+      "small business automation",
+      "digital filing system",
+      "workflow automation",
+      "paperless office",
+      "business digitization",
+      "AI for small business",
+      "negocio digital",
+      "automatización de negocios"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+# Environment — never commit API keys
+.env
+config/google-credentials.json
+
+# Dependencies
+node_modules/
+
+# Generated outputs (large, review locally)
+outputs/
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp

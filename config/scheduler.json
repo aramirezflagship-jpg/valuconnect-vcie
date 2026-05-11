@@ -1,0 +1,14 @@
+{
+  "cron_expression": "0 6 */2 * *",
+  "description": "Runs every 48 hours at 6:00 AM",
+  "timezone": "America/New_York",
+  "max_topics_per_run": 5,
+  "outlier_threshold": 300,
+  "relevance_threshold": 60,
+  "output_dir": "./outputs",
+  "log_file": "./logs/run-history.jsonl",
+  "notify": {
+    "email": true,
+    "slack": false
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "platforms": {
+    "linkedin": {
+      "id": "linkedin",
+      "name": "LinkedIn",
+      "frequency": "3x per week",
+      "best_days": ["Monday", "Wednesday", "Friday"],
+      "priority": "primary",
+      "priority_note": "Monetization + B2B leads",
+      "formats": {
+        "story": {
+          "word_count_min": 150,
+          "word_count_max": 220,
+          "structure": ["hook", "pain", "insight", "result", "CTA"],
+          "hashtag_max": 5,
+          "cta": "Engagement question or book a call",
+          "languages": ["en", "es"]
+        },
+        "list": {
+          "items_min": 5,
+          "items_max": 7,
+          "rule": "Each item starts with action verb",
+          "cta": "Save this",
+          "languages": ["en"]
+        },
+        "win": {
+          "note": "Use when client result applies — share a transformation story",
+          "languages": ["en", "es"]
+        }
+      }
+    },
+    "instagram": {
+      "id": "instagram",
+      "name": "Instagram",
+      "frequency": "4x per week",
+      "best_days": ["Monday", "Tuesday", "Thursday", "Saturday"],
+      "priority": "primary",
+      "priority_note": "Visual brand + community",
+      "formats": {
+        "reel_script": {
+          "duration_min_seconds": 30,
+          "duration_max_seconds": 45,
+          "hook_deadline_seconds": 2,
+          "languages": ["en", "es"],
+          "on_screen_text_max_words": 6,
+          "ab_hook_options": 2
+        },
+        "carousel": {
+          "slides": 7,
+          "structure": ["cover", "insight_1", "insight_2", "insight_3", "insight_4", "insight_5", "CTA"],
+          "slide_title_max_words": 5,
+          "rule": "One idea per slide"
+        },
+        "caption": {
+          "hook_max_words": 15,
+          "hook_note": "Shows before 'more' — must stop the scroll",
+          "hashtag_count_min": 6,
+          "hashtag_count_max": 8,
+          "required_hashtag": "#NegocioLatino",
+          "languages": ["en", "es"]
+        }
+      }
+    },
+    "facebook": {
+      "id": "facebook",
+      "name": "Facebook",
+      "frequency": "2x per week",
+      "best_days": ["Wednesday", "Sunday"],
+      "priority": "secondary",
+      "priority_note": "Bilingual community",
+      "formats": {
+        "community_post": {
+          "word_count_min": 100,
+          "word_count_max": 200,
+          "tone": "warmer than LinkedIn",
+          "structure": "EN section then ES section in same post",
+          "hashtag_max": 2,
+          "languages": ["en", "es"]
+        },
+        "engagement_question": {
+          "note": "Bilingual conversation starter — especially for Sunday",
+          "languages": ["en", "es"]
+        }
+      }
+    },
+    "tiktok": {
+      "id": "tiktok",
+      "name": "TikTok",
+      "frequency": "2x per week",
+      "best_days": ["Tuesday", "Friday"],
+      "priority": "secondary",
+      "priority_note": "Viral reach + awareness",
+      "formats": {
+        "video_script": {
+          "duration_min_seconds": 30,
+          "duration_max_seconds": 45,
+          "hook_deadline_seconds": 2,
+          "sentence_style": "Short and punchy",
+          "on_screen_text_max_words": 6,
+          "on_screen_overlays": 4,
+          "ab_hook_options": 2,
+          "languages": ["en", "es"]
+        }
+      }
+    }
+  },
+  "bilingual_rules": {
+    "spanish_style": "Conversational, not formal — natural speech patterns",
+    "always_english_first": true,
+    "required_hashtags_es": ["#NegocioLatino", "#AutomatizacionDeNegocios"],
+    "note": "Spanish should feel like how Andres would actually say it to a friend, not a translation"
+  },
+  "weekly_schedule": {
+    "Monday": {
+      "platforms": ["linkedin", "instagram"],
+      "formats": ["story post", "carousel"],
+      "industry_focus": "Rotate through 8 industries weekly"
+    },
+    "Tuesday": {
+      "platforms": ["tiktok", "instagram"],
+      "formats": ["reel script", "reel"],
+      "industry_focus": "High-outlier viral topic of the week"
+    },
+    "Wednesday": {
+      "platforms": ["linkedin", "facebook"],
+      "formats": ["list post", "bilingual community post"],
+      "industry_focus": "Work Smarter pillar"
+    },
+    "Thursday": {
+      "platforms": ["instagram"],
+      "formats": ["carousel or single image"],
+      "industry_focus": "Owner story / client win"
+    },
+    "Friday": {
+      "platforms": ["linkedin", "tiktok"],
+      "formats": ["win post", "trend reel"],
+      "industry_focus": "Top-performing topic of the 48h cycle"
+    },
+    "Saturday": {
+      "platforms": ["instagram"],
+      "formats": ["behind the scenes", "Valu mascot"],
+      "industry_focus": "Brand personality + community"
+    },
+    "Sunday": {
+      "platforms": ["facebook"],
+      "formats": ["engagement question (bilingual)"],
+      "industry_focus": "Conversation starter for the week ahead"
+    }
+  }
+}
