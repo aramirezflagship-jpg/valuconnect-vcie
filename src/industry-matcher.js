@@ -1,8 +1,8 @@
-const Anthropic = require('@anthropic-ai/sdk');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const logger = require('./logger');
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const RELEVANCE_THRESHOLD = parseInt(process.env.RELEVANCE_THRESHOLD || '60', 10);
 
 const industries = require('../config/industries.json').industries;
@@ -37,13 +37,9 @@ Industries:
 ${JSON.stringify(industryList, null, 2)}`;
 
   try {
-    const response = await client.messages.create({
-      model: MODEL,
-      max_tokens: 512,
-      messages: [{ role: 'user', content: prompt }]
-    });
-
-    const raw = response.content[0].text.trim();
+    const model = genAI.getGenerativeModel({ model: MODEL });
+    const result = await model.generateContent(prompt);
+    const raw = result.response.text().trim().replace(/^```json\n?/, '').replace(/\n?```$/, '');
     const match = JSON.parse(raw);
 
     if (match.relevanceScore < RELEVANCE_THRESHOLD) {
