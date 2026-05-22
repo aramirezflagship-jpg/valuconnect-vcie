@@ -1,119 +1,665 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ValuConnect Solutions — Work Smarter, Not Harder</title>
-  <meta name="description" content="ValuConnect helps small businesses go from paper-based operations to fully digital workflows. Bilingual EN/ES.">
-  <link rel="stylesheet" href="css/style.css"/>
-  <script src="js/translations.js"></script>
-  <script src="js/lang.js" defer></script>
+  <meta name="description" content="ValuConnect Solutions helps small businesses go from paper-based operations to fully digital, automated workflows. Practical systems, hands-on support, bilingual service.">
+  <meta name="keywords" content="small business digital transformation, workflow automation, paper to digital, Latino business, bilingual business consultant">
+  <!-- Canonical & Hreflang -->
+  <link rel="canonical" href="https://vcsolutions.com/">
+  <link rel="alternate" hreflang="en" href="https://vcsolutions.com/">
+  <link rel="alternate" hreflang="es" href="https://vcsolutions.com/">
+  <link rel="alternate" hreflang="x-default" href="https://vcsolutions.com/">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vcsolutions.com/">
+  <meta property="og:title" content="ValuConnect Solutions — Work Smarter, Not Harder">
+  <meta property="og:description" content="ValuConnect Solutions helps small businesses go from paper-based operations to fully digital, automated workflows. Practical systems, hands-on support, bilingual service.">
+  <meta property="og:image" content="https://vcsolutions.com/assets/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_MX">
+  <meta property="og:site_name" content="ValuConnect Solutions">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ValuConnect Solutions — Work Smarter, Not Harder">
+  <meta name="twitter:description" content="ValuConnect Solutions helps small businesses go from paper-based operations to fully digital, automated workflows. Practical systems, hands-on support, bilingual service.">
+  <meta name="twitter:image" content="https://vcsolutions.com/assets/images/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LMS86C2CJ4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LMS86C2CJ4');
+  </script>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "ValuConnect Solutions",
+    "description": "Small business digital transformation consulting. Bilingual workflow automation, paper-to-digital systems, CRM implementation, and ongoing support.",
+    "url": "https://vcsolutions.com",
+    "email": "info@vcsolutions.com",
+    "areaServed": { "@type": "Country", "name": "United States" },
+    "availableLanguage": ["English", "Spanish"],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Digital Transformation Services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Paper-to-Digital Systems" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Workflow Automation" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Agent Creation" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "monday.com Implementation" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Ongoing Support & Training" } }
+      ]
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/valuconnect",
+      "https://www.facebook.com/profile.php?id=61590069511226"
+    ]
+  }
+  </script>
 </head>
 <body>
 
-<div class="lang-bar"><div class="container">
-  <button class="lang-btn active" data-l="en">EN</button>
-  <button class="lang-btn" data-l="es">ES</button>
-</div></div>
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/images/vcs-logo.png" alt="ValuConnect Solutions" class="nav-logo-img">
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+      <ul class="nav-links">
 
-<nav><div class="container">
-  <a href="index.html" class="nav-logo">Valu<span>Connect</span></a>
-  <div class="nav-links">
-    <a href="#industries" data-i18n="nav.industries">Industries</a>
-    <a href="#services" data-i18n="nav.services">Services</a>
-    <a href="#about" data-i18n="nav.about">About</a>
-  </div>
-  <a href="#contact" class="nav-cta" data-i18n="nav.cta">Book Free Call</a>
-</div></nav>
+        <li class="nav-dropdown">
+          <a href="#services" data-i18n="nav.services">Services</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="#services" data-i18n="nav.s1">Paper-to-Digital</a></li>
+            <li><a href="#services" data-i18n="nav.s2">Workflow Automation</a></li>
+            <li><a href="#services" data-i18n="nav.s3">AI Agent Creation</a></li>
+            <li><a href="monday.html" data-i18n="nav.s4">monday.com Setup</a></li>
+            <li><a href="#services" data-i18n="nav.s5">Ongoing Support</a></li>
+          </ul>
+        </li>
 
-<section class="hero"><div class="container">
-  <h1 data-i18n="hero.title">Is your business still <br><span>running on paper?</span></h1>
-  <p data-i18n="hero.sub">ValuConnect transforms manual, paper-based processes into streamlined digital systems.</p>
-  <div class="hero-btns">
-    <a href="#contact" class="btn-primary" data-i18n="hero.btn1">Book Your Free Assessment</a>
-    <a href="#industries" class="btn-outline" data-i18n="hero.btn2">See Your Industry</a>
-  </div>
-</div></section>
+        <li class="nav-dropdown">
+          <a href="#industries" data-i18n="nav.industries">Industries</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="industries/restaurants.html" data-i18n="foot.i1">Restaurants</a></li>
+            <li><a href="industries/retail.html" data-i18n="foot.i2">Retail &amp; Boutiques</a></li>
+            <li><a href="industries/construction.html" data-i18n="foot.i3">Construction</a></li>
+            <li><a href="industries/health-wellness.html" data-i18n="foot.i4">Health &amp; Wellness</a></li>
+            <li><a href="industries/real-estate.html" data-i18n="foot.i5">Real Estate</a></li>
+            <li><a href="industries/professional-services.html" data-i18n="foot.i6">Professional Services</a></li>
+            <li><a href="industries/salons-beauty.html" data-i18n="foot.i7">Salons &amp; Beauty</a></li>
+            <li><a href="industries/logistics.html" data-i18n="foot.i8">Logistics</a></li>
+          </ul>
+        </li>
 
-<section class="bg-gray"><div class="container">
-  <div class="section-header">
-    <div class="section-label" data-i18n="pillars.label">How We Help</div>
-    <h2 class="section-title" data-i18n="pillars.title">Three ways ValuConnect changes your business</h2>
-  </div>
-  <div class="pillars">
-    <div class="pillar-card">
-      <div class="pillar-num" data-i18n="p1.num">PILLAR 01</div>
-      <h3 data-i18n="p1.title">Digital Transformation</h3>
-      <p data-i18n="p1.body">We move your business from paper to organized digital systems.</p>
+        <li><a href="monday.html" data-i18n="nav.monday">monday.com</a></li>
+        <li><a href="#" class="nav-insights-trigger" data-i18n="nav.insights">Industry Insights</a></li>
+        <li><a href="#about" data-i18n="nav.about">About</a></li>
+
+        <li class="lang-li">
+          <button class="lang-btn active" data-l="en">EN</button>
+          <button class="lang-btn" data-l="es">ES</button>
+        </li>
+        <li><a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="nav-cta" data-i18n="nav.cta">Book Free Call</a></li>
+      </ul>
     </div>
-    <div class="pillar-card">
-      <div class="pillar-num" data-i18n="p2.num">PILLAR 02</div>
-      <h3 data-i18n="p2.title">Work Smarter</h3>
-      <p data-i18n="p2.body">Automation tools that save you hours every week.</p>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-tag" data-i18n="hero.tag">Trusted by 100+ small business owners</div>
+          <h1 data-i18n="hero.h1">Your Business Runs on <span>Paper.</span><br>Let's Change That.</h1>
+          <p class="hero-subtitle" data-i18n="hero.subtitle">
+            ValuConnect Solutions helps small business owners go digital — without the tech headaches. Practical systems, hands-on support, and a partner who truly gets it.
+          </p>
+          <p class="hero-subtitle-es">Trabajemos con inteligencia, no con esfuerzo. — Andres Ramirez</p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary" data-i18n="hero.btn1">Book Your Free Assessment</a>
+            <a href="#how-it-works" class="btn btn-secondary" data-i18n="hero.btn2">See How It Works</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card-stack">
+            <div class="hero-card card-behind"></div>
+            <div class="hero-card card-main">
+              <div class="hero-metric">
+                <div class="metric-icon">⚡</div>
+                <div class="metric-info">
+                  <div class="metric-value" data-i18n="hero.m1v">6+ hrs saved</div>
+                  <div class="metric-label" data-i18n="hero.m1l">per week, on average</div>
+                </div>
+              </div>
+              <div class="hero-metric">
+                <div class="metric-icon">📄</div>
+                <div class="metric-info">
+                  <div class="metric-value" data-i18n="hero.m2v">Zero lost files</div>
+                  <div class="metric-label" data-i18n="hero.m2l">after going digital</div>
+                </div>
+              </div>
+              <div class="hero-metric">
+                <div class="metric-icon">📊</div>
+                <div class="metric-info">
+                  <div class="metric-value" data-i18n="hero.m3v">80% fewer errors</div>
+                  <div class="metric-label" data-i18n="hero.m3l">in daily operations</div>
+                </div>
+              </div>
+              <div class="hero-metric">
+                <div class="metric-icon">🚀</div>
+                <div class="metric-info">
+                  <div class="metric-value" data-i18n="hero.m4v">30-day setup</div>
+                  <div class="metric-label" data-i18n="hero.m4l">from paper to digital</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="pillar-card">
-      <div class="pillar-num" data-i18n="p3.num">PILLAR 03</div>
-      <h3 data-i18n="p3.title">Owner Stories</h3>
-      <p data-i18n="p3.body">Real small business owners sharing how going digital changed everything.</p>
+  </section>
+
+  <!-- ── Trust bar ── -->
+  <div class="trust-bar">
+    <div class="container">
+      <div class="trust-bar-inner">
+        <div class="trust-stat">
+          <span class="number">100+</span>
+          <span class="label" data-i18n="trust.l1">Businesses Helped</span>
+        </div>
+        <div class="trust-stat">
+          <span class="number">8</span>
+          <span class="label" data-i18n="trust.l2">Industries Served</span>
+        </div>
+        <div class="trust-stat">
+          <span class="number">6 hrs</span>
+          <span class="label" data-i18n="trust.l3">Saved Per Week</span>
+        </div>
+        <div class="trust-stat">
+          <span class="number">80%</span>
+          <span class="label" data-i18n="trust.l4">Error Reduction</span>
+        </div>
+        <div class="trust-stat">
+          <span class="number">30</span>
+          <span class="label" data-i18n="trust.l5">Day Setup</span>
+        </div>
+        <div class="trust-stat">
+          <span class="number">✓</span>
+          <span class="label" data-i18n="trust.l6">monday.com Partner</span>
+        </div>
+      </div>
     </div>
   </div>
-</div></section>
 
-<section id="industries"><div class="container">
-  <div class="section-header">
-    <div class="section-label" data-i18n="ind.label">Industries We Serve</div>
-    <h2 class="section-title" data-i18n="ind.title">Find your industry — see your situation</h2>
-    <p class="section-sub" data-i18n="ind.sub">Click your industry to see exactly how ValuConnect solves your problems.</p>
-  </div>
-  <div class="industry-grid">
-    <a href="industries/restaurants.html" class="industry-card"><div class="industry-icon">🍽️</div><h3 data-i18n="i.restaurants.name">Restaurants & Food Service</h3><p data-i18n="i.restaurants.desc">Invoices, schedules, and inspections — all under control.</p><span class="arrow">→</span></a>
-    <a href="industries/retail.html" class="industry-card"><div class="industry-icon">🛍️</div><h3 data-i18n="i.retail.name">Retail & Boutiques</h3><p data-i18n="i.retail.desc">Real-time inventory — no more paper cards.</p><span class="arrow">→</span></a>
-    <a href="industries/construction.html" class="industry-card"><div class="industry-icon">🏗️</div><h3 data-i18n="i.construction.name">Construction & Contracting</h3><p data-i18n="i.construction.desc">Digital work orders — from weeks to days.</p><span class="arrow">→</span></a>
-    <a href="industries/health-wellness.html" class="industry-card"><div class="industry-icon">🏥</div><h3 data-i18n="i.health-wellness.name">Health & Wellness</h3><p data-i18n="i.health-wellness.desc">Patient records and HIPAA — always audit-ready.</p><span class="arrow">→</span></a>
-    <a href="industries/real-estate.html" class="industry-card"><div class="industry-icon">🏠</div><h3 data-i18n="i.real-estate.name">Real Estate & Property Mgmt</h3><p data-i18n="i.real-estate.desc">Leases and rent — zero missed renewals.</p><span class="arrow">→</span></a>
-    <a href="industries/professional-services.html" class="industry-card"><div class="industry-icon">💼</div><h3 data-i18n="i.professional-services.name">Professional Services</h3><p data-i18n="i.professional-services.desc">Client documents and deadlines — always visible.</p><span class="arrow">→</span></a>
-    <a href="industries/salons-beauty.html" class="industry-card"><div class="industry-icon">✂️</div><h3 data-i18n="i.salons-beauty.name">Salons & Beauty</h3><p data-i18n="i.salons-beauty.desc">Appointments and client history — automated.</p><span class="arrow">→</span></a>
-    <a href="industries/logistics.html" class="industry-card"><div class="industry-icon">🚚</div><h3 data-i18n="i.logistics.name">Logistics & Delivery</h3><p data-i18n="i.logistics.desc">Dispatch and proof of delivery — dispute-proof.</p><span class="arrow">→</span></a>
-  </div>
-</div></section>
+  <!-- ── Services ── -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="services-header text-center">
+        <span class="section-label" data-i18n="svc.label">What We Do</span>
+        <h2 class="section-title" data-i18n="svc.title">Five Services. One Goal: Run Your Business Smarter.</h2>
+        <p class="section-subtitle" data-i18n="svc.sub">Every service replaces a manual process with a system that works for you — built on the tools your team will actually use.</p>
+      </div>
+      <div class="services-grid">
 
-<section id="services" class="bg-gray"><div class="container">
-  <div class="section-header">
-    <div class="section-label" data-i18n="svc.label">What We Do</div>
-    <h2 class="section-title" data-i18n="svc.title">Our services</h2>
-  </div>
-  <div class="services-grid">
-    <div class="service-card"><div class="icon">📁</div><h3 data-i18n="svc.1.title">Digital Filing Systems</h3><p data-i18n="svc.1.body">Every document searchable in seconds.</p></div>
-    <div class="service-card"><div class="icon">⚙️</div><h3 data-i18n="svc.2.title">Workflow Automation</h3><p data-i18n="svc.2.body">Automate repetitive tasks.</p></div>
-    <div class="service-card"><div class="icon">🤖</div><h3 data-i18n="svc.3.title">AI Communication</h3><p data-i18n="svc.3.body">Messages sent automatically.</p></div>
-    <div class="service-card"><div class="icon">📊</div><h3 data-i18n="svc.4.title">Project Tracking</h3><p data-i18n="svc.4.body">Real-time visibility into costs and deadlines.</p></div>
-  </div>
-</div></section>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          </div>
+          <h3 data-i18n="svc.c1t">Paper-to-Digital &amp; Document Management</h3>
+          <p data-i18n="svc.c1d">We digitize, scan, and organize your existing documents, records, contracts, and invoices into a searchable digital system — structured from day one so nothing gets lost.</p>
+        </div>
 
-<section id="about"><div class="container">
-  <div class="about-grid">
-    <div class="about-text">
-      <div class="section-label" data-i18n="about.label">About Andres</div>
-      <h2 class="section-title" data-i18n="about.title">A neighbor, not a consultant</h2>
-      <p data-i18n="about.p1">I'm Andres Ramirez — bilingual entrepreneur and founder of ValuConnect Solutions.</p>
-      <p data-i18n="about.p2">My approach is hands-on and personal. I build you a system that works for your business.</p>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          </div>
+          <h3 data-i18n="svc.c2t">Workflow Automation</h3>
+          <p data-i18n="svc.c2d">Manual processes become automated. Reminders, approvals, status updates, and cross-team notifications run on schedule — without anyone having to remember to send them.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2M15 8h2M11 8h2M7 12h10"/></svg>
+          </div>
+          <h3 data-i18n="svc.c3t">AI Agent Creation</h3>
+          <p data-i18n="svc.c3d">We build custom AI agents that handle client follow-ups, appointment scheduling, intake forms, and team communications — responding on your behalf, 24 hours a day.</p>
+        </div>
+
+        <div class="service-card monday-card">
+          <div class="monday-card-content">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 data-i18n="svc.c4t">monday.com Implementation</h3>
+            <p data-i18n="svc.c4d">As a certified monday.com partner, we design and build your full workspace — boards, CRM pipeline, project tracking, automations, and reporting dashboards. Then we train your entire team in English and Spanish until they are confident using it daily.</p>
+            <p style="margin-top:12px;font-size:.8rem;font-weight:600;color:var(--teal);" data-i18n="svc.c4tag">Setup · CRM · Project Tracking · Training</p>
+          </div>
+          <div class="monday-card-badge">
+            <img src="assets/images/Certified Partner.png" alt="monday.com Certified Partner" class="monday-cert-img">
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.9 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.99 5.99l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/></svg>
+          </div>
+          <h3 data-i18n="svc.c5t">Ongoing Digital Support</h3>
+          <p data-i18n="svc.c5d">We stay with you after go-live. Monthly maintenance, new-hire training, system updates, and a direct line to Andres as your business grows and your needs change.</p>
+        </div>
+
+      </div>
     </div>
-    <div class="mascot-box">
-      <div class="mascot-icon">⭐</div>
-      <h3>Valu</h3>
-      <p data-i18n="mascot.body">Our mascot — a symbol of innovation, clarity, and the future we're building together.</p>
+  </section>
+
+  <!-- ── Industries ── -->
+  <section class="industries" id="industries">
+    <div class="container">
+      <div class="industries-header text-center">
+        <span class="section-label" data-i18n="ind.label">Industries We Serve</span>
+        <h2 class="section-title" data-i18n="ind.title">We Know Your Industry</h2>
+        <p class="section-subtitle" data-i18n="ind.sub">We don't do generic. Every system is built around the specific challenges of your business type.</p>
+      </div>
+      <div class="industries-grid">
+
+        <a href="industries/restaurants.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
+          </div>
+          <div class="industry-name">Restaurants &amp; Food Service</div>
+          <div class="industry-name-es">Restaurantes y Servicio de Comida</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Orders</span><span class="industry-kw">Scheduling</span><span class="industry-kw">Staff</span><span class="industry-kw">Billing</span>
+            <span class="industry-kw-es">Pedidos</span><span class="industry-kw-es">Horarios</span><span class="industry-kw-es">Personal</span><span class="industry-kw-es">Cobros</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/retail.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <div class="industry-name">Retail &amp; Boutiques</div>
+          <div class="industry-name-es">Comercio y Boutiques</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Inventory</span><span class="industry-kw">Sales</span><span class="industry-kw">Clients</span><span class="industry-kw">Orders</span>
+            <span class="industry-kw-es">Inventario</span><span class="industry-kw-es">Ventas</span><span class="industry-kw-es">Clientes</span><span class="industry-kw-es">Pedidos</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/construction.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-6 7 6v12"/><path d="M9 20v-5h6v5"/></svg>
+          </div>
+          <div class="industry-name">Construction &amp; Contracting</div>
+          <div class="industry-name-es">Construcción y Contratistas</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Projects</span><span class="industry-kw">Bids</span><span class="industry-kw">Crew</span><span class="industry-kw">Billing</span>
+            <span class="industry-kw-es">Proyectos</span><span class="industry-kw-es">Cotizaciones</span><span class="industry-kw-es">Equipo</span><span class="industry-kw-es">Cobros</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/health-wellness.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="industry-name">Health &amp; Wellness</div>
+          <div class="industry-name-es">Salud y Bienestar</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Appointments</span><span class="industry-kw">Records</span><span class="industry-kw">Follow-ups</span><span class="industry-kw">Clients</span>
+            <span class="industry-kw-es">Citas</span><span class="industry-kw-es">Registros</span><span class="industry-kw-es">Seguimientos</span><span class="industry-kw-es">Clientes</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/real-estate.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="industry-name">Real Estate &amp; Property Mgmt</div>
+          <div class="industry-name-es">Bienes Raíces y Administración de Propiedades</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Listings</span><span class="industry-kw">Leads</span><span class="industry-kw">Tenants</span><span class="industry-kw">Maintenance</span>
+            <span class="industry-kw-es">Propiedades</span><span class="industry-kw-es">Prospectos</span><span class="industry-kw-es">Inquilinos</span><span class="industry-kw-es">Mantenimiento</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/professional-services.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="industry-name">Professional Services</div>
+          <div class="industry-name-es">Servicios Profesionales</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Clients</span><span class="industry-kw">Deadlines</span><span class="industry-kw">Tasks</span><span class="industry-kw">Billing</span>
+            <span class="industry-kw-es">Clientes</span><span class="industry-kw-es">Plazos</span><span class="industry-kw-es">Tareas</span><span class="industry-kw-es">Facturación</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/salons-beauty.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          </div>
+          <div class="industry-name">Salons &amp; Beauty</div>
+          <div class="industry-name-es">Salones y Belleza</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Bookings</span><span class="industry-kw">Clients</span><span class="industry-kw">Staff</span><span class="industry-kw">Inventory</span>
+            <span class="industry-kw-es">Reservas</span><span class="industry-kw-es">Clientes</span><span class="industry-kw-es">Personal</span><span class="industry-kw-es">Inventario</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+        <a href="industries/logistics.html" class="industry-card">
+          <div class="industry-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="industry-name">Logistics &amp; Delivery</div>
+          <div class="industry-name-es">Logística y Entregas</div>
+          <div class="industry-keywords">
+            <span class="industry-kw">Routes</span><span class="industry-kw">Fleet</span><span class="industry-kw">Deliveries</span><span class="industry-kw">Tracking</span>
+            <span class="industry-kw-es">Rutas</span><span class="industry-kw-es">Flotilla</span><span class="industry-kw-es">Entregas</span><span class="industry-kw-es">Rastreo</span>
+          </div>
+          <div class="industry-arrow">→</div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How It Works ── -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="text-center" style="margin-bottom: 56px;">
+        <span class="section-label" data-i18n="hiw.label">The Process</span>
+        <h2 class="section-title" data-i18n="hiw.title">From Paper to Digital in 4 Steps</h2>
+        <p class="section-subtitle" data-i18n="hiw.sub">Simple, hands-on, and designed for owners who don't have time to learn new tech on their own.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3 data-i18n="hiw.s1t">Free Workflow Assessment</h3>
+          <p data-i18n="hiw.s1d">30-minute call to map exactly where you're losing time, money, and sleep to manual processes.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3 data-i18n="hiw.s2t">Custom System Design</h3>
+          <p data-i18n="hiw.s2d">We build a digital workflow plan specific to your industry, team size, and biggest bottlenecks.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3 data-i18n="hiw.s3t">Setup &amp; Hands-On Training</h3>
+          <p data-i18n="hiw.s3d">We set it up, migrate your existing data, and train your team until everyone is confident.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3 data-i18n="hiw.s4t">Ongoing Support</h3>
+          <p data-i18n="hiw.s4d">We stay available as your business grows. Add workflows, troubleshoot, or just ask questions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Testimonials ── -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label" data-i18n="test.label">Real Results</span>
+        <h2 class="section-title" data-i18n="test.title">What Business Owners Say</h2>
+        <p class="section-subtitle" data-i18n="test.sub">Real stories from real small business owners — in their own words.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="testimonial-quote" data-i18n="test.q1">I used to dread inspection week. Now everything is one click away.</p>
+          <div class="testimonial-attr">
+            <div class="testimonial-avatar">M</div>
+            <div>
+              <div class="testimonial-name" data-i18n="test.n1">Maria G.</div>
+              <div class="testimonial-industry" data-i18n="test.i1">Restaurant Owner · Miami, FL</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote" data-i18n="test.q2">We used to bill late every single month. Now invoices go out the same day the job is done.</p>
+          <div class="testimonial-attr">
+            <div class="testimonial-avatar">R</div>
+            <div>
+              <div class="testimonial-name" data-i18n="test.n2">Roberto M.</div>
+              <div class="testimonial-industry" data-i18n="test.i2">General Contractor · Houston, TX</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote" data-i18n="test.q3">We grew from 20 to 40 units without hiring extra staff. The system does the tracking for us.</p>
+          <div class="testimonial-attr">
+            <div class="testimonial-avatar">L</div>
+            <div>
+              <div class="testimonial-name" data-i18n="test.n3">Luis T.</div>
+              <div class="testimonial-industry" data-i18n="test.i3">Property Manager · Dallas, TX</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Meet the Team ── -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="text-center" style="margin-bottom: 56px;">
+        <span class="section-label">Our Team</span>
+        <h2 class="section-title">The People Behind Your Growth</h2>
+        <p class="section-subtitle" style="max-width: 620px; margin: 0 auto;">We partner with small businesses to streamline operations, build smarter workflows, and drive real, measurable growth — bilingual, committed, and always by your side.</p>
+      </div>
+
+      <div class="team-grid">
+
+        <!-- Andres -->
+        <div class="team-card">
+          <div class="team-img-wrap">
+            <div class="team-img-blur" style="background-image:url('assets/images/andresfinal.png');"></div>
+            <img src="assets/images/andresfinal.png" alt="Andres Ramirez" class="team-img">
+          </div>
+          <div class="team-info">
+            <h3 class="team-name">Andres Ramirez</h3>
+            <span class="team-title">Founder &amp; Implementation Director</span>
+            <p class="team-bio">Andres started ValuConnect Solutions to give hardworking small business owners the digital tools they deserve. A certified monday.com partner and bilingual specialist, he designs custom systems that free you from paperwork and help your business grow sustainably.</p>
+            <blockquote class="about-quote">"Work smarter, not harder — with systems that grow with you."</blockquote>
+          </div>
+        </div>
+
+        <!-- Yolanda -->
+        <div class="team-card">
+          <div class="team-img-wrap">
+            <div class="team-img-blur" style="background-image:url('assets/images/yolanda_blur.png');"></div>
+            <img src="assets/images/yolanda.png" alt="Yolanda Ribeyro" class="team-img">
+          </div>
+          <div class="team-info">
+            <h3 class="team-name">Yolanda Ribeyro</h3>
+            <span class="team-title">Director of Sales &amp; Marketing LATAM</span>
+            <p class="team-bio">Yolanda leads growth strategy at ValuConnect Solutions, helping clients attract more customers, build stronger brand presence, and convert opportunities into revenue. With a results-driven mindset, she ensures every client sees tangible impact from day one.</p>
+            <blockquote class="about-quote">"Your success is our success — we grow together."</blockquote>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="team-cta">
+        <div class="about-badge" style="position:static; bottom:auto; right:auto; display:inline-flex; gap:24px; align-items:center; padding: 20px 32px;">
+          <div style="text-align:center;"><span class="badge-number">100+</span><span class="badge-label">Businesses Helped</span></div>
+          <div style="width:1px; height:40px; background:rgba(255,255,255,.2);"></div>
+          <div style="text-align:center;"><span class="badge-number">5★</span><span class="badge-label">Client Satisfaction</span></div>
+          <div style="width:1px; height:40px; background:rgba(255,255,255,.2);"></div>
+          <div style="text-align:center;"><span class="badge-number">2</span><span class="badge-label">Languages Served</span></div>
+        </div>
+        <div style="margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="#contact" class="btn btn-primary" data-i18n="about.btn1">Book a Free Call with Andres</a>
+          <a href="#industries" class="btn btn-outline" data-i18n="about.btn2">Explore Your Industry</a>
+        </div>
+        <p style="color: var(--teal); font-style: italic; font-size: .9rem; margin-top: 20px;">Trabajamos con inteligencia, no con esfuerzo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <div class="cta-inner">
+        <h2 data-i18n="cta.title">Ready to Stop Running on Paper?</h2>
+        <p data-i18n="cta.desc">Book your free 30-minute workflow assessment. No tech jargon, no pressure — just a real conversation about how your business could work smarter.</p>
+        <div class="cta-actions">
+          <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="btn btn-gold" data-i18n="cta.btn1">Book Free 30-Min Call</a>
+          <a href="#industries" class="btn btn-secondary" data-i18n="cta.btn2">Explore Your Industry</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo-text" style="font-size: 1.35rem;">Valu<span>Connect</span> Solutions</span>
+          <p data-i18n="foot.brand">Helping small businesses work smarter, not harder — with digital systems that grow with them.</p>
+          <p style="margin-top: 6px; font-style: italic; font-size: .8rem; color: rgba(255,255,255,.35);">Trabajemos con inteligencia, no con esfuerzo.</p>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="foot.svcTitle">Services</h4>
+          <ul>
+            <li><a href="#services" data-i18n="foot.s1">Paper-to-Digital</a></li>
+            <li><a href="#services" data-i18n="foot.s3">Workflow Automation</a></li>
+            <li><a href="#services" data-i18n="foot.s5">AI Agent Creation</a></li>
+            <li><a href="monday.html" data-i18n="nav.s4">monday.com Setup</a></li>
+            <li><a href="#services" data-i18n="foot.s6">Digital Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="foot.indTitle">Industries</h4>
+          <ul>
+            <li><a href="industries/restaurants.html" data-i18n="foot.i1">Restaurants</a></li>
+            <li><a href="industries/retail.html" data-i18n="foot.i2">Retail &amp; Boutiques</a></li>
+            <li><a href="industries/construction.html" data-i18n="foot.i3">Construction</a></li>
+            <li><a href="industries/health-wellness.html" data-i18n="foot.i4">Health &amp; Wellness</a></li>
+            <li><a href="industries/real-estate.html" data-i18n="foot.i5">Real Estate</a></li>
+            <li><a href="industries/professional-services.html" data-i18n="foot.i6">Professional Services</a></li>
+            <li><a href="industries/salons-beauty.html" data-i18n="foot.i7">Salons &amp; Beauty</a></li>
+            <li><a href="industries/logistics.html" data-i18n="foot.i8">Logistics</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="foot.conTitle">Connect</h4>
+          <ul>
+            <li><a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" data-i18n="foot.c1">Book Free Call</a></li>
+            <li><a href="mailto:info@vcsolutions.com">info@vcsolutions.com</a></li>
+            <li><a href="#" class="nav-insights-trigger" data-i18n="nav.insights">Industry Insights</a></li>
+          </ul>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/company/valuconnect" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61590069511226" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="TikTok">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr class="footer-divider">
+      <div class="footer-bottom">
+        <p data-i18n="foot.copy">© 2025–2026 ValuConnect Solutions. All rights reserved. Founder: Andres Ramirez.</p>
+        <div class="footer-bottom-links">
+          <a href="#" data-i18n="foot.privacy">Privacy Policy</a>
+          <a href="#" data-i18n="foot.terms">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Newsletter Modal ── -->
+  <div class="modal-overlay" id="insightsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      <div id="modalForm">
+        <span class="modal-tag" data-i18n="modal.tag">Industry Insights</span>
+        <h2 class="modal-title" id="modalTitle" data-i18n="modal.title">Stay Ahead in Your Industry</h2>
+        <p class="modal-sub" data-i18n="modal.sub">Get practical tips, workflow ideas, and digital transformation insights for small business owners — delivered in English and Spanish. No spam, ever.</p>
+        <form class="modal-form" id="newsletterForm" novalidate>
+          <input type="text" class="modal-input" id="nlName" placeholder="Your first name" autocomplete="given-name" data-i18n-ph="modal.ph.name">
+          <input type="email" class="modal-input" id="nlEmail" placeholder="Your email address" autocomplete="email" data-i18n-ph="modal.ph.email">
+          <select class="modal-input" id="nlIndustry">
+            <option value="" data-i18n="modal.ph.industry">Your industry (optional)</option>
+            <option value="restaurants" data-i18n="foot.i1">Restaurants</option>
+            <option value="retail" data-i18n="foot.i2">Retail &amp; Boutiques</option>
+            <option value="construction" data-i18n="foot.i3">Construction</option>
+            <option value="health" data-i18n="foot.i4">Health &amp; Wellness</option>
+            <option value="realestate" data-i18n="foot.i5">Real Estate</option>
+            <option value="professional" data-i18n="foot.i6">Professional Services</option>
+            <option value="salons" data-i18n="foot.i7">Salons &amp; Beauty</option>
+            <option value="logistics" data-i18n="foot.i8">Logistics</option>
+          </select>
+          <button type="submit" class="modal-submit" data-i18n="modal.submit">Subscribe to Industry Insights</button>
+        </form>
+        <p class="modal-privacy" data-i18n="modal.privacy">No spam. Unsubscribe anytime. Your information is never shared.</p>
+      </div>
+      <div class="modal-success" id="modalSuccess">
+        <span class="modal-success-icon">&#10003;</span>
+        <h3 data-i18n="modal.ok.title">You're in!</h3>
+        <p data-i18n="modal.ok.sub">We'll send your first industry insight soon. Check your inbox.</p>
+      </div>
     </div>
   </div>
-</div></section>
 
-<div id="contact" class="cta-banner"><div class="container">
-  <h2 data-i18n="cta.title">Ready to stop running on paper?</h2>
-  <p data-i18n="cta.sub">Book your free 30-minute workflow assessment — no tech knowledge required.</p>
-  <a href="mailto:andres@valuconnect.com" class="btn-navy" data-i18n="cta.btn">Book Your Free Call</a>
-</div></div>
+  <!-- ── Chatbot Widget ── -->
+  <div class="chatbot-widget" id="chatbotWidget">
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <div class="chatbot-header-info">
+          <div class="chatbot-avatar">A</div>
+          <div>
+            <div class="chatbot-name">ValuConnect</div>
+            <div class="chatbot-status" data-i18n="chat.status">Typically replies instantly</div>
+          </div>
+        </div>
+        <button class="chatbot-x" id="chatbotClose" aria-label="Close chat">&times;</button>
+      </div>
+      <div class="chatbot-messages" id="chatMessages"></div>
+      <div class="chatbot-qr" id="chatQR"></div>
+      <div class="chatbot-input-area" id="chatInputArea" style="display:none;">
+        <input type="email" class="chatbot-text-input" id="chatEmailInput" placeholder="Your email (so we can reply)">
+        <div class="chatbot-msg-row">
+          <input type="text" class="chatbot-text-input" id="chatTextInput" placeholder="Type your message...">
+          <button class="chatbot-send-btn" id="chatSendBtn" aria-label="Send">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="chatbot-trigger-btn" id="chatbotTrigger" aria-label="Open chat">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+  </div>
 
-<footer><div class="container">
-  <p>© 2026 <strong>ValuConnect Solutions</strong> · Andres Ramirez · <span data-i18n="footer.tagline">Bilingual small business operations partner</span></p>
-</div></footer>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>

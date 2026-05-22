@@ -3,5 +3,13 @@ Save your image files here with these exact filenames:
   vcs-logo.png        → The VCS / ValuConnect Solutions logo (navbar — use the logo without the mascot figure)
   valu-mascot.png     → The Valu running figure holding the compass (for the hero section)
   valu-meet.png       → Valu standing in the digital city background (for the "Meet Valu" section)
+  valuconnect_header.png → Clean ValuConnect header logo (transparent, ~40px height, right‑aligned)
+
+The website already references these filenames. Once you add the images, they will appear automatically.
+
+
+  vcs-logo.png        → The VCS / ValuConnect Solutions logo (navbar — use the logo without the mascot figure)
+  valu-mascot.png     → The Valu running figure holding the compass (for the hero section)
+  valu-meet.png       → Valu standing in the digital city background (for the "Meet Valu" section)
 
 The website already references these filenames. Once you add the images, they will appear automatically.

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>monday.com Implementation — ValuConnect Solutions</title>
+  <meta name="description" content="ValuConnect Solutions implements monday.com for small businesses — workspace setup, CRM, automations, integrations, and bilingual training. 4 packages from $497.">
+  <meta name="keywords" content="monday.com implementation, monday.com consultant, monday CRM setup, small business monday.com, monday.com bilingual">
+  <!-- Canonical & Hreflang -->
+  <link rel="canonical" href="https://vcsolutions.com/monday.html">
+  <link rel="alternate" hreflang="en" href="https://vcsolutions.com/monday.html">
+  <link rel="alternate" hreflang="es" href="https://vcsolutions.com/monday.html">
+  <link rel="alternate" hreflang="x-default" href="https://vcsolutions.com/monday.html">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vcsolutions.com/monday.html">
+  <meta property="og:title" content="monday.com Implementation — ValuConnect Solutions">
+  <meta property="og:description" content="ValuConnect Solutions implements monday.com for small businesses — workspace setup, CRM, automations, integrations, and bilingual training. 4 packages from $497.">
+  <meta property="og:image" content="https://vcsolutions.com/assets/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="ValuConnect Solutions">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="monday.com Implementation — ValuConnect Solutions">
+  <meta name="twitter:description" content="ValuConnect Solutions implements monday.com for small businesses — workspace setup, CRM, automations, integrations, and bilingual training. 4 packages from $497.">
+  <meta name="twitter:image" content="https://vcsolutions.com/assets/images/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LMS86C2CJ4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LMS86C2CJ4');
+  </script>
+  <style>
+    .monday-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #0a1628 60%, #0d1f10 100%);
+      padding: 100px 0 80px; text-align: center; position: relative; overflow: hidden;
+    }
+    .monday-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,168,150,.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .monday-hero .container { position: relative; z-index: 1; }
+    .monday-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+    }
+    .monday-hero h1 {
+      font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800; color: var(--white); line-height: 1.15; margin-bottom: 20px;
+    }
+    .monday-hero h1 span { color: var(--teal); }
+    .monday-hero p { font-size: 1.1rem; color: rgba(255,255,255,.7); max-width: 620px; margin: 0 auto 36px; line-height: 1.75; }
+    .hero-trust {
+      display: flex; justify-content: center; align-items: center; gap: 32px; flex-wrap: wrap;
+      margin-top: 48px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .trust-item { text-align: center; }
+    .trust-num { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; color: var(--teal); }
+    .trust-label { font-size: .8rem; color: rgba(255,255,255,.5); margin-top: 2px; }
+    .products-strip { background: var(--light-bg); padding: 60px 0; border-bottom: 1px solid var(--border); }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .product-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; transition: border-color .2s, box-shadow .2s; }
+    .product-card:hover { border-color: var(--teal); box-shadow: 0 4px 20px rgba(0,168,150,.08); }
+    .product-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .product-name { font-weight: 700; color: var(--navy); margin-bottom: 6px; font-size: .95rem; }
+    .product-desc { font-size: .85rem; color: var(--text-gray); line-height: 1.6; }
+    .product-tag { display: inline-block; margin-top: 10px; font-size: .72rem; font-weight: 700; letter-spacing: .8px; padding: 3px 10px; border-radius: 20px; background: rgba(0,168,150,.1); color: var(--teal); }
+    .for-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+    .for-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 16px; display: flex; align-items: flex-start; gap: 12px; }
+    .for-emoji { font-size: 1.4rem; flex-shrink: 0; }
+    .for-label { font-size: .88rem; font-weight: 600; color: var(--navy); }
+    .for-sub { font-size: .78rem; color: var(--text-gray); margin-top: 3px; }
+    .process-track { display: flex; flex-direction: column; gap: 0; max-width: 720px; margin: 0 auto; position: relative; }
+    .process-track::before { content: ''; position: absolute; left: 27px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--teal), rgba(0,168,150,.1)); }
+    .process-step { display: flex; gap: 24px; padding: 0 0 36px 0; position: relative; z-index: 1; }
+    .process-step:last-child { padding-bottom: 0; }
+    .process-num { width: 56px; height: 56px; flex-shrink: 0; background: var(--white); border: 2px solid var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--teal); }
+    .process-content { padding-top: 8px; }
+    .process-content h3 { font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .process-content p { font-size: .9rem; color: var(--text-gray); line-height: 1.65; }
+    .process-duration { display: inline-block; font-size: .75rem; font-weight: 600; color: var(--teal); margin-top: 8px; }
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+    .faq-q { padding: 18px 20px; font-weight: 600; color: var(--navy); font-size: .95rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--white); user-select: none; }
+    .faq-q:hover { background: var(--light-bg); }
+    .faq-chevron { font-size: .75rem; transition: transform .25s; color: var(--teal); }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .2s ease; font-size: .9rem; color: var(--text-gray); line-height: 1.7; background: var(--light-bg); }
+    .faq-item.open .faq-a { max-height: 300px; padding: 16px 20px; }
+    .monday-addons { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .monday-addon { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .monday-addon h3 { font-size: .95rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .monday-addon p { font-size: .85rem; color: var(--text-gray); line-height: 1.55; }
+    .addon-tag { display: inline-block; margin-top: 10px; font-size: .78rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; background: rgba(0,168,150,.1); color: var(--teal); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/images/vcs-logo.png" alt="ValuConnect Solutions" class="nav-logo-img">
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html#services" data-i18n="nav.services">Services</a></li>
+        <li><a href="index.html#industries" data-i18n="nav.industries">Industries</a></li>
+        <li class="nav-dropdown">
+          <a href="packages.html" data-i18n="nav.packages">Packages &amp; Pricing</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="packages.html" data-i18n="nav.packages">Packages &amp; Pricing</a></li>
+            <li><a href="monday.html" data-i18n="nav.monday" style="color:var(--teal)">monday.com Setup</a></li>
+          </ul>
+        </li>
+        <li><a href="index.html#how-it-works" data-i18n="nav.howItWorks">How It Works</a></li>
+        <li><a href="index.html#about" data-i18n="nav.about">About</a></li>
+        <li class="lang-li">
+          <button class="lang-btn active" data-l="en">EN</button>
+          <button class="lang-btn" data-l="es">ES</button>
+        </li>
+        <li><a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="nav-cta" data-i18n="nav.cta">Book Free Call</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="monday-hero">
+    <div class="container">
+      <div class="monday-badge">
+        <img src="assets/images/monday-logo.png" alt="monday.com" class="monday-badge-logo">
+      </div>
+      <h1 data-i18n="mon.hero.h1">Your Business, Fully Organized in <span>monday.com</span></h1>
+      <p data-i18n="mon.hero.p">Stop managing your business from spreadsheets and sticky notes. We build your monday.com workspace from scratch — boards, automations, CRM, and dashboards — and train your entire team in English and Spanish.</p>
+      <div class="hero-actions">
+        <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="mon.hero.btn1">Book Free Discovery Call</a>
+        <a href="#packages" class="btn btn-secondary" data-i18n="mon.hero.btn2">See Packages</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item">
+          <div class="trust-num">48h</div>
+          <div class="trust-label" data-i18n="mon.hero.t1l">Average setup time<br>for Quick Start</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-num">100%</div>
+          <div class="trust-label" data-i18n="mon.hero.t2l">Bilingual training<br>EN / ES</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-num">30-day</div>
+          <div class="trust-label" data-i18n="mon.hero.t3l">Setup guarantee<br>or your money back</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-num">$0</div>
+          <div class="trust-label" data-i18n="mon.hero.t4l">Due before<br>proposal is signed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Products ── -->
+  <section class="products-strip">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:40px;">
+        <span class="section-label" data-i18n="mon.prod.label">monday.com Products We Implement</span>
+        <h2 class="section-title" style="margin-top:8px;" data-i18n="mon.prod.h2">One Platform. Every Part of Your Business.</h2>
+        <p class="section-subtitle" data-i18n="mon.prod.p">monday.com is not just a task manager — it's a full operating system for your company. We implement the products that fit your needs, not all of them at once.</p>
+      </div>
+      <div class="products-grid">
+        <div class="product-card">
+          <div class="product-icon">📋</div>
+          <div class="product-name" data-i18n="mon.p1.name">Work Management</div>
+          <p class="product-desc" data-i18n="mon.p1.desc">Tasks, projects, team coordination, deadlines, and file sharing — all in one place. Replaces spreadsheets and email chains.</p>
+          <span class="product-tag" data-i18n="mon.p1.tag">Core — All Plans</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">🤝</div>
+          <div class="product-name" data-i18n="mon.p2.name">monday CRM</div>
+          <p class="product-desc" data-i18n="mon.p2.desc">Track every lead, contact, deal, and follow-up in a visual pipeline. Never lose a client or forget a callback again.</p>
+          <span class="product-tag" data-i18n="mon.p2.tag">Essentials+</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">🎯</div>
+          <div class="product-name" data-i18n="mon.p3.name">Service &amp; Ticketing</div>
+          <p class="product-desc" data-i18n="mon.p3.desc">Manage customer requests, complaints, and service tickets with SLA tracking and automatic routing to the right person.</p>
+          <span class="product-tag" data-i18n="mon.p3.tag">Growth+</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">📣</div>
+          <div class="product-name" data-i18n="mon.p4.name">Marketing &amp; Campaigns</div>
+          <p class="product-desc" data-i18n="mon.p4.desc">Plan launches, track campaigns, manage content calendars, and measure results — integrated with your work boards.</p>
+          <span class="product-tag" data-i18n="mon.p4.tag">Growth+</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">⚡</div>
+          <div class="product-name" data-i18n="mon.p5.name">Automations</div>
+          <p class="product-desc" data-i18n="mon.p5.desc">Automatic reminders, status updates, email notifications, and cross-board actions. Stop doing manually what a machine can do.</p>
+          <span class="product-tag" data-i18n="mon.p5.tag">All Plans</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">📊</div>
+          <div class="product-name" data-i18n="mon.p6.name">Dashboards &amp; Reports</div>
+          <p class="product-desc" data-i18n="mon.p6.desc">Real-time views of your pipeline, team workload, revenue, and operations — built for owners, not IT departments.</p>
+          <span class="product-tag" data-i18n="mon.p6.tag">All Plans</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Who It's For ── -->
+  <section style="padding:var(--section-pad);">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:48px;">
+        <span class="section-label" data-i18n="mon.for.label">Who We Work With</span>
+        <h2 class="section-title" data-i18n="mon.for.h2">Built for Small Business Owners Who Are Done with the Chaos</h2>
+        <p class="section-subtitle" data-i18n="mon.for.p">If you're managing jobs, clients, or inventory from memory, text threads, or a messy spreadsheet — this is for you.</p>
+      </div>
+      <div class="for-grid">
+        <div class="for-card"><div class="for-emoji">🍽️</div><div><div class="for-label" data-i18n="ind.rest">Restaurants &amp; Catering</div><div class="for-sub" data-i18n="mon.for.r1">Vendor orders, staff schedules, event management</div></div></div>
+        <div class="for-card"><div class="for-emoji">🏗️</div><div><div class="for-label" data-i18n="ind.const">Construction &amp; Contracting</div><div class="for-sub" data-i18n="mon.for.r2">Project timelines, subcontractors, invoicing</div></div></div>
+        <div class="for-card"><div class="for-emoji">🏘️</div><div><div class="for-label" data-i18n="ind.re">Real Estate &amp; Property Mgmt</div><div class="for-sub" data-i18n="mon.for.r3">Listings, tenant requests, maintenance tracking</div></div></div>
+        <div class="for-card"><div class="for-emoji">💊</div><div><div class="for-label" data-i18n="ind.hw">Health &amp; Wellness</div><div class="for-sub" data-i18n="mon.for.r4">Appointments, client files, billing workflows</div></div></div>
+        <div class="for-card"><div class="for-emoji">🛍️</div><div><div class="for-label" data-i18n="ind.ret">Retail &amp; Boutiques</div><div class="for-sub" data-i18n="mon.for.r5">Inventory, suppliers, order tracking</div></div></div>
+        <div class="for-card"><div class="for-emoji">💼</div><div><div class="for-label" data-i18n="ind.ps">Professional Services</div><div class="for-sub" data-i18n="mon.for.r6">Client work, proposals, billing, team tasks</div></div></div>
+        <div class="for-card"><div class="for-emoji">✂️</div><div><div class="for-label" data-i18n="ind.sb">Salons &amp; Beauty</div><div class="for-sub" data-i18n="mon.for.r7">Bookings, staff tasks, product inventory</div></div></div>
+        <div class="for-card"><div class="for-emoji">🚚</div><div><div class="for-label" data-i18n="ind.log">Logistics &amp; Delivery</div><div class="for-sub" data-i18n="mon.for.r8">Routes, dispatch, driver coordination</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Packages ── -->
+  <section id="packages" class="packages-section" style="background:var(--light-bg);">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:56px;">
+        <span class="section-label" data-i18n="mon.pkg.label">monday.com Implementation Packages</span>
+        <h2 class="section-title" data-i18n="mon.pkg.h2">One-Time Setup. You Own It Forever.</h2>
+        <p class="section-subtitle" data-i18n="mon.pkg.p">No subscriptions for our work — you pay once, we build it, you keep it. Add a monthly retainer only if you want ongoing support and optimization.</p>
+      </div>
+
+      <div class="pricing-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));">
+
+        <div class="pricing-card">
+          <div class="plan-name">Quick Start</div>
+          <div class="plan-cadence" data-i18n="mon.qs.cad">Solo owner or 1–3 person team</div>
+          <div class="plan-price"><span class="plan-amount">$497</span><span class="plan-period" data-i18n="mon.once">one-time</span></div>
+          <div class="plan-setup" data-i18n="mon.qs.del">Delivered in 5 business days</div>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f1">Free 30-min discovery call</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f2">1 monday.com product configured</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f3">Up to 3 custom boards</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f4">5 automations (reminders, status, alerts)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f5">1 reporting dashboard</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f6">1-hour walkthrough training (EN/ES)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.qs.f7">14-day email support</span></li>
+            <li><span class="feat-dash">—</span> <span style="color:var(--text-gray)" data-i18n="mon.qs.f8">CRM setup</span></li>
+            <li><span class="feat-dash">—</span> <span style="color:var(--text-gray)" data-i18n="mon.qs.f9">External integrations</span></li>
+          </ul>
+          <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="plan-cta plan-cta-outline" data-i18n="nav.cta">Book Free Call</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <div class="featured-badge" data-i18n="mon.popular">Most Popular</div>
+          <div class="plan-name">Operations Essentials</div>
+          <div class="plan-cadence" data-i18n="mon.oe.cad">Teams of 3–15 employees</div>
+          <div class="plan-price"><span class="plan-amount">$1,297</span><span class="plan-period" data-i18n="mon.once">one-time</span></div>
+          <div class="plan-setup" data-i18n="mon.oe.del">+ optional $297/mo retainer</div>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f1">Everything in Quick Start</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f2">Full workspace architecture design</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f3">Up to 8 custom boards</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f4">monday CRM — pipeline, contacts, deals</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f5">15+ automations across all boards</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f6">2 executive dashboards</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f7">1 external integration (Gmail, Slack, or WhatsApp)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f8">Full team training up to 5 people (EN/ES)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.oe.f9">30-day email + chat support</span></li>
+          </ul>
+          <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="plan-cta plan-cta-primary" data-i18n="nav.cta">Book Free Call</a>
+        </div>
+
+        <div class="pricing-card">
+          <div class="plan-name">Growth Suite</div>
+          <div class="plan-cadence" data-i18n="mon.gs.cad">15+ employees or multi-location</div>
+          <div class="plan-price"><span class="plan-amount">$2,497</span><span class="plan-period" data-i18n="mon.once">one-time</span></div>
+          <div class="plan-setup" data-i18n="mon.gs.del">+ optional $497/mo retainer</div>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f1">Everything in Essentials</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f2">Full CRM pipeline — leads → deals → clients</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f3">Service &amp; ticketing module</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f4">30+ automations including cross-board triggers</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f5">3 executive dashboards + KPI tracking</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f6">SOP documentation per workflow</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f7">Up to 3 integrations (QuickBooks, Zapier, etc.)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f8">Team training up to 10 people (EN/ES)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.gs.f9">30-day support + 1 optimization call</span></li>
+          </ul>
+          <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="plan-cta plan-cta-outline" data-i18n="nav.cta">Book Free Call</a>
+        </div>
+
+        <div class="pricing-card">
+          <div class="plan-name">Custom Build</div>
+          <div class="plan-cadence" data-i18n="mon.cb.cad">Enterprise results, small biz price</div>
+          <div class="plan-price"><span class="plan-amount">$3,500+</span><span class="plan-period" data-i18n="mon.start">starting at</span></div>
+          <div class="plan-setup" data-i18n="mon.cb.del">Scoped to your exact requirements</div>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f1">Full discovery &amp; architecture workshop</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f2">Unlimited boards &amp; workspaces</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f3">Data migration from existing tools</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f4">Custom automations + API integrations</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f5">Department-level dashboards</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f6">Full bilingual documentation (EN/ES)</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f7">Admin + staff + manager training tracks</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f8">60-day dedicated support</span></li>
+            <li><span class="feat-check">✓</span> <span data-i18n="mon.cb.f9">Monthly maintenance available</span></li>
+          </ul>
+          <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="plan-cta plan-cta-outline" data-i18n="mon.cb.cta">Let's Talk Scope</a>
+        </div>
+
+      </div>
+
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-top:40px;max-width:760px;margin-left:auto;margin-right:auto;text-align:center;">
+        <p style="margin:0;color:var(--text-gray);font-size:.9rem;line-height:1.75;" data-i18n="mon.pkg.note"><strong>Not sure which plan?</strong><br>Every engagement begins with a free 30-minute discovery call. We'll map your current workflow, identify the right monday.com products, and recommend a package — no pressure, no obligation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Comparison ── -->
+  <section style="padding:var(--section-pad);">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:52px;">
+        <span class="section-label" data-i18n="mon.cmp.label">Compare Plans</span>
+        <h2 class="section-title" data-i18n="mon.cmp.h2">What's Included in Each Package</h2>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th style="width:36%;" data-i18n="mon.cmp.feat">Feature</th>
+              <th>Quick Start</th><th>Essentials</th><th>Growth</th><th>Custom</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td data-i18n="mon.cmp.r1">Free discovery call</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td data-i18n="mon.cmp.r2">Custom boards configured</td><td data-i18n="mon.cmp.r2a">Up to 3</td><td data-i18n="mon.cmp.r2b">Up to 8</td><td data-i18n="mon.cmp.r2c">Unlimited</td><td data-i18n="mon.cmp.r2c">Unlimited</td></tr>
+            <tr><td data-i18n="mon.cmp.r3">Automations built</td><td>5</td><td>15+</td><td>30+</td><td data-i18n="mon.cmp.r3c">Unlimited</td></tr>
+            <tr><td data-i18n="mon.cmp.r4">Reporting dashboards</td><td>1</td><td>2</td><td>3</td><td data-i18n="mon.cmp.r4c">Per dept.</td></tr>
+            <tr><td data-i18n="mon.cmp.r5">monday CRM setup</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td data-i18n="mon.cmp.r6">Service &amp; ticketing module</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td data-i18n="mon.cmp.r7">External integrations</td><td class="dash">—</td><td data-i18n="mon.cmp.r7b">1 (Gmail/Slack/WA)</td><td data-i18n="mon.cmp.r7c">Up to 3</td><td data-i18n="mon.cmp.r7c2">Unlimited</td></tr>
+            <tr><td data-i18n="mon.cmp.r8">Data migration</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+            <tr><td data-i18n="mon.cmp.r9">SOP documentation</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td data-i18n="mon.cmp.r10">Team training (EN/ES)</td><td data-i18n="mon.cmp.r10a">1-hr / 1 person</td><td data-i18n="mon.cmp.r10b">Up to 5 people</td><td data-i18n="mon.cmp.r10c">Up to 10 people</td><td data-i18n="mon.cmp.r10d">All levels</td></tr>
+            <tr><td data-i18n="mon.cmp.r11">Bilingual setup &amp; docs</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td data-i18n="mon.cmp.r12">Post-launch support</td><td data-i18n="mon.cmp.r12a">14 days email</td><td data-i18n="mon.cmp.r12b">30 days email+chat</td><td data-i18n="mon.cmp.r12c">30 days + call</td><td data-i18n="mon.cmp.r12d">60 days dedicated</td></tr>
+            <tr><td data-i18n="mon.cmp.r13">Monthly retainer</td><td data-i18n="mon.cmp.r13a">Add-on</td><td data-i18n="mon.cmp.r13b">$297/mo optional</td><td data-i18n="mon.cmp.r13c">$497/mo optional</td><td data-i18n="mon.cmp.r13d">Custom</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Process ── -->
+  <section style="padding:var(--section-pad);background:var(--light-bg);">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:56px;">
+        <span class="section-label" data-i18n="mon.proc.label">The Implementation Process</span>
+        <h2 class="section-title" data-i18n="mon.proc.h2">We Handle Everything. You Just Show Up.</h2>
+        <p class="section-subtitle" data-i18n="mon.proc.p">From your first call to go-live, here's exactly how we work together — no surprises, no tech overwhelm.</p>
+      </div>
+      <div class="process-track">
+        <div class="process-step">
+          <div class="process-num">1</div>
+          <div class="process-content">
+            <h3 data-i18n="mon.proc.s1h">Discovery Call (Free)</h3>
+            <p data-i18n="mon.proc.s1p">We spend 30 minutes mapping your current workflow — where the bottlenecks are, what tools you're using, and what's costing you the most time. We recommend a package and a scope. No commitment required.</p>
+            <span class="process-duration" data-i18n="mon.proc.s1d">⏱ 30 minutes · Free</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">2</div>
+          <div class="process-content">
+            <h3 data-i18n="mon.proc.s2h">Proposal &amp; Scope Sign-Off</h3>
+            <p data-i18n="mon.proc.s2p">You receive a written proposal with every deliverable, the timeline, and the exact price. We send a simple service agreement — once signed, we collect your 50% deposit and work begins.</p>
+            <span class="process-duration" data-i18n="mon.proc.s2d">⏱ 24–48 hours after call</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">3</div>
+          <div class="process-content">
+            <h3 data-i18n="mon.proc.s3h">Workspace Architecture</h3>
+            <p data-i18n="mon.proc.s3p">We design your board structure, naming conventions, and workflow logic before building anything. You approve the blueprint — so there are no surprises when it's live.</p>
+            <span class="process-duration" data-i18n="mon.proc.s3d">⏱ Day 1–2 of build</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">4</div>
+          <div class="process-content">
+            <h3 data-i18n="mon.proc.s4h">Build, Automate &amp; Connect</h3>
+            <p data-i18n="mon.proc.s4p">We configure every board, build every automation, set up your CRM pipeline, connect integrations (Gmail, Slack, WhatsApp, QuickBooks), and populate sample data so it's ready to use on day one.</p>
+            <span class="process-duration" data-i18n="mon.proc.s4d">⏱ Day 2–5 depending on package</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">5</div>
+          <div class="process-content">
+            <h3 data-i18n="mon.proc.s5h">Training &amp; Go-Live</h3>
+            <p data-i18n="mon.proc.s5p">We walk you and your team through the whole system in English and Spanish. You get a recording of the session, a written reference guide, and hands-on access while we're still on the call. Final 50% payment is collected after you've approved and your team is confident.</p>
+            <span class="process-duration" data-i18n="mon.proc.s5d">⏱ Final day · Bilingual EN/ES</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Add-ons ── -->
+  <section style="padding:var(--section-pad);">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:52px;">
+        <span class="section-label" data-i18n="mon.add.label">Add-Ons</span>
+        <h2 class="section-title" data-i18n="mon.add.h2">Extend Any Package</h2>
+        <p class="section-subtitle" data-i18n="mon.add.p">Add these to any plan — billed once or monthly. Perfect for teams that want to grow the system after launch.</p>
+      </div>
+      <div class="monday-addons">
+        <div class="monday-addon"><h3 data-i18n="mon.a1h">Monthly Maintenance</h3><p data-i18n="mon.a1p">Monthly board updates, automation fixes, new-hire onboarding setup, and direct access to Andres for questions.</p><span class="addon-tag" data-i18n="mon.a1t">$197/mo</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a2h">Extra Automation Pack</h3><p data-i18n="mon.a2p">10 additional automations built and tested for your workspace — triggered notifications, cross-board actions, deadline escalations.</p><span class="addon-tag" data-i18n="mon.a2t">$247 one-time</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a3h">Training Session (Extra)</h3><p data-i18n="mon.a3p">1-on-1 or group walkthrough for new hires, advanced features, or refresher. 60 minutes, bilingual EN/ES, recorded.</p><span class="addon-tag" data-i18n="mon.a3t">$147/session</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a4h">CRM Data Migration</h3><p data-i18n="mon.a4p">Migrate existing contacts, leads, and deal history from HubSpot, Salesforce, spreadsheets, or any CSV export into monday CRM.</p><span class="addon-tag" data-i18n="mon.a4t">$497 one-time</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a5h">QuickBooks / Accounting Integration</h3><p data-i18n="mon.a5p">Connect monday.com to QuickBooks Online or FreshBooks — sync invoices, client records, and payment statuses automatically.</p><span class="addon-tag" data-i18n="mon.a5t">$350 one-time</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a6h">Custom API Integration</h3><p data-i18n="mon.a6p">Connect monday.com to any tool with an API — POS systems, booking platforms, ERP software, or proprietary databases.</p><span class="addon-tag" data-i18n="mon.a6t">From $500 — scoped</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a7h">SOP Documentation Pack</h3><p data-i18n="mon.a7p">Step-by-step written SOPs for each workflow built in monday.com — bilingual EN/ES, formatted for new hire onboarding.</p><span class="addon-tag" data-i18n="mon.a7t">$297 one-time</span></div>
+        <div class="monday-addon"><h3 data-i18n="mon.a8h">Quarterly System Review</h3><p data-i18n="mon.a8p">Every 3 months: a full audit of your workspace, identify inefficiencies, and update automations as your business evolves.</p><span class="addon-tag" data-i18n="mon.a8t">$247/quarter</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section style="padding:var(--section-pad);background:var(--light-bg);">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:52px;">
+        <span class="section-label" data-i18n="mon.faq.label">FAQ</span>
+        <h2 class="section-title" data-i18n="mon.faq.h2">Common Questions</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q"><span data-i18n="mon.q1">Do I need a monday.com subscription before I hire you?</span> <span class="faq-chevron">▼</span></div>
+          <div class="faq-a" data-i18n="mon.a1q">No — you don't need anything before the discovery call. After we agree on scope, we'll help you select the right monday.com plan for your team size. monday.com starts at $9/user/month. That's a separate cost from our implementation fee, which covers our labor and expertise.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q"><span data-i18n="mon.q2">How long does the full setup take?</span> <span class="faq-chevron">▼</span></div>
+          <div class="faq-a" data-i18n="mon.a2q">Quick Start is delivered in 5 business days. Operations Essentials takes 7–10 days. Growth Suite takes 2–3 weeks. Custom Build is scoped to your project — typically 3–6 weeks. We give you a firm timeline in the proposal before any money changes hands.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q"><span data-i18n="mon.q3">What if I already have a monday.com account with some boards set up?</span> <span class="faq-chevron">▼</span></div>
+          <div class="faq-a" data-i18n="mon.a3q">No problem. We start with an audit of what you have, keep what's working, and rebuild what isn't. We won't charge you to start from scratch if you have a solid foundation already. The discovery call is where we assess this — it's free and there's no commitment.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q"><span data-i18n="mon.q4">Is the training really in Spanish?</span> <span class="faq-chevron">▼</span></div>
+          <div class="faq-a" data-i18n="mon.a4q">Yes. Andres Ramirez is bilingual and conducts all training in the language your team is most comfortable with — English, Spanish, or a mix of both. All written documentation and SOP guides can be delivered in both languages.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q"><span data-i18n="mon.q5">What's the 30-day setup guarantee?</span> <span class="faq-chevron">▼</span></div>
+          <div class="faq-a" data-i18n="mon.a5q">If your workspace isn't fully built, tested, and your team isn't trained within the agreed timeline, you don't pay the final 50%. We finish what we promised — or we refund the difference. The guarantee also covers the first 30 days of use: if something breaks due to our configuration, we fix it at no additional cost.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q"><span data-i18n="mon.q6">Do I need technical skills to maintain it after setup?</span> <span class="faq-chevron">▼</span></div>
+          <div class="faq-a" data-i18n="mon.a6q">No. We build systems that non-technical owners can manage day-to-day. Adding items, updating statuses, checking dashboards — all straightforward. If you want to build new automations or integrations down the road, that's what the monthly maintenance add-on is for.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-inner">
+        <h2 data-i18n="mon.cta.h2">Start with a Free Discovery Call</h2>
+        <p data-i18n="mon.cta.p">30 minutes. No tech jargon, no sales pitch. We map your current workflow and tell you exactly what monday.com can automate — even if you're not ready to buy yet.</p>
+        <div class="cta-actions">
+          <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="btn btn-gold" data-i18n="cta.btn1">📅 Book Free 30-Min Call</a>
+          <a href="packages.html" class="btn btn-secondary" data-i18n="mon.cta.btn2">View All Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo-text" style="font-size:1.35rem;">Valu<span>Connect</span> Solutions</span>
+          <p data-i18n="foot.brand">Helping small businesses work smarter, not harder — with digital systems that grow with them.</p>
+          <p style="margin-top:6px;font-style:italic;font-size:.8rem;color:rgba(255,255,255,.35);">Trabajemos con inteligencia, no con esfuerzo.</p>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="foot.svcTitle">Services</h4>
+          <ul>
+            <li><a href="index.html#services" data-i18n="foot.s1">Paper-to-Digital</a></li>
+            <li><a href="index.html#services" data-i18n="foot.s3">Workflow Automation</a></li>
+            <li><a href="monday.html">monday.com Setup</a></li>
+            <li><a href="packages.html" data-i18n="nav.packages">Packages &amp; Pricing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="foot.indTitle">Industries</h4>
+          <ul>
+            <li><a href="industries/restaurants.html" data-i18n="foot.i1">Restaurants</a></li>
+            <li><a href="industries/construction.html" data-i18n="foot.i3">Construction</a></li>
+            <li><a href="industries/real-estate.html" data-i18n="foot.i5">Real Estate</a></li>
+            <li><a href="industries/professional-services.html" data-i18n="foot.i6">Professional Services</a></li>
+            <li><a href="industries/retail.html" data-i18n="foot.i2">Retail &amp; Boutiques</a></li>
+            <li><a href="industries/health-wellness.html" data-i18n="foot.i4">Health &amp; Wellness</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="foot.conTitle">Connect</h4>
+          <ul>
+            <li><a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" data-i18n="foot.c1">Book Free Call</a></li>
+            <li><a href="mailto:aramirez.flagship@gmail.com">aramirez.flagship@gmail.com</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="footer-divider">
+      <div class="footer-bottom">
+        <p data-i18n="foot.copy">© 2026 ValuConnect Solutions. All rights reserved. Founder: Andres Ramirez.</p>
+        <div class="footer-bottom-links">
+          <a href="#" data-i18n="foot.privacy">Privacy Policy</a>
+          <a href="#" data-i18n="foot.terms">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function toggleFaq(item) {
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+</body>
+</html>

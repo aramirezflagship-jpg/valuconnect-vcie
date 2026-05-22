@@ -3,153 +3,236 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Construction & Contracting — ValuConnect Solutions</title>
-  <meta name="description" content="See how ValuConnect helps construction & contracting businesses go digital. Billing cycle cut from 3 weeks to 3 days.">
-  <link rel="stylesheet" href="../css/style.css"/>
+  <title>Construction &amp; Contracting — ValuConnect Solutions</title>
+  <meta name="description" content="See how ValuConnect helps contractors go digital. Billing cycle cut from 3 weeks to 3 days, zero missing timesheets.">
+  <link rel="canonical" href="https://vcsolutions.com/industries/construction.html">
+  <link rel="alternate" hreflang="en" href="https://vcsolutions.com/industries/construction.html">
+  <link rel="alternate" hreflang="es" href="https://vcsolutions.com/industries/construction.html">
+  <link rel="alternate" hreflang="x-default" href="https://vcsolutions.com/industries/construction.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vcsolutions.com/industries/construction.html">
+  <meta property="og:title" content="Construction & Contracting — ValuConnect Solutions">
+  <meta property="og:description" content="See how ValuConnect helps contractors go digital. Billing cycle cut from 3 weeks to 3 days, zero missing timesheets.">
+  <meta property="og:image" content="https://vcsolutions.com/assets/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="ValuConnect Solutions">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Construction & Contracting — ValuConnect Solutions">
+  <meta name="twitter:description" content="See how ValuConnect helps contractors go digital. Billing cycle cut from 3 weeks to 3 days, zero missing timesheets.">
+  <meta name="twitter:image" content="https://vcsolutions.com/assets/images/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css"/>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LMS86C2CJ4"></script>
   <script>
-const translations = {
-  
-  en: {
-    'page.hero': 'Still running your job sites on paper?',
-    'page.situation.label': 'The Situation Before ValuConnect',
-    'page.situation.title': 'Sound familiar?',
-    'page.situation.body': 'A small general contractor manages 4 active job sites with paper work orders, handwritten timesheets, and subcontractor invoices stored in a folder in the truck. Billing delays of 2–3 weeks are common because documents get lost between the job site and the office.',
-    'page.ps.label': 'Pain points → Solutions',
-    'page.pain.title': '❌ Pain Points',
-    'page.sol.title': '✅ ValuConnect Solutions',
-    'page.results.label': 'Results Achieved',
-    'page.results.title': 'What changes after ValuConnect',
-    'page.quote.attr': 'Roberto M. — General contractor, Houston',
-    'page.cta.title': 'Ready to transform your business?',
-    'page.cta.sub': 'Book your free 30-minute workflow assessment. No tech knowledge required.',
-    'page.related.title': 'Related industries',
-    'pain.0': 'Work orders handwritten on site — illegible or lost',
-    'pain.1': 'Timesheets collected via text message photos every Friday',
-    'pain.2': 'Subcontractor invoices missing, duplicated, or disputed',
-    'pain.3': 'Project cost overruns discovered only after the job ends',
-    'sol.0': 'Mobile-friendly digital work orders submitted directly from job site',
-    'sol.1': 'Automated timesheet collection with manager approval workflow',
-    'sol.2': 'Subcontractor invoice portal with status tracking and duplicate detection',
-    'sol.3': 'Real-time project cost dashboard vs. original budget — alerts at 80%',
-    'result.0': 'Billing cycle cut from 3 weeks to 3 days',
-    'result.1': 'Zero missing timesheets',
-    'result.2': 'Subcontractor disputes eliminated',
-    'result.3': 'Budget overruns caught before they happen',
-    'page.quote': '"We used to bill late every single month. Now invoices go out the same day the job is done."',
-    'page.name': 'Construction & Contracting',
-    'page.name.es': 'Construcción y Contratistas'
-  },
-  es: {
-    'page.hero': '¿Todavía manejando tus obras en papel?',
-    'page.situation.label': 'La Situación Antes de ValuConnect',
-    'page.situation.title': '¿Te suena familiar?',
-    'page.situation.body': 'Un contratista general maneja 4 obras activas con órdenes de trabajo en papel, hojas de horas escritas a mano y facturas de subcontratistas en una carpeta en el camión. Los retrasos de facturación de 2 a 3 semanas son comunes porque los documentos se pierden entre la obra y la oficina.',
-    'page.ps.label': 'Problemas → Soluciones',
-    'page.pain.title': '❌ Problemas',
-    'page.sol.title': '✅ Soluciones ValuConnect',
-    'page.results.label': 'Resultados Obtenidos',
-    'page.results.title': 'Qué cambia después de ValuConnect',
-    'page.quote.attr': 'Roberto M. — General contractor, Houston',
-    'page.cta.title': '¿Listo para transformar tu negocio?',
-    'page.cta.sub': 'Agenda tu evaluación gratuita de 30 minutos. No se requieren conocimientos técnicos.',
-    'page.related.title': 'Industrias relacionadas',
-    'pain.0': 'Work orders handwritten on site — illegible or lost',
-    'pain.1': 'Timesheets collected via text message photos every Friday',
-    'pain.2': 'Subcontractor invoices missing, duplicated, or disputed',
-    'pain.3': 'Project cost overruns discovered only after the job ends',
-    'sol.0': 'Mobile-friendly digital work orders submitted directly from job site',
-    'sol.1': 'Automated timesheet collection with manager approval workflow',
-    'sol.2': 'Subcontractor invoice portal with status tracking and duplicate detection',
-    'sol.3': 'Real-time project cost dashboard vs. original budget — alerts at 80%',
-    'result.0': 'Billing cycle cut from 3 weeks to 3 days',
-    'result.1': 'Zero missing timesheets',
-    'result.2': 'Subcontractor disputes eliminated',
-    'result.3': 'Budget overruns caught before they happen',
-    'page.quote': '"We used to bill late every single month. Now invoices go out the same day the job is done."',
-    'page.name': 'Construcción y Contratistas',
-    'page.name.es': 'Construcción y Contratistas'
-  }
-};
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LMS86C2CJ4');
+  </script>
+  <script src="../js/translations.js"></script>
+  <script>
+Object.assign(translations.en, {
+  'page.hero': 'Still running your job sites on paper?',
+  'page.subtitle': 'Billing cycle cut from 3 weeks to 3 days &nbsp;·&nbsp; Zero missing timesheets &nbsp;·&nbsp; Subcontractor disputes eliminated &nbsp;·&nbsp; Budget overruns caught early',
+  'page.situation.label': 'The Situation Before ValuConnect',
+  'page.situation.title': 'Sound familiar?',
+  'page.situation.body': 'A small general contractor manages 4 active job sites with paper work orders, handwritten timesheets, and subcontractor invoices stored in a folder in the truck. Billing delays of 2–3 weeks are common because documents get lost between the job site and the office.',
+  'page.ps.label': 'Pain points → ValuConnect solutions',
+  'page.pain.title': '❌ Pain Points',
+  'page.sol.title': '✅ ValuConnect Solutions',
+  'page.results.label': 'Results Achieved',
+  'page.results.title': 'What changes after ValuConnect',
+  'page.cta.title': 'Ready to transform your contracting business?',
+  'page.cta.sub': 'Book your free 30-minute workflow assessment. No tech knowledge required.',
+  'page.cta.btn': 'Book Your Free Call',
+  'page.related.title': 'Related industries',
+  'pain.0': 'Work orders handwritten on site — illegible or lost',
+  'pain.1': 'Timesheets collected via text message photos every Friday',
+  'pain.2': 'Subcontractor invoices missing, duplicated, or disputed',
+  'pain.3': 'Project cost overruns discovered only after the job ends',
+  'sol.0': 'Mobile-friendly digital work orders submitted directly from job site',
+  'sol.1': 'Automated timesheet collection with manager approval workflow',
+  'sol.2': 'Subcontractor invoice portal with status tracking and duplicate detection',
+  'sol.3': 'Real-time project cost dashboard vs. original budget — alerts at 80%',
+  'result.0': 'Billing cycle cut from 3 weeks to 3 days',
+  'result.1': 'Zero missing timesheets',
+  'result.2': 'Subcontractor disputes eliminated',
+  'result.3': 'Budget overruns caught before they happen',
+  'page.quote': 'We used to bill late every single month. Now invoices go out the same day the job is done.',
+  'page.quote.attr': 'Roberto M. — General contractor, Houston',
+});
+Object.assign(translations.es, {
+  'page.hero': '¿Todavía manejando tus sitios de trabajo en papel?',
+  'page.subtitle': 'Ciclo de facturación: de 3 semanas a 3 días &nbsp;·&nbsp; Cero hojas de tiempo faltantes &nbsp;·&nbsp; Disputas de subcontratistas eliminadas &nbsp;·&nbsp; Sobrecostos detectados a tiempo',
+  'page.situation.label': 'La Situación Antes de ValuConnect',
+  'page.situation.title': '¿Te suena familiar?',
+  'page.situation.body': 'Un pequeño contratista general maneja 4 sitios de trabajo activos con órdenes de trabajo en papel, hojas de tiempo escritas a mano y facturas de subcontratistas en una carpeta en el camión. Los retrasos en la facturación de 2 a 3 semanas son comunes porque los documentos se pierden entre el sitio de trabajo y la oficina.',
+  'page.ps.label': 'Problemas → Soluciones ValuConnect',
+  'page.pain.title': '❌ Problemas',
+  'page.sol.title': '✅ Soluciones ValuConnect',
+  'page.results.label': 'Resultados Obtenidos',
+  'page.results.title': 'Qué cambia después de ValuConnect',
+  'page.cta.title': '¿Listo para transformar tu empresa contratista?',
+  'page.cta.sub': 'Agenda tu evaluación gratuita de 30 minutos. No se requieren conocimientos técnicos.',
+  'page.cta.btn': 'Agenda tu Llamada Gratis',
+  'page.related.title': 'Industrias relacionadas',
+  'pain.0': 'Órdenes de trabajo escritas a mano en el sitio — ilegibles o perdidas',
+  'pain.1': 'Hojas de tiempo recolectadas por fotos de mensajes de texto cada viernes',
+  'pain.2': 'Facturas de subcontratistas faltantes, duplicadas o en disputa',
+  'pain.3': 'Sobrecostos de proyectos descubiertos solo después de que el trabajo termina',
+  'sol.0': 'Órdenes de trabajo digitales para móvil enviadas directamente desde el sitio de trabajo',
+  'sol.1': 'Recolección automatizada de hojas de tiempo con flujo de aprobación del gerente',
+  'sol.2': 'Portal de facturas de subcontratistas con seguimiento de estado y detección de duplicados',
+  'sol.3': 'Panel de costos del proyecto en tiempo real vs. presupuesto original — alertas al 80%',
+  'result.0': 'Ciclo de facturación reducido de 3 semanas a 3 días',
+  'result.1': 'Cero hojas de tiempo faltantes',
+  'result.2': 'Disputas de subcontratistas eliminadas',
+  'result.3': 'Sobrecostos detectados antes de que ocurran',
+  'page.quote': 'Solíamos facturar tarde cada mes. Ahora las facturas salen el mismo día que termina el trabajo.',
+  'page.quote.attr': 'Roberto M. — Contratista general, Houston',
+});
   </script>
   <script src="../js/lang.js" defer></script>
 </head>
 <body>
-
-<div class="lang-bar"><div class="container">
-  <button class="lang-btn active" data-l="en">EN</button>
-  <button class="lang-btn" data-l="es">ES</button>
-</div></div>
-
-<nav><div class="container">
-  <a href="../index.html" class="nav-logo">Valu<span>Connect</span></a>
-  <div class="nav-links">
-    <a href="../index.html#industries">Industries</a>
-    <a href="../index.html#services">Services</a>
-    <a href="../index.html#about">About</a>
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <img src="../assets/images/vcs-logo.png" alt="ValuConnect Solutions" class="nav-logo-img">
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#services" data-i18n="nav.services">Services</a></li>
+      <li><a href="../index.html#industries" data-i18n="nav.industries">Industries</a></li>
+      <li><a href="../packages.html" data-i18n="nav.packages">Packages</a></li>
+      <li><a href="../index.html#how-it-works" data-i18n="nav.howItWorks">How It Works</a></li>
+      <li><a href="../index.html#about" data-i18n="nav.about">About</a></li>
+      <li class="lang-li">
+        <button class="lang-btn active" data-l="en">EN</button>
+        <button class="lang-btn" data-l="es">ES</button>
+      </li>
+      <li><a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" class="nav-cta" data-i18n="nav.cta">Book Free Call</a></li>
+    </ul>
   </div>
-  <a href="../index.html#contact" class="nav-cta">Book Free Call</a>
-</div></nav>
-
+</nav>
 <div class="industry-hero"><div class="container">
-  <div class="badge">🏗️ <span data-i18n="page.name">Construction & Contracting</span></div>
+  <div class="badge">🏗️ <span data-i18n="i.construction.name">Construction &amp; Contracting</span></div>
   <h1 data-i18n="page.hero">Still running your job sites on paper?</h1>
-  <p class="subtitle">Billing cycle cut from 3 weeks to 3 days &nbsp;·&nbsp; Zero missing timesheets &nbsp;·&nbsp; Subcontractor disputes eliminated &nbsp;·&nbsp; Budget overruns caught before they happen</p>
+  <p class="subtitle" data-i18n="page.subtitle">Billing cycle cut from 3 weeks to 3 days · Zero missing timesheets · Subcontractor disputes eliminated · Budget overruns caught early</p>
 </div></div>
-
 <section><div class="container">
   <div class="section-header">
     <div class="section-label" data-i18n="page.situation.label">The Situation Before ValuConnect</div>
     <h2 class="section-title" data-i18n="page.situation.title">Sound familiar?</h2>
   </div>
-  <div class="situation"><p data-i18n="page.situation.body">A small general contractor manages 4 active job sites with paper work orders, handwritten timesheets, and subcontractor invoices stored in a folder in the truck. Billing delays of 2–3 weeks are common because documents get lost between the job site and the office.</p></div>
+  <div class="situation"><p data-i18n="page.situation.body">A small general contractor manages 4 active job sites with paper work orders, handwritten timesheets, and subcontractor invoices in a folder in the truck.</p></div>
 </div></section>
-
 <section class="bg-gray"><div class="container">
-  <div class="section-header">
-    <h2 class="section-title" data-i18n="page.ps.label">Pain points → ValuConnect solutions</h2>
-  </div>
+  <div class="section-header"><h2 class="section-title" data-i18n="page.ps.label">Pain points → ValuConnect solutions</h2></div>
   <div class="ps-grid">
     <div class="ps-col pain">
       <h3 data-i18n="page.pain.title">❌ Pain Points</h3>
-      <div class="ps-item"><div class="dot"></div><p data-i18n="pain.0"></p></div><div class="ps-item"><div class="dot"></div><p data-i18n="pain.1"></p></div><div class="ps-item"><div class="dot"></div><p data-i18n="pain.2"></p></div><div class="ps-item"><div class="dot"></div><p data-i18n="pain.3"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="pain.0"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="pain.1"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="pain.2"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="pain.3"></p></div>
     </div>
     <div class="ps-col solutions">
       <h3 data-i18n="page.sol.title">✅ ValuConnect Solutions</h3>
-      <div class="ps-item"><div class="dot"></div><p data-i18n="sol.0"></p></div><div class="ps-item"><div class="dot"></div><p data-i18n="sol.1"></p></div><div class="ps-item"><div class="dot"></div><p data-i18n="sol.2"></p></div><div class="ps-item"><div class="dot"></div><p data-i18n="sol.3"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="sol.0"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="sol.1"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="sol.2"></p></div>
+      <div class="ps-item"><div class="dot"></div><p data-i18n="sol.3"></p></div>
     </div>
   </div>
 </div></section>
-
 <section><div class="container">
   <div class="section-header">
     <div class="section-label" data-i18n="page.results.label">Results Achieved</div>
     <h2 class="section-title" data-i18n="page.results.title">What changes after ValuConnect</h2>
   </div>
-  <div class="results-grid"><div class="result-chip"><div class="metric">✓</div><p data-i18n="result.0"></p></div><div class="result-chip"><div class="metric">✓</div><p data-i18n="result.1"></p></div><div class="result-chip"><div class="metric">✓</div><p data-i18n="result.2"></p></div><div class="result-chip"><div class="metric">✓</div><p data-i18n="result.3"></p></div></div>
+  <div class="results-grid">
+    <div class="result-chip"><div class="metric">✓</div><p data-i18n="result.0"></p></div>
+    <div class="result-chip"><div class="metric">✓</div><p data-i18n="result.1"></p></div>
+    <div class="result-chip"><div class="metric">✓</div><p data-i18n="result.2"></p></div>
+    <div class="result-chip"><div class="metric">✓</div><p data-i18n="result.3"></p></div>
+  </div>
 </div></section>
-
 <section class="bg-gray"><div class="container">
   <div class="quote-block">
-    <blockquote data-i18n="page.quote">"We used to bill late every single month. Now invoices go out the same day the job is done."</blockquote>
+    <blockquote data-i18n="page.quote">We used to bill late every single month. Now invoices go out the same day the job is done.</blockquote>
     <div class="quote-attr" data-i18n="page.quote.attr">Roberto M. — General contractor, Houston</div>
   </div>
 </div></section>
-
 <div class="cta-banner"><div class="container">
-  <h2 data-i18n="page.cta.title">Ready to transform your business?</h2>
+  <h2 data-i18n="page.cta.title">Ready to transform your contracting business?</h2>
   <p data-i18n="page.cta.sub">Book your free 30-minute workflow assessment. No tech knowledge required.</p>
-  <a href="mailto:andres@valuconnect.com" class="btn-navy">Book Your Free Call</a>
+  <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="btn-navy" data-i18n="page.cta.btn">Book Your Free Call</a>
 </div></div>
-
 <section><div class="container">
-  <div class="section-header">
-    <h2 class="section-title" data-i18n="page.related.title">Related industries</h2>
+  <div class="section-header"><h2 class="section-title" data-i18n="page.related.title">Related industries</h2></div>
+  <div class="related-grid">
+    <a href="logistics.html" class="industry-card"><div class="industry-icon">🚚</div><h3 data-i18n="i.logistics.name">Logistics</h3><p data-i18n="i.logistics.desc"></p><span class="arrow">→</span></a>
+    <a href="real-estate.html" class="industry-card"><div class="industry-icon">🏠</div><h3 data-i18n="i.real-estate.name">Real Estate</h3><p data-i18n="i.real-estate.desc"></p><span class="arrow">→</span></a>
+    <a href="professional-services.html" class="industry-card"><div class="industry-icon">💼</div><h3 data-i18n="i.professional-services.name">Professional Services</h3><p data-i18n="i.professional-services.desc"></p><span class="arrow">→</span></a>
   </div>
-  <div class="related-grid"><a href="real-estate.html" class="industry-card"><div class="industry-icon">🏠</div><h3 data-i18n="i.real-estate.name">Real Estate & Property Management</h3><p data-i18n="i.real-estate.desc"></p><span class="arrow">→</span></a><a href="professional-services.html" class="industry-card"><div class="industry-icon">💼</div><h3 data-i18n="i.professional-services.name">Professional Services</h3><p data-i18n="i.professional-services.desc"></p><span class="arrow">→</span></a><a href="logistics.html" class="industry-card"><div class="industry-icon">🚚</div><h3 data-i18n="i.logistics.name">Logistics & Delivery</h3><p data-i18n="i.logistics.desc"></p><span class="arrow">→</span></a></div>
 </div></section>
-
-<footer><div class="container">
-  <p>© 2026 <strong>ValuConnect Solutions</strong> · Andres Ramirez · <span data-i18n="footer.tagline">Bilingual small business operations partner</span></p>
-</div></footer>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="nav-logo-text" style="font-size:1.35rem;">Valu<span>Connect</span> Solutions</span>
+        <p data-i18n="foot.brand">Helping small businesses work smarter, not harder — with digital systems that grow with them.</p>
+        <p style="margin-top:6px;font-style:italic;font-size:.8rem;color:rgba(255,255,255,.35);">Trabajemos con inteligencia, no con esfuerzo.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="foot.svcTitle">Services</h4>
+        <ul>
+          <li><a href="../index.html#services" data-i18n="foot.s1">Paper-to-Digital</a></li>
+          <li><a href="../index.html#services" data-i18n="foot.s2">Document Filing</a></li>
+          <li><a href="../index.html#services" data-i18n="foot.s3">Workflow Automation</a></li>
+          <li><a href="../index.html#services" data-i18n="foot.s4">Project Tracking</a></li>
+          <li><a href="../index.html#services" data-i18n="foot.s5">AI Communication</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="foot.indTitle">Industries</h4>
+        <ul>
+          <li><a href="restaurants.html" data-i18n="foot.i1">Restaurants</a></li>
+          <li><a href="retail.html" data-i18n="foot.i2">Retail &amp; Boutiques</a></li>
+          <li><a href="construction.html" data-i18n="foot.i3">Construction</a></li>
+          <li><a href="health-wellness.html" data-i18n="foot.i4">Health &amp; Wellness</a></li>
+          <li><a href="real-estate.html" data-i18n="foot.i5">Real Estate</a></li>
+          <li><a href="professional-services.html" data-i18n="foot.i6">Professional Services</a></li>
+          <li><a href="salons-beauty.html" data-i18n="foot.i7">Salons &amp; Beauty</a></li>
+          <li><a href="logistics.html" data-i18n="foot.i8">Logistics</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="foot.conTitle">Connect</h4>
+        <ul>
+          <li><a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" data-i18n="foot.c1">Book Free Call</a></li>
+          <li><a href="mailto:info@vcsolutions.us">info@vcsolutions.us</a></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+          <li><a href="#">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <p data-i18n="foot.copy">© 2026 ValuConnect Solutions. All rights reserved. Founder: Andres Ramirez.</p>
+      <div class="footer-bottom-links">
+        <a href="#" data-i18n="foot.privacy">Privacy Policy</a>
+        <a href="#" data-i18n="foot.terms">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
