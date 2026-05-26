@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vcsolutions.com/sitemap.xml
+Sitemap: https://vcsolutions.us/sitemap.xml
