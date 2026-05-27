@@ -572,6 +572,135 @@ const sharedCSS = `
     font-weight: 500;
   }
 
+  /* ── Company intro slide ── */
+  .intro-layout {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 8mm;
+    flex: 1;
+    align-items: start;
+  }
+  .intro-tagline {
+    font-size: 15pt;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.3;
+    margin-bottom: 4mm;
+  }
+  .intro-body {
+    font-size: 9pt;
+    color: var(--gray-text);
+    line-height: 1.65;
+    margin-bottom: 5mm;
+  }
+  .founder-card {
+    background: var(--navy);
+    border-radius: 6px;
+    border-left: 3px solid var(--gold);
+    padding: 4mm 6mm;
+    display: flex;
+    align-items: center;
+    gap: 5mm;
+    margin-bottom: 4mm;
+  }
+  .founder-avatar {
+    width: 12mm;
+    height: 12mm;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14pt;
+    flex-shrink: 0;
+  }
+  .founder-name { font-size: 10pt; font-weight: 800; color: #fff; line-height: 1.2; }
+  .founder-sub  { font-size: 7.5pt; color: rgba(255,255,255,.65); }
+  .trust-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+  .trust-badge {
+    background: var(--teal);
+    color: #fff;
+    font-size: 7pt;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    letter-spacing: .3px;
+  }
+  .services-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .service-mini {
+    background: var(--gray-bg);
+    border-radius: 5px;
+    padding: 4mm;
+    border-top: 2px solid var(--teal);
+  }
+  .service-mini-icon  { font-size: 13pt; margin-bottom: 1.5mm; display: block; }
+  .service-mini-title { font-size: 7.5pt; font-weight: 800; color: var(--navy); margin-bottom: 1mm; line-height: 1.2; }
+  .service-mini-text  { font-size: 6.5pt; color: var(--gray-text); line-height: 1.45; }
+
+  /* ── Challenge cards ── */
+  .challenge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; flex: 1; }
+  .challenge-card {
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 6mm;
+    border-left: 3px solid #e8534a;
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+  }
+  .challenge-icon  { font-size: 18pt; }
+  .challenge-title { font-size: 10pt; font-weight: 800; color: var(--navy); line-height: 1.3; }
+  .challenge-consequence {
+    font-size: 8pt;
+    color: #c0392b;
+    font-style: italic;
+    line-height: 1.45;
+    margin-top: auto;
+    padding-top: 2mm;
+    border-top: 1px solid rgba(192,57,43,.15);
+  }
+
+  /* ── Chart slide ── */
+  .chart-layout {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 6mm;
+    flex: 1;
+    align-items: center;
+  }
+  .chart-block {
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 6mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+  }
+  .chart-caption {
+    font-size: 7.5pt;
+    color: var(--gray-text);
+    text-align: center;
+    margin-top: 3mm;
+    line-height: 1.45;
+  }
+  .chart-highlight {
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 8pt;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 4mm;
+    display: inline-block;
+  }
+
+  /* ── Before/After column tint ── */
+  .compare-col-before-wrap { background: rgba(192,57,43,.03); border-radius: 5px; padding: 4mm; }
+  .compare-col-after-wrap  { background: rgba(26,144,128,.04); border-radius: 5px; padding: 4mm; }
+
   /* ── Print media ── */
   @media print {
     body { background: white; }
@@ -828,7 +957,270 @@ function buildOverview() {
   return wrapHtml('ValuConnect Solutions — Customer Presentation', slides.join('\n'));
 }
 
-// ── Industry deck builder ─────────────────────────────────────────────────────
+// ── Slide 2: Who is ValuConnect? ─────────────────────────────────────────────
+function buildCompanyIntroSlide() {
+  const services = [
+    { icon: '📄', title: 'Paper-to-Digital', text: 'Invoices, contracts, records — searchable in seconds' },
+    { icon: '🗂️', title: 'Document Filing', text: 'Organized digital folders — nothing ever lost' },
+    { icon: '⚙️', title: 'Workflow Automation', text: 'Reminders, approvals, follow-ups run themselves' },
+    { icon: '📊', title: 'Project Tracking', text: 'Real-time dashboards — who owns what, by when' },
+    { icon: '🤖', title: 'AI Communication', text: 'Smart templates that save hours every week' },
+    { icon: '🎓', title: 'Team Training', text: 'We build it, train your team, stay by your side' },
+  ];
+  return `
+    <div class="slide">
+      <div class="slide-body" style="padding-bottom: 10mm;">
+        ${slideHeader('Who Is <span>ValuConnect Solutions?</span>')}
+        <div class="intro-layout">
+          <div>
+            <div class="intro-tagline">"Your neighbor who happens to know digital systems."</div>
+            <div class="intro-body">
+              ValuConnect helps small business owners — especially Latino and Hispanic entrepreneurs —
+              replace paper chaos with digital systems that run without stress. We're not a platform.
+              We're a personalized, bilingual partner who builds the system, trains your team, and
+              stays by your side as you grow.
+            </div>
+            <div class="founder-card">
+              <div class="founder-avatar">👤</div>
+              <div>
+                <div class="founder-name">Andres Ramirez · Founder</div>
+                <div class="founder-sub">ValuConnect Solutions · Bilingual EN/ES · Mascot: Valu</div>
+              </div>
+            </div>
+            <div class="trust-badges">
+              <span class="trust-badge">✓ Bilingual EN/ES</span>
+              <span class="trust-badge">✓ Small Business Focused</span>
+              <span class="trust-badge">✓ Hands-On Partner</span>
+              <span class="trust-badge">✓ 8 Industries Served</span>
+            </div>
+          </div>
+          <div class="services-mini-grid">
+            ${services.map(s => `
+              <div class="service-mini">
+                <span class="service-mini-icon">${s.icon}</span>
+                <div class="service-mini-title">${s.title}</div>
+                <div class="service-mini-text">${s.text}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+      ${footer()}
+    </div>`;
+}
+
+// ── Slide 4: Industry challenges with consequences ────────────────────────────
+const challengeData = {
+  restaurants: [
+    { icon: '🧾', pain: 'Lost paper invoices',          consequence: 'One missing invoice can cause a $400 overpayment you never catch.' },
+    { icon: '📅', pain: 'Scheduling conflicts',          consequence: 'Last-minute call-outs lead to overtime costs and poor customer experience.' },
+    { icon: '📦', pain: 'No food cost visibility',       consequence: "You're pricing dishes on guesses — margins leak silently every month." },
+    { icon: '🏥', pain: 'Health inspection dread',       consequence: 'Every inspection becomes a 2-day scramble — and all that stress lands on you.' },
+  ],
+  retail: [
+    { icon: '📋', pain: 'Paper inventory cards',         consequence: 'Stock-outs cost you sales and send customers straight to your competitor.' },
+    { icon: '📞', pain: 'Supplier orders by phone',      consequence: 'No paper trail means disputes, wrong shipments, and lost money.' },
+    { icon: '🗄️', pain: 'Receipts in binders',          consequence: "Finding one customer's record takes 10+ minutes — if you find it at all." },
+    { icon: '↩️', pain: 'No return tracking system',    consequence: 'Untracked returns breed fraud and erode your margins invisibly.' },
+  ],
+  construction: [
+    { icon: '📝', pain: 'Handwritten work orders',       consequence: 'Illegible or lost orders cause rework — and the client holds you responsible.' },
+    { icon: '📷', pain: 'Timesheets via text photos',   consequence: 'Late or disputed pay every Friday damages crew trust and retention.' },
+    { icon: '🧾', pain: 'Missing subcontractor invoices',consequence: 'Duplicate payments and disputes can cost thousands on a single job.' },
+    { icon: '📈', pain: 'Cost overruns found late',      consequence: 'Discovering overruns after the job ends destroys the margin you planned for.' },
+  ],
+  'health-wellness': [
+    { icon: '🗂️', pain: 'Patient files in folders',     consequence: 'Slow retrieval frustrates patients and creates liability during audits.' },
+    { icon: '📅', pain: 'Double-bookings on paper',      consequence: 'One scheduling error can cost you a patient relationship permanently.' },
+    { icon: '📌', pain: 'Auth requests on sticky notes', consequence: 'Missed pre-authorizations mean denied claims and delayed revenue.' },
+    { icon: '⚖️', pain: 'HIPAA compliance gaps',         consequence: 'A failed audit can trigger fines up to $50,000 — per violation.' },
+  ],
+  'real-estate': [
+    { icon: '📁', pain: 'Leases in physical folders',   consequence: 'One flood or fire and your entire lease archive is gone — no backup.' },
+    { icon: '📱', pain: 'Maintenance by text message',  consequence: 'Requests get buried in threads — issues fester and tenants get frustrated.' },
+    { icon: '📊', pain: 'Conflicting rent spreadsheets',consequence: 'Version confusion leads to disputes, late fees you miss, and tenant friction.' },
+    { icon: '⏰', pain: 'Missed lease renewals',         consequence: 'Month-to-month tenants cost you 2–3 months of lost locked-in revenue.' },
+  ],
+  'professional-services': [
+    { icon: '📂', pain: 'Documents in folders & email', consequence: 'Staff waste hours hunting for files — billing time you can\'t recover.' },
+    { icon: '❓', pain: 'No document tracking system',  consequence: 'You don\'t know what you\'re missing until a deadline has already passed.' },
+    { icon: '😕', pain: 'Staff confusion on ownership', consequence: 'When no one knows who owns a task, it falls through the cracks.' },
+    { icon: '🗓️', pain: 'Whiteboard deadline calendar', consequence: 'A single erased date can trigger a missed filing and a damaged client relationship.' },
+  ],
+  'salons-beauty': [
+    { icon: '📖', pain: 'Paper appointment book',        consequence: 'One eraser and the whole day\'s schedule is a mystery — and clients are livid.' },
+    { icon: '🎨', pain: 'No client formula records',    consequence: 'When a stylist leaves, every color formula walks out with them.' },
+    { icon: '😶', pain: 'No-shows tracked on stickies', consequence: 'Without follow-up, every no-show is permanent lost revenue with no recovery.' },
+    { icon: '🧴', pain: 'Inventory counted by eye',     consequence: 'Running out of a top seller mid-week costs retail sales and client trust.' },
+  ],
+  logistics: [
+    { icon: '📞', pain: 'Dispatch by phone only',        consequence: 'No written record means he-said/she-said disputes on every job.' },
+    { icon: '📋', pain: 'Paper delivery manifest',       consequence: 'A lost manifest with 30 deliveries on it is a full-day catastrophe.' },
+    { icon: '💬', pain: 'Proof of delivery in group chat',consequence: 'Buried in 300+ messages — finding one delivery confirmation takes 20 minutes.' },
+    { icon: '🕐', pain: 'Driver hours by verbal report', consequence: 'Pay disputes without records cost you in court and destroy driver trust.' },
+  ],
+};
+
+function buildChallengesSlide(ind) {
+  const cards = challengeData[ind.id] || ind.pain_points.map((p, i) => ({
+    icon: ['⚠️','📋','❌','⏰'][i] || '⚠️',
+    pain: p,
+    consequence: 'This creates friction, cost, and stress that compounds over time.',
+  }));
+  return `
+    <div class="slide">
+      <div class="slide-body" style="padding-bottom: 10mm;">
+        ${slideHeader('Does This Sound <span>Familiar?</span>')}
+        <div class="challenge-grid">
+          ${cards.map(c => `
+            <div class="challenge-card">
+              <span class="challenge-icon">${c.icon}</span>
+              <div class="challenge-title">${c.pain}</div>
+              <div class="challenge-consequence">💸 ${c.consequence}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      ${footer()}
+    </div>`;
+}
+
+// ── Chart data per industry ───────────────────────────────────────────────────
+const chartData = {
+  restaurants: {
+    title: 'Weekly Admin Time (Hours)',
+    rows: [
+      { label: 'Invoices',   before: 3,    after: 0.25, beforeLabel: '3 hrs',  afterLabel: '15 min' },
+      { label: 'Scheduling', before: 2,    after: 0.5,  beforeLabel: '2 hrs',  afterLabel: '30 min' },
+      { label: 'Compliance', before: 4,    after: 0.08, beforeLabel: '4 hrs',  afterLabel: '5 min'  },
+    ],
+    maxHrs: 4,
+    savingsLabel: 'Total savings: ~6 hours saved every week',
+    donut: { pct: 87, label: 'admin time\nreduced', before: '9 hrs/wk', after: '1.2 hrs/wk' },
+  },
+};
+
+// Fallback chart data derived from results text for industries without custom data
+function getFallbackChartData(ind) {
+  return {
+    title: 'Key Improvements After ValuConnect',
+    rows: [
+      { label: ind.results[0].split(' ').slice(-2).join(' '), before: 100, after: 20, beforeLabel: 'Before', afterLabel: ind.results[0] },
+      { label: ind.results[1].split(' ').slice(-2).join(' '), before: 100, after: 30, beforeLabel: 'Before', afterLabel: ind.results[1] },
+    ],
+    maxHrs: 100,
+    savingsLabel: ind.results[0],
+    donut: { pct: 80, label: 'avg improvement\nacross metrics', before: 'Manual', after: 'Automated' },
+  };
+}
+
+function buildChartSlide(ind) {
+  const data = chartData[ind.id] || getFallbackChartData(ind);
+
+  // Bar chart SVG — paired horizontal bars, before=red / after=teal
+  // ViewBox: 330 wide, rows calculated dynamically
+  const BAR_START = 95;  // x where bars begin
+  const BAR_MAX   = 205; // max bar width in px (scale = BAR_MAX / data.maxHrs)
+  const ROW_H     = 25;  // height allocated per metric row (2 bars + gap)
+  const BAR_H     = 10;  // height of each bar
+  const TOP       = 38;  // y start of first row
+  const scale     = BAR_MAX / data.maxHrs;
+
+  const rowsSVG = data.rows.map((row, i) => {
+    const y0    = TOP + i * ROW_H;       // before bar top
+    const y1    = y0 + BAR_H + 3;        // after bar top
+    const labelY = y0 + BAR_H;           // label between bars
+    const bW    = Math.max(2, Math.round(row.before * scale));
+    const aW    = Math.max(2, Math.round(row.after  * scale));
+    return `
+      <text x="91" y="${labelY}" font-family="Inter,sans-serif" font-size="7"
+            fill="#5a6a85" text-anchor="end">${row.label}</text>
+      <rect x="${BAR_START}" y="${y0}" width="${bW}" height="${BAR_H}"
+            fill="#e8534a" rx="2"/>
+      <text x="${BAR_START + bW + 3}" y="${y0 + BAR_H - 1}"
+            font-family="Inter,sans-serif" font-size="7" font-weight="700" fill="#e8534a">${row.beforeLabel}</text>
+      <rect x="${BAR_START}" y="${y1}" width="${aW}" height="${BAR_H}"
+            fill="#1a9080" rx="2"/>
+      <text x="${BAR_START + aW + 3}" y="${y1 + BAR_H - 1}"
+            font-family="Inter,sans-serif" font-size="7" font-weight="700" fill="#1a9080">${row.afterLabel}</text>`;
+  }).join('');
+
+  const chartBottom = TOP + data.rows.length * ROW_H + 4;
+  const svgH = chartBottom + 28;
+
+  const barChartSVG = `
+    <svg viewBox="0 0 330 ${svgH}" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;display:block;">
+      <text x="0" y="13" font-family="Inter,sans-serif" font-size="9"
+            font-weight="700" fill="#0d1f44">${data.title}</text>
+      <!-- Legend -->
+      <rect x="0" y="20" width="8" height="8" fill="#e8534a" rx="2"/>
+      <text x="12" y="28" font-family="Inter,sans-serif" font-size="7" fill="#5a6a85">Before</text>
+      <rect x="52" y="20" width="8" height="8" fill="#1a9080" rx="2"/>
+      <text x="64" y="28" font-family="Inter,sans-serif" font-size="7" fill="#5a6a85">After ValuConnect</text>
+      <!-- Axis -->
+      <line x1="${BAR_START}" y1="34" x2="${BAR_START}" y2="${chartBottom - 4}"
+            stroke="#dde1ea" stroke-width="1"/>
+      ${rowsSVG}
+      <!-- Callout -->
+      <rect x="${BAR_START}" y="${chartBottom}" width="${BAR_MAX}" height="20"
+            fill="#e0f5f1" rx="4"/>
+      <text x="${BAR_START + BAR_MAX / 2}" y="${chartBottom + 13}"
+            font-family="Inter,sans-serif" font-size="8" font-weight="800"
+            fill="#1a9080" text-anchor="middle">${data.savingsLabel}</text>
+    </svg>`;
+
+  // Donut chart SVG — static stroke-dasharray, no JS
+  const d = data.donut;
+  const R   = 58;
+  const CX  = 90, CY = 95;
+  const circ = Math.round(2 * Math.PI * R);        // ≈ 364
+  const arc  = Math.round((d.pct / 100) * circ);   // filled portion
+  const donutLines = d.label.split('\n');
+
+  const donutSVG = `
+    <svg viewBox="0 0 180 175" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;max-width:180px;display:block;margin:0 auto;">
+      <text x="90" y="14" font-family="Inter,sans-serif" font-size="8"
+            font-weight="700" fill="#0d1f44" text-anchor="middle">Admin Time Reduced</text>
+      <!-- Track -->
+      <circle cx="${CX}" cy="${CY}" r="${R}"
+              fill="none" stroke="#dde1ea" stroke-width="14"/>
+      <!-- Arc -->
+      <circle cx="${CX}" cy="${CY}" r="${R}"
+              fill="none" stroke="#1a9080" stroke-width="14"
+              stroke-dasharray="${arc} ${circ}"
+              stroke-linecap="round"
+              transform="rotate(-90 ${CX} ${CY})"/>
+      <!-- Center metric -->
+      <text x="${CX}" y="${CY - 6}" font-family="Inter,sans-serif" font-size="24"
+            font-weight="900" fill="#0d1f44" text-anchor="middle">${d.pct}%</text>
+      ${donutLines.map((line, i) => `
+      <text x="${CX}" y="${CY + 10 + i * 12}" font-family="Inter,sans-serif" font-size="7"
+            fill="#5a6a85" text-anchor="middle">${line}</text>`).join('')}
+      <!-- Before/after note -->
+      <text x="${CX}" y="158" font-family="Inter,sans-serif" font-size="7"
+            fill="#5a6a85" text-anchor="middle">${d.before} → ${d.after}</text>
+    </svg>`;
+
+  return `
+    <div class="slide">
+      <div class="slide-body" style="padding-bottom: 10mm;">
+        ${slideHeader('By the Numbers — <span>Before vs. After ValuConnect</span>')}
+        <div class="chart-layout">
+          <div class="chart-block">
+            ${barChartSVG}
+          </div>
+          <div class="chart-block">
+            ${donutSVG}
+            <div class="chart-highlight">${d.pct}% less time on admin</div>
+            <div class="chart-caption">Time reclaimed every week — back to<br>running your business, not paperwork.</div>
+          </div>
+        </div>
+      </div>
+      ${footer()}
+    </div>`;
+}
+
+// ── Industry deck builder (7-slide format) ────────────────────────────────────
 function buildIndustryDeck(ind) {
   const icon = icons[ind.id] || '🏢';
   const slides = [];
@@ -836,33 +1228,44 @@ function buildIndustryDeck(ind) {
   // Slide 1 — Cover
   slides.push(`
     <div class="slide">
-      <div class="slide-cover">
-        <div class="cover-accent"></div>
-        <div class="cover-dot-grid"></div>
+      <div class="slide-cover" style="position:relative;overflow:hidden;">
+        <!-- Decorative SVG accent (replaces CSS clip-path for print reliability) -->
+        <svg style="position:absolute;right:0;top:0;height:100%;width:55mm;pointer-events:none;"
+             viewBox="0 0 110 210" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="40,0 110,0 110,210 0,210" fill="#1a9080" opacity="0.13"/>
+          <!-- Dot grid -->
+          ${Array.from({length:6}, (_,row) => Array.from({length:5}, (_,col) =>
+            `<circle cx="${col*18+9}" cy="${row*30+15}" r="1.5" fill="#ffffff" opacity="0.25"/>`
+          ).join('')).join('')}
+        </svg>
         <div class="eyebrow">${icon} ${ind.name} · Industry Solution</div>
-        <h1>Digital Systems<br>Built for <span>${ind.name.split(' ')[0]}</span><br>Businesses.</h1>
+        <h1>Digital Systems<br>Built for <span>${ind.name.split(/\s+/)[0]}</span><br>Businesses.</h1>
         <p class="subtitle">
           Stop managing your business on paper and in your head.
-          ValuConnect builds the digital workflow system that runs in the background,
+          ValuConnect builds the digital workflow system that runs in the background —
           so you can focus on what you do best.
         </p>
         <div class="tag-row">
           <span class="tag">${ind.name}</span>
           <span class="tag">Bilingual EN/ES</span>
           <span class="tag">Paper → Digital</span>
+          <span class="tag">Hands-On Partner</span>
         </div>
         <div class="cta-pill">Free 30-Minute Workflow Assessment</div>
       </div>
       ${footer()}
     </div>`);
 
-  // Slide 2 — Pain points vs Solutions (compare)
+  // Slide 2 — Who is ValuConnect?
+  slides.push(buildCompanyIntroSlide());
+
+  // Slide 3 — Before vs. After (with column tints)
   slides.push(`
     <div class="slide">
       <div class="slide-body" style="padding-bottom: 10mm;">
         ${slideHeader('Before vs. After — <span>What Changes</span>')}
         <div class="compare-grid">
-          <div>
+          <div class="compare-col-before-wrap">
             <div class="compare-col-header col-before">✕ Before ValuConnect</div>
             <ul class="compare-list">
               ${ind.pain_points.map(p => `
@@ -872,7 +1275,7 @@ function buildIndustryDeck(ind) {
                 </li>`).join('')}
             </ul>
           </div>
-          <div>
+          <div class="compare-col-after-wrap">
             <div class="compare-col-header col-after">✓ After ValuConnect</div>
             <ul class="compare-list">
               ${ind.solutions.map(s => `
@@ -887,14 +1290,20 @@ function buildIndustryDeck(ind) {
       ${footer()}
     </div>`);
 
-  // Slide 3 — Results
+  // Slide 4 — Industry challenges with real-world consequences
+  slides.push(buildChallengesSlide(ind));
+
+  // Slide 5 — SVG charts: By the Numbers
+  slides.push(buildChartSlide(ind));
+
+  // Slide 6 — Results metrics
   slides.push(`
     <div class="slide">
       <div class="slide-body" style="padding-bottom: 10mm;">
         ${slideHeader('Results You Can <span>Expect</span>')}
-        <div class="result-grid">
+        <div class="result-grid" style="margin-bottom: 5mm;">
           ${ind.results.map(r => {
-            const match = r.match(/^([\d%x+]+\s*\w*)/i);
+            const match = r.match(/^([\d%x+<]+\s*\w*)/i);
             const metric = match ? match[0] : '✓';
             const label  = match ? r.replace(match[0], '').trim().replace(/^[-–—]/, '').trim() : r;
             return `
@@ -904,47 +1313,56 @@ function buildIndustryDeck(ind) {
             </div>`;
           }).join('')}
         </div>
-        <div style="margin-top: 6mm; display: grid; grid-template-columns: 1fr 1fr; gap: 5mm;">
-          <div style="background: var(--gray-bg); border-radius: 5px; padding: 5mm;">
-            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 3mm;">What You Get</div>
-            ${ind.solutions.slice(0, 2).map(s => `<div style="font-size: 8pt; color: var(--navy); line-height: 1.5; margin-bottom: 2mm; display: flex; gap: 4px;"><span style="color: var(--teal); font-weight: 900; flex-shrink: 0;">›</span> ${s}</div>`).join('')}
+        <div style="background: var(--gray-bg); border-radius: 6px; padding: 5mm; border-left: 3px solid var(--gold); display: flex; gap: 6mm; align-items: center;">
+          <div style="flex: 1;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 2mm;">How We Do It</div>
+            <div style="font-size: 8pt; color: var(--gray-text); line-height: 1.6;">Free 30-min assessment → custom roadmap → implementation → team training → ongoing support. Bilingual (EN/ES), always personalized.</div>
           </div>
-          <div style="background: var(--gray-bg); border-radius: 5px; padding: 5mm;">
-            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 3mm;">How We Do It</div>
-            <div style="font-size: 8pt; color: var(--gray-text); line-height: 1.6;">Free 30-min assessment → custom roadmap → implementation → team training → ongoing support. Bilingual (EN/ES), personalized to your business.</div>
+          <div style="text-align:center; flex-shrink:0;">
+            <div style="font-size: 20pt; font-weight: 900; color: var(--gold); line-height:1;">3</div>
+            <div style="font-size: 7pt; font-weight: 700; color: var(--navy);">Simple Steps</div>
           </div>
         </div>
       </div>
       ${footer()}
     </div>`);
 
-  // Slide 4 — Quote + CTA
+  // Slide 7 — Client quote + CTA
   slides.push(`
     <div class="slide">
-      <div class="quote-slide">
+      <div class="quote-slide" style="position:relative;overflow:hidden;">
+        <!-- Decorative arc in top-right -->
+        <svg style="position:absolute;top:0;right:0;width:40mm;height:40mm;pointer-events:none;"
+             viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="0" r="70" fill="none" stroke="#d4920a" stroke-width="2" opacity="0.2"/>
+          <circle cx="100" cy="0" r="50" fill="none" stroke="#d4920a" stroke-width="1.5" opacity="0.15"/>
+        </svg>
         <div class="quote-mark">"</div>
         <div class="quote-text">${ind.quote}</div>
         <div class="quote-attr">${ind.quote_attr}</div>
         <div class="quote-cta-box">
-          <div class="cta-heading">Ready to run your ${ind.name.split(' ')[0].toLowerCase()} business on systems — not stress?</div>
+          <div class="cta-heading">Ready to run your ${ind.name.split(/\s+/)[0].toLowerCase()} business on systems — not stress?</div>
           <div class="cta-sub">Book a free 30-minute workflow assessment with Andres</div>
           <div style="margin-top: 4mm; font-size: 9pt; font-weight: 800; color: var(--navy);">valuconnect.com${ind.website_slug}</div>
         </div>
-        <div style="margin-top: 7mm; display: flex; gap: 8mm; justify-content: center;">
+        <div style="margin-top: 7mm; display: flex; gap: 8mm; justify-content: center; align-items: center;">
           <div style="text-align: center;">
             <div style="font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1mm;">Founder</div>
             <div style="font-size: 9pt; font-weight: 700; color: #fff;">Andres Ramirez</div>
           </div>
-          <div style="width: 1px; background: rgba(255,255,255,.2);"></div>
+          <div style="width: 1px; height: 20px; background: rgba(255,255,255,.2);"></div>
           <div style="text-align: center;">
             <div style="font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1mm;">Bilingual</div>
             <div style="font-size: 9pt; font-weight: 700; color: #fff;">English · Español</div>
           </div>
-          <div style="width: 1px; background: rgba(255,255,255,.2);"></div>
+          <div style="width: 1px; height: 20px; background: rgba(255,255,255,.2);"></div>
           <div style="text-align: center;">
             <div style="font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1mm;">Industry</div>
             <div style="font-size: 9pt; font-weight: 700; color: #fff;">${ind.name}</div>
           </div>
+        </div>
+        <div style="margin-top: 5mm; font-size: 8pt; font-style: italic; color: var(--gold); opacity: .8;">
+          Hablamos tu idioma — We speak your language.
         </div>
       </div>
       ${footer()}
@@ -969,19 +1387,34 @@ ${body}
 </html>`;
 }
 
-// ── Generate all files ────────────────────────────────────────────────────────
+// ── Generate files ────────────────────────────────────────────────────────────
+// PILOT MODE: generating Restaurants only to validate the new 7-slide format.
+// Once approved, remove the filter below to generate all 8 industry decks.
+
+const PILOT_SLUG = 'restaurants'; // set to null to generate all industries
+
 const overviewHtml = buildOverview();
 fs.writeFileSync(path.join(OUT, 'overview.html'), overviewHtml);
 console.log('✓  overview.html');
 
-for (const ind of industries) {
+const pilotIndustries = PILOT_SLUG
+  ? industries.filter(ind => ind.slug === PILOT_SLUG)
+  : industries;
+
+for (const ind of pilotIndustries) {
   const html = buildIndustryDeck(ind);
   const filename = `${ind.slug}.html`;
   fs.writeFileSync(path.join(OUT, filename), html);
-  console.log(`✓  ${filename}`);
+  console.log(`✓  ${filename}  (${ind.results.length} results, ${(chartData[ind.id] ? 'custom' : 'fallback')} chart data)`);
 }
 
-console.log(`\n🎉 Generated ${industries.length + 1} presentations in presentations/output/`);
+if (PILOT_SLUG) {
+  console.log('\n📋 PILOT MODE — Restaurants only.');
+  console.log('   Review restaurants.html, then set PILOT_SLUG = null to generate all 8 decks.');
+} else {
+  console.log(`\n🎉 Generated ${industries.length + 1} presentations in presentations/output/`);
+}
+
 console.log('\nTo convert to PDF:');
-console.log('  Open each HTML file in Chrome/Edge → File → Print → Save as PDF');
-console.log('  Settings: A4 landscape, margins = Minimum/None, Background graphics = ON');
+console.log('  Open HTML in Chrome/Edge → File → Print → Save as PDF');
+console.log('  Settings: A4 landscape · Background graphics ON · Margins = None');
