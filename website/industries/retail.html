@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Inventario registrado en tarjetas de papel — sin visibilidad en tiempo real",
+    'pain.1': "Pedidos a proveedores por teléfono sin registro escrito",
+    'pain.2': "Recibos de clientes guardados en carpetas por mes",
+    'pain.3': "Sin sistema para rastrear devoluciones o cambios",
+    'sol.0': "Inventario digital con alertas de stock bajo enviadas automáticamente",
+    'sol.1': "Correos de pedidos a proveedores automatizados con rastro de confirmación digital",
+    'sol.2': "Archivo de transacciones de clientes — cualquier recibo encontrado en menos de 10 segundos",
+    'sol.3': "Flujo de trabajo de seguimiento de devoluciones y cambios con pasos de aprobación"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

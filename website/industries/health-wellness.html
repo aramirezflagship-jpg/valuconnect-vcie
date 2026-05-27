@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Expedientes de pacientes dispersos en carpetas físicas — la búsqueda tarda minutos",
+    'pain.1': "Reservas dobles por un calendario de papel compartido",
+    'pain.2': "Solicitudes de preautorización rastreadas con notas adhesivas — retrasos y omisiones",
+    'pain.3': "Cumplimiento HIPAA difícil de demostrar durante auditorías",
+    'sol.0': "Sistema digital seguro de expedientes de pacientes — cualquier archivo en menos de 5 segundos",
+    'sol.1': "Agenda en línea con sincronización de disponibilidad en tiempo real para todo el personal",
+    'sol.2': "Panel automatizado de seguimiento de preautorizaciones con alertas de estado y fecha límite",
+    'sol.3': "Carpeta de documentos de cumplimiento HIPAA lista para auditoría con registros de acceso"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

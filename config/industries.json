@@ -12,11 +12,23 @@
         "No visibility on food costs or waste trends",
         "Health inspection records disorganized — inspection week is dreaded"
       ],
+      "pain_points_es": [
+        "Facturas de proveedores perdidas o mal archivadas cada semana",
+        "Conflictos de horarios por listas de personal escritas a mano",
+        "Sin visibilidad de costos de alimentos ni tendencias de desperdicio",
+        "Registros de inspección de salud desorganizados — la semana de inspección es temida"
+      ],
       "solutions": [
         "Digital filing system for all supplier invoices — searchable in seconds",
         "Automated weekly schedule templates with conflict alerts",
         "Digital inventory tracking with cost-per-dish visibility",
         "Compliance document folder with expiry reminders — always inspection-ready"
+      ],
+      "solutions_es": [
+        "Sistema de archivo digital para todas las facturas de proveedores — buscable en segundos",
+        "Plantillas de horario semanal automatizadas con alertas de conflictos",
+        "Seguimiento de inventario digital con visibilidad del costo por plato",
+        "Carpeta de documentos de cumplimiento con recordatorios de vencimiento — siempre lista para inspección"
       ],
       "results": [
         "6 hours saved per week",
@@ -42,11 +54,23 @@
         "Customer receipts stored in binders by month",
         "No system for tracking returns or exchanges"
       ],
+      "pain_points_es": [
+        "Inventario registrado en tarjetas de papel — sin visibilidad en tiempo real",
+        "Pedidos a proveedores por teléfono sin registro escrito",
+        "Recibos de clientes guardados en carpetas por mes",
+        "Sin sistema para rastrear devoluciones o cambios"
+      ],
       "solutions": [
         "Digital inventory with low-stock alerts sent automatically",
         "Automated supplier order emails with digital confirmation trail",
         "Customer transaction archive — any receipt found in under 10 seconds",
         "Return and exchange tracking workflow with approval steps"
+      ],
+      "solutions_es": [
+        "Inventario digital con alertas de stock bajo enviadas automáticamente",
+        "Correos de pedidos a proveedores automatizados con rastro de confirmación digital",
+        "Archivo de transacciones de clientes — cualquier recibo encontrado en menos de 10 segundos",
+        "Flujo de trabajo de seguimiento de devoluciones y cambios con pasos de aprobación"
       ],
       "results": [
         "Stock-outs reduced by 80%",
@@ -72,11 +96,23 @@
         "Subcontractor invoices missing, duplicated, or disputed",
         "Project cost overruns discovered only after the job ends"
       ],
+      "pain_points_es": [
+        "Órdenes de trabajo escritas a mano en obra — ilegibles o perdidas",
+        "Hojas de horas recopiladas por fotos de mensajes de texto cada viernes",
+        "Facturas de subcontratistas perdidas, duplicadas o disputadas",
+        "Sobrecostos de proyectos descubiertos solo al terminar el trabajo"
+      ],
       "solutions": [
         "Mobile-friendly digital work orders submitted directly from job site",
         "Automated timesheet collection with manager approval workflow",
         "Subcontractor invoice portal with status tracking and duplicate detection",
         "Real-time project cost dashboard vs. original budget — alerts at 80%"
+      ],
+      "solutions_es": [
+        "Órdenes de trabajo digitales optimizadas para móvil, enviadas directamente desde la obra",
+        "Recopilación automatizada de hojas de horas con flujo de aprobación del gerente",
+        "Portal de facturas de subcontratistas con seguimiento de estado y detección de duplicados",
+        "Panel de costos del proyecto en tiempo real vs. presupuesto original — alertas al 80%"
       ],
       "results": [
         "Billing cycle cut from 3 weeks to 3 days",
@@ -102,11 +138,23 @@
         "Pre-authorization requests tracked with sticky notes — delays and misses",
         "HIPAA compliance difficult to demonstrate during audits"
       ],
+      "pain_points_es": [
+        "Expedientes de pacientes dispersos en carpetas físicas — la búsqueda tarda minutos",
+        "Reservas dobles por un calendario de papel compartido",
+        "Solicitudes de preautorización rastreadas con notas adhesivas — retrasos y omisiones",
+        "Cumplimiento HIPAA difícil de demostrar durante auditorías"
+      ],
       "solutions": [
         "Secure digital patient record system — any file in under 5 seconds",
         "Online scheduling with real-time availability sync across all staff",
         "Automated pre-auth tracking dashboard with status and deadline alerts",
         "Audit-ready HIPAA compliance documentation folder with access logs"
+      ],
+      "solutions_es": [
+        "Sistema digital seguro de expedientes de pacientes — cualquier archivo en menos de 5 segundos",
+        "Agenda en línea con sincronización de disponibilidad en tiempo real para todo el personal",
+        "Panel automatizado de seguimiento de preautorizaciones con alertas de estado y fecha límite",
+        "Carpeta de documentos de cumplimiento HIPAA lista para auditoría con registros de acceso"
       ],
       "results": [
         "Patient lookup under 5 seconds",
@@ -132,11 +180,23 @@
         "Rent payment spreadsheet with conflicting versions across staff",
         "Lease renewal deadlines missed — tenants stay month-to-month by accident"
       ],
+      "pain_points_es": [
+        "Contratos de arrendamiento en carpetas físicas — una sola copia, sin respaldo",
+        "Solicitudes de mantenimiento recibidas por mensaje de texto sin sistema de seguimiento",
+        "Hoja de pagos de renta con versiones conflictivas entre el personal",
+        "Fechas de renovación de contratos perdidas — inquilinos quedan mes a mes por accidente"
+      ],
       "solutions": [
         "Digital lease archive with automatic 60-day renewal alerts",
         "Maintenance request portal with ticket numbers, status, and photo documentation",
         "Centralized rent payment log with automated reminder messages to tenants",
         "Renewal workflow: automated notice → signature → new lease filed digitally"
+      ],
+      "solutions_es": [
+        "Archivo digital de contratos con alertas automáticas de renovación a 60 días",
+        "Portal de solicitudes de mantenimiento con número de ticket, estado y documentación fotográfica",
+        "Registro centralizado de pagos de renta con mensajes de recordatorio automáticos a inquilinos",
+        "Flujo de renovación: aviso automatizado → firma → nuevo contrato archivado digitalmente"
       ],
       "results": [
         "Zero missed renewals in 12 months",
@@ -162,11 +222,23 @@
         "Staff confusion about who is responsible for each client case",
         "Deadlines managed on a shared whiteboard calendar — easy to miss"
       ],
+      "pain_points_es": [
+        "Documentos de clientes dispersos entre carpetas físicas y archivos adjuntos de correo",
+        "Sin sistema para rastrear qué clientes han enviado los documentos requeridos",
+        "Confusión del personal sobre quién es responsable de cada caso de cliente",
+        "Fechas límite gestionadas en un calendario de pizarra compartido — fácil de pasar por alto"
+      ],
       "solutions": [
         "Digital client portal for secure document submission with auto-confirmation",
         "Per-client document checklist with real-time submission status visible to all staff",
         "Task assignment system with staff accountability and deadline tracking",
         "Deadline management workflow with automated 30-day and 7-day reminder emails"
+      ],
+      "solutions_es": [
+        "Portal digital de clientes para envío seguro de documentos con confirmación automática",
+        "Lista de verificación de documentos por cliente con estado de envío en tiempo real visible para todo el personal",
+        "Sistema de asignación de tareas con responsabilidad del personal y seguimiento de fechas límite",
+        "Flujo de gestión de plazos con correos de recordatorio automatizados a 30 y 7 días"
       ],
       "results": [
         "Tax season prep cut from 2 weeks to 3 days",
@@ -192,11 +264,23 @@
         "No-shows tracked with sticky notes — no follow-up system",
         "Retail product inventory counted by eye once a week"
       ],
+      "pain_points_es": [
+        "Citas en una agenda de papel — un borrador arruina el horario del día",
+        "Fórmulas de color y preferencias de clientes sin documentar en ningún lado",
+        "Ausencias rastreadas con notas adhesivas — sin sistema de seguimiento",
+        "Inventario de productos al por menor contado a ojo una vez por semana"
+      ],
       "solutions": [
         "Digital appointment system with automated SMS reminders 24 hours before",
         "Client profile cards with full service history, color formulas, and preferences",
         "Automated no-show follow-up with rebooking offer — recovers lost revenue",
         "Retail inventory system with reorder alerts before products run out"
+      ],
+      "solutions_es": [
+        "Sistema digital de citas con recordatorios por SMS automatizados 24 horas antes",
+        "Tarjetas de perfil de cliente con historial completo de servicios, fórmulas de color y preferencias",
+        "Seguimiento automatizado de ausencias con oferta de reagendamiento — recupera ingresos perdidos",
+        "Sistema de inventario con alertas de reorden antes de que se agoten los productos"
       ],
       "results": [
         "No-shows reduced by 60%",
@@ -222,11 +306,23 @@
         "Proof of delivery buried in a chaotic group chat with 300+ messages",
         "Driver hours tracked by verbal report — disputes about pay are common"
       ],
+      "pain_points_es": [
+        "Despacho por teléfono — sin registro escrito de instrucciones",
+        "Manifiesto de entregas en papel perdido si el conductor lo extravía o el camión falla",
+        "Comprobantes de entrega enterrados en un chat grupal caótico con más de 300 mensajes",
+        "Horas de conductores rastreadas por informe verbal — disputas de pago frecuentes"
+      ],
       "solutions": [
         "Digital dispatch board with real-time driver assignment and route tracking",
         "Digital manifest accessible on any phone — survives any hardware failure",
         "Structured proof-of-delivery workflow: photo + GPS timestamp + customer signature",
         "Driver timesheet system with documented hours — eliminates pay disputes"
+      ],
+      "solutions_es": [
+        "Panel de despacho digital con asignación de conductores en tiempo real y seguimiento de rutas",
+        "Manifiesto digital accesible en cualquier teléfono — sobrevive cualquier falla de hardware",
+        "Flujo estructurado de comprobante de entrega: foto + marca de tiempo GPS + firma del cliente",
+        "Sistema de hojas de horas de conductores con horas documentadas — elimina disputas de pago"
       ],
       "results": [
         "Delivery disputes resolved in under 5 minutes",

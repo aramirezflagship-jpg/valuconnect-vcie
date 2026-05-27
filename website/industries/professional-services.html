@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Documentos de clientes dispersos entre carpetas físicas y archivos adjuntos de correo",
+    'pain.1': "Sin sistema para rastrear qué clientes han enviado los documentos requeridos",
+    'pain.2': "Confusión del personal sobre quién es responsable de cada caso de cliente",
+    'pain.3': "Fechas límite gestionadas en un calendario de pizarra compartido — fácil de pasar por alto",
+    'sol.0': "Portal digital de clientes para envío seguro de documentos con confirmación automática",
+    'sol.1': "Lista de verificación de documentos por cliente con estado de envío en tiempo real visible para todo el personal",
+    'sol.2': "Sistema de asignación de tareas con responsabilidad del personal y seguimiento de fechas límite",
+    'sol.3': "Flujo de gestión de plazos con correos de recordatorio automatizados a 30 y 7 días"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

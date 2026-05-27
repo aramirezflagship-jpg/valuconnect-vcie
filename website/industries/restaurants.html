@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Facturas de proveedores perdidas o mal archivadas cada semana",
+    'pain.1': "Conflictos de horarios por listas de personal escritas a mano",
+    'pain.2': "Sin visibilidad de costos de alimentos ni tendencias de desperdicio",
+    'pain.3': "Registros de inspección de salud desorganizados — la semana de inspección es temida",
+    'sol.0': "Sistema de archivo digital para todas las facturas de proveedores — buscable en segundos",
+    'sol.1': "Plantillas de horario semanal automatizadas con alertas de conflictos",
+    'sol.2': "Seguimiento de inventario digital con visibilidad del costo por plato",
+    'sol.3': "Carpeta de documentos de cumplimiento con recordatorios de vencimiento — siempre lista para inspección"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

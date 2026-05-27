@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Despacho por teléfono — sin registro escrito de instrucciones",
+    'pain.1': "Manifiesto de entregas en papel perdido si el conductor lo extravía o el camión falla",
+    'pain.2': "Comprobantes de entrega enterrados en un chat grupal caótico con más de 300 mensajes",
+    'pain.3': "Horas de conductores rastreadas por informe verbal — disputas de pago frecuentes",
+    'sol.0': "Panel de despacho digital con asignación de conductores en tiempo real y seguimiento de rutas",
+    'sol.1': "Manifiesto digital accesible en cualquier teléfono — sobrevive cualquier falla de hardware",
+    'sol.2': "Flujo estructurado de comprobante de entrega: foto + marca de tiempo GPS + firma del cliente",
+    'sol.3': "Sistema de hojas de horas de conductores con horas documentadas — elimina disputas de pago"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

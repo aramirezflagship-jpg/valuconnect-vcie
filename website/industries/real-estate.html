@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Contratos de arrendamiento en carpetas físicas — una sola copia, sin respaldo",
+    'pain.1': "Solicitudes de mantenimiento recibidas por mensaje de texto sin sistema de seguimiento",
+    'pain.2': "Hoja de pagos de renta con versiones conflictivas entre el personal",
+    'pain.3': "Fechas de renovación de contratos perdidas — inquilinos quedan mes a mes por accidente",
+    'sol.0': "Archivo digital de contratos con alertas automáticas de renovación a 60 días",
+    'sol.1': "Portal de solicitudes de mantenimiento con número de ticket, estado y documentación fotográfica",
+    'sol.2': "Registro centralizado de pagos de renta con mensajes de recordatorio automáticos a inquilinos",
+    'sol.3': "Flujo de renovación: aviso automatizado → firma → nuevo contrato archivado digitalmente"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

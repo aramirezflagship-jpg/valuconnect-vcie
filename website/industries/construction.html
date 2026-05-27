@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Órdenes de trabajo escritas a mano en obra — ilegibles o perdidas",
+    'pain.1': "Hojas de horas recopiladas por fotos de mensajes de texto cada viernes",
+    'pain.2': "Facturas de subcontratistas perdidas, duplicadas o disputadas",
+    'pain.3': "Sobrecostos de proyectos descubiertos solo al terminar el trabajo",
+    'sol.0': "Órdenes de trabajo digitales optimizadas para móvil, enviadas directamente desde la obra",
+    'sol.1': "Recopilación automatizada de hojas de horas con flujo de aprobación del gerente",
+    'sol.2': "Portal de facturas de subcontratistas con seguimiento de estado y detección de duplicados",
+    'sol.3': "Panel de costos del proyecto en tiempo real vs. presupuesto original — alertas al 80%"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

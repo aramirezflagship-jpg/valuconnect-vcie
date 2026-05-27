@@ -169,6 +169,24 @@
     </div>
   </div>
 </footer>
+  <script>
+(function(){
+  var d = {
+    'pain.0': "Citas en una agenda de papel — un borrador arruina el horario del día",
+    'pain.1': "Fórmulas de color y preferencias de clientes sin documentar en ningún lado",
+    'pain.2': "Ausencias rastreadas con notas adhesivas — sin sistema de seguimiento",
+    'pain.3': "Inventario de productos al por menor contado a ojo una vez por semana",
+    'sol.0': "Sistema digital de citas con recordatorios por SMS automatizados 24 horas antes",
+    'sol.1': "Tarjetas de perfil de cliente con historial completo de servicios, fórmulas de color y preferencias",
+    'sol.2': "Seguimiento automatizado de ausencias con oferta de reagendamiento — recupera ingresos perdidos",
+    'sol.3': "Sistema de inventario con alertas de reorden antes de que se agoten los productos"
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);
+  });
+})();
+</script>
+
   <script src="../assets/js/translations.js"></script>
   <script src="../assets/js/main.js"></script>
 </body>

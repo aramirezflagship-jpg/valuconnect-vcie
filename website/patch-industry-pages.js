@@ -13,25 +13,51 @@ industries.forEach(function(ind) {
 
   let html = fs.readFileSync(filePath, 'utf8');
 
-  // Inject pain point text into empty <p data-i18n="pain.N"></p> tags
+  // Inject English pain point text into <p data-i18n="pain.N"> tags
   ind.pain_points.forEach(function(text, i) {
-    const empty = new RegExp('(<p data-i18n="pain\\.' + i + '")>\\s*<\\/p>', 'g');
-    html = html.replace(empty, '$1>' + text + '</p>');
+    const re = new RegExp('(<p data-i18n="pain\\.' + i + '")>[^<]*<\\/p>', 'g');
+    html = html.replace(re, '$1>' + text + '</p>');
   });
 
-  // Inject solution text into empty <p data-i18n="sol.N"></p> tags
+  // Inject English solution text into <p data-i18n="sol.N"> tags
   ind.solutions.forEach(function(text, i) {
-    const empty = new RegExp('(<p data-i18n="sol\\.' + i + '")>\\s*<\\/p>', 'g');
-    html = html.replace(empty, '$1>' + text + '</p>');
+    const re = new RegExp('(<p data-i18n="sol\\.' + i + '")>[^<]*<\\/p>', 'g');
+    html = html.replace(re, '$1>' + text + '</p>');
   });
 
-  // Add scripts before </body> if not already present
+  // Build per-page Spanish translations inline script
+  const esEntries = [];
+  (ind.pain_points_es || []).forEach(function(text, i) {
+    esEntries.push("    'pain." + i + "': \"" + text.replace(/"/g, '\\"') + '"');
+  });
+  (ind.solutions_es || []).forEach(function(text, i) {
+    esEntries.push("    'sol." + i + "': \"" + text.replace(/"/g, '\\"') + '"');
+  });
+
+  const inlineScript = esEntries.length
+    ? '<script>\n(function(){\n  var d = {\n' + esEntries.join(',\n') + '\n  };\n' +
+      "  document.addEventListener('DOMContentLoaded', function() {\n" +
+      "    if (typeof i18n !== 'undefined') Object.assign(i18n.es, d);\n" +
+      '  });\n})();\n</script>\n'
+    : '';
+
+  // Remove any previously injected inline script block before re-adding
+  html = html.replace(/<script>\n\(function\(\)\{[\s\S]*?\}\)\(\);\n<\/script>\n\s*/g, '');
+
+  // Add scripts + inline block before </body>
   if (!html.includes('assets/js/translations.js')) {
     html = html.replace(
       '</body>',
+      '  ' + inlineScript +
       '  <script src="../assets/js/translations.js"></script>\n' +
       '  <script src="../assets/js/main.js"></script>\n' +
       '</body>'
+    );
+  } else {
+    // Already has scripts — insert inline block before translations.js
+    html = html.replace(
+      /(\s*<script src="\.\.\/assets\/js\/translations\.js"><\/script>)/,
+      '\n  ' + inlineScript + '$1'
     );
   }
 
