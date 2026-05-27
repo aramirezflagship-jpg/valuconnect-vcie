@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ValuConnect — Restaurants & Food Service One-Pager</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #CBD5E0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── Page shell ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #FFFFFF;
+      margin: 8mm auto;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 30px rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    .hdr {
+      background: #1A2332;
+      padding: 7mm 9mm 6mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .hdr-left {}
+    .hdr-logo {
+      font-size: 15pt;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -.3px;
+      line-height: 1;
+      margin-bottom: 1.5mm;
+    }
+    .hdr-logo span { color: #C47B0A; }
+    .hdr-tagline {
+      font-size: 7.5pt;
+      color: rgba(255,255,255,.55);
+      font-style: italic;
+    }
+    .hdr-right { text-align: right; }
+    .hdr-industry {
+      font-size: 10pt;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1mm;
+    }
+    .hdr-industry-sub {
+      font-size: 6.5pt;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    /* ── HERO STRIP ── */
+    .hero {
+      background: #1D6FA4;
+      padding: 6mm 9mm;
+    }
+    .hero h1 {
+      font-size: 16pt;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 2mm;
+    }
+    .hero p {
+      font-size: 8.5pt;
+      color: rgba(255,255,255,.82);
+      line-height: 1.6;
+      max-width: 160mm;
+    }
+
+    /* ── COMPANY STRIP ── */
+    .company-strip {
+      background: #F7F9FC;
+      border-bottom: 1.5px solid #E2E8F0;
+      padding: 4mm 9mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6mm;
+    }
+    .company-intro {
+      font-size: 7.5pt;
+      color: #2D3748;
+      line-height: 1.55;
+      max-width: 105mm;
+    }
+    .company-intro strong { color: #1A2332; }
+    .services-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+    .svc-pill {
+      background: #1D6FA4;
+      color: #fff;
+      font-size: 6pt;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    /* ── THREE-COLUMN BODY ── */
+    .body-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      flex: 1;
+      border-bottom: 1.5px solid #E2E8F0;
+    }
+
+    .col {
+      padding: 5mm 5mm 5mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .col + .col { border-left: 1.5px solid #E2E8F0; }
+
+    .col-head {
+      font-size: 7pt;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding-bottom: 3mm;
+      margin-bottom: 3mm;
+      border-bottom: 2px solid currentColor;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .col-challenges .col-head { color: #C0392B;   border-bottom-color: #C0392B;   }
+    .col-solutions  .col-head { color: #1A7F5A; border-bottom-color: #1A7F5A; }
+    .col-results    .col-head { color: #1D6FA4; border-bottom-color: #1D6FA4; }
+
+    /* Challenges */
+    .col-challenges { background: #FEF0EE; }
+    .pain-list { list-style: none; display: flex; flex-direction: column; gap: 3mm; }
+    .pain-item {
+      display: flex; gap: 4px; align-items: flex-start;
+      font-size: 8pt; color: #2D3748; line-height: 1.45;
+    }
+    .pain-icon { flex-shrink: 0; font-size: 10pt; margin-top: -1px; }
+
+    /* Solutions */
+    .col-solutions { background: #EAF7F1; }
+    .sol-list { list-style: none; display: flex; flex-direction: column; gap: 3mm; }
+    .sol-item {
+      display: flex; gap: 4px; align-items: flex-start;
+      font-size: 8pt; color: #2D3748; line-height: 1.45;
+    }
+    .sol-check { color: #1A7F5A; font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+
+    /* Results */
+    .col-results { background: #FFFFFF; }
+    .metrics-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3mm; margin-bottom: 4mm;
+    }
+    .metric-chip {
+      background: #FEF9E7;
+      border: 1px solid #F6D98A;
+      border-radius: 6px;
+      padding: 3.5mm 2mm;
+      text-align: center;
+    }
+    .metric-num {
+      font-size: 14pt; font-weight: 900;
+      color: #C47B0A; line-height: 1; margin-bottom: 1.5mm;
+    }
+    .metric-label {
+      font-size: 6pt; color: #718096; line-height: 1.35;
+    }
+    .chart-section { margin-top: 2mm; }
+    .chart-section-head {
+      font-size: 6.5pt; font-weight: 700; color: #718096;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 2mm;
+    }
+    .donut-row {
+      display: flex; align-items: center; gap: 4mm; margin-top: 3mm;
+    }
+    .donut-label {
+      font-size: 7pt; color: #2D3748; line-height: 1.5; flex: 1;
+    }
+    .donut-label strong { color: #1A7F5A; font-size: 9pt; }
+
+    /* ── QUOTE BAND ── */
+    .quote-band {
+      background: #1A2332;
+      padding: 5mm 9mm;
+      display: flex;
+      align-items: center;
+      gap: 6mm;
+    }
+    .quote-mark {
+      font-size: 32pt; font-weight: 900;
+      color: #C47B0A; line-height: .6;
+      flex-shrink: 0; opacity: .6;
+    }
+    .quote-body {}
+    .quote-text {
+      font-size: 9pt; font-style: italic; font-weight: 600;
+      color: #fff; line-height: 1.55; margin-bottom: 1.5mm;
+    }
+    .quote-attr {
+      font-size: 7pt; font-weight: 700;
+      color: #C47B0A; letter-spacing: .3px;
+    }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      background: #C47B0A;
+      padding: 4.5mm 9mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cta-left {}
+    .cta-headline {
+      font-size: 10pt; font-weight: 900;
+      color: #1A2332; line-height: 1.2; margin-bottom: 1mm;
+    }
+    .cta-sub {
+      font-size: 7pt; color: rgba(26,35,50,.65);
+    }
+    .cta-right { text-align: right; }
+    .cta-url {
+      font-size: 11pt; font-weight: 900;
+      color: #1A2332; letter-spacing: -.3px;
+      line-height: 1.1;
+    }
+    .cta-lang {
+      font-size: 6.5pt; color: rgba(26,35,50,.55);
+      font-style: italic; margin-top: 1mm;
+    }
+
+    /* ── PROCESS FOOTER ── */
+    .process-footer {
+      background: #F7F9FC;
+      border-top: 1.5px solid #E2E8F0;
+      padding: 4mm 9mm;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .proc-label {
+      font-size: 6pt; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: #718096; margin-right: 5mm; white-space: nowrap;
+    }
+    .proc-steps {
+      display: flex; gap: 0; flex: 1; align-items: center;
+    }
+    .proc-step {
+      display: flex; align-items: center; gap: 3px;
+    }
+    .proc-num {
+      width: 5mm; height: 5mm; border-radius: 50%;
+      background: #1D6FA4; color: #fff;
+      font-size: 6.5pt; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .proc-text {
+      font-size: 7pt; font-weight: 600; color: #2D3748;
+    }
+    .proc-arrow {
+      font-size: 9pt; color: #718096;
+      margin: 0 3mm; flex-shrink: 0;
+    }
+    .founder-note {
+      font-size: 6.5pt; color: #718096;
+      text-align: right; white-space: nowrap; margin-left: 6mm;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white; }
+      .page { margin: 0; box-shadow: none; width: 210mm; min-height: 297mm; }
+      @page { size: A4 portrait; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo">Valu<span>Connect</span> Solutions</div>
+      <div class="hdr-tagline">"Your neighbor who happens to know digital systems."</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-industry">🍽️ Restaurants & Food Service</div>
+      <div class="hdr-industry-sub">Industry Solution Guide · Digital Transformation</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Stop Running Your Restaurant on Paper.</h1>
+    <p>ValuConnect builds the back-office digital system your team actually needs — so you can get back to cooking, not filing.</p>
+  </div>
+
+  <!-- COMPANY STRIP -->
+  <div class="company-strip">
+    <div class="company-intro">
+      <strong>ValuConnect Solutions</strong> — Help small businesses work smarter, not harder — with digital systems that grow with them.<br>
+      Founded by <strong>Andres Ramirez</strong> · Serving small business owners, especially Latino &amp; Hispanic entrepreneurs.
+    </div>
+    <div>
+      <div style="font-size:6pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#718096;margin-bottom:2mm;">What We Build For You</div>
+      <div class="services-row">
+        <span class="svc-pill">Paper-to-Digital</span><span class="svc-pill">Document Filing</span><span class="svc-pill">Workflow Automation</span><span class="svc-pill">Project Tracking</span><span class="svc-pill">AI Communication</span><span class="svc-pill">Training & Support</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE COLUMNS -->
+  <div class="body-cols">
+
+    <!-- CHALLENGES -->
+    <div class="col col-challenges">
+      <div class="col-head">✕ Your Challenges</div>
+      <ul class="pain-list">
+        
+          <li class="pain-item">
+            <span class="pain-icon">🧾</span>
+            <span>Supplier invoices lost or buried in a drawer every week</span>
+          </li>
+          <li class="pain-item">
+            <span class="pain-icon">📅</span>
+            <span>Scheduling done by hand — conflicts and call-outs every Friday</span>
+          </li>
+          <li class="pain-item">
+            <span class="pain-icon">📦</span>
+            <span>No visibility on food costs until the month-end spreadsheet panic</span>
+          </li>
+          <li class="pain-item">
+            <span class="pain-icon">🏥</span>
+            <span>Health inspection week = days of scrambling through paper files</span>
+          </li>
+      </ul>
+    </div>
+
+    <!-- SOLUTIONS -->
+    <div class="col col-solutions">
+      <div class="col-head">✓ ValuConnect Fixes This</div>
+      <ul class="sol-list">
+        
+          <li class="sol-item">
+            <span class="sol-check">›</span>
+            <span>Digital invoice archive — any document found in under 10 seconds</span>
+          </li>
+          <li class="sol-item">
+            <span class="sol-check">›</span>
+            <span>Automated weekly schedule with conflict alerts to your phone</span>
+          </li>
+          <li class="sol-item">
+            <span class="sol-check">›</span>
+            <span>Real-time food cost tracking tied directly to your inventory</span>
+          </li>
+          <li class="sol-item">
+            <span class="sol-check">›</span>
+            <span>Compliance folder always current — inspection-ready any day, any time</span>
+          </li>
+      </ul>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="col col-results">
+      <div class="col-head">📊 Your Results</div>
+      <div class="metrics-grid">
+        
+          <div class="metric-chip">
+            <div class="metric-num">6 hrs</div>
+            <div class="metric-label">Saved per week<br>on admin tasks</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-num">87%</div>
+            <div class="metric-label">Reduction in<br>admin time</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-num">5 min</div>
+            <div class="metric-label">Inspection readiness<br>(was 4+ hours)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-num">0</div>
+            <div class="metric-label">Lost invoices<br>since go-live</div>
+          </div>
+      </div>
+      <div class="chart-section">
+        <div class="chart-section-head">Weekly admin hours — before vs. after</div>
+        <svg viewBox="0 0 270 125" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+    <text x="0" y="12" font-family="Inter,sans-serif" font-size="7.5" font-weight="700" fill="#1A2332">Weekly Admin Hours</text>
+    <rect x="0" y="18" width="6" height="6" fill="#C0392B" rx="1"/>
+    <text x="9" y="24" font-family="Inter,sans-serif" font-size="6" fill="#718096">Before</text>
+    <rect x="40" y="18" width="6" height="6" fill="#1A7F5A" rx="1"/>
+    <text x="49" y="24" font-family="Inter,sans-serif" font-size="6" fill="#718096">After</text>
+    <line x1="82" y1="28" x2="82" y2="107" stroke="#E2E8F0" stroke-width="1"/>
+    
+      <text x="78" y="40" font-family="Inter,sans-serif" font-size="6"
+            fill="#718096" text-anchor="end">Invoice admin</text>
+      <rect x="82" y="32" width="128" height="9" fill="#C0392B" rx="2"/>
+      <text x="213" y="40" font-family="Inter,sans-serif"
+            font-size="6" font-weight="700" fill="#C0392B">3 hrs</text>
+      <rect x="82" y="44" width="11" height="9" fill="#1A7F5A" rx="2"/>
+      <text x="96" y="52" font-family="Inter,sans-serif"
+            font-size="6" font-weight="700" fill="#1A7F5A">15 min</text>
+      <text x="78" y="64" font-family="Inter,sans-serif" font-size="6"
+            fill="#718096" text-anchor="end">Scheduling</text>
+      <rect x="82" y="56" width="85" height="9" fill="#C0392B" rx="2"/>
+      <text x="170" y="64" font-family="Inter,sans-serif"
+            font-size="6" font-weight="700" fill="#C0392B">2 hrs</text>
+      <rect x="82" y="68" width="21" height="9" fill="#1A7F5A" rx="2"/>
+      <text x="106" y="76" font-family="Inter,sans-serif"
+            font-size="6" font-weight="700" fill="#1A7F5A">30 min</text>
+      <text x="78" y="88" font-family="Inter,sans-serif" font-size="6"
+            fill="#718096" text-anchor="end">Compliance prep</text>
+      <rect x="82" y="80" width="170" height="9" fill="#C0392B" rx="2"/>
+      <text x="255" y="88" font-family="Inter,sans-serif"
+            font-size="6" font-weight="700" fill="#C0392B">4 hrs</text>
+      <rect x="82" y="92" width="3" height="9" fill="#1A7F5A" rx="2"/>
+      <text x="88" y="100" font-family="Inter,sans-serif"
+            font-size="6" font-weight="700" fill="#1A7F5A">5 min</text>
+    <rect x="82" y="107" width="170" height="15" fill="#EAF7F1" rx="3"/>
+    <text x="167" y="117" font-family="Inter,sans-serif" font-size="6.5"
+          font-weight="700" fill="#1A7F5A" text-anchor="middle">87% less admin time overall</text>
+  </svg>
+        <div class="donut-row">
+          <svg viewBox="0 0 92 100" xmlns="http://www.w3.org/2000/svg" style="width:90px;display:block;margin:0 auto;">
+    <circle cx="46" cy="46" r="38" fill="none" stroke="#E2E8F0" stroke-width="10"/>
+    <circle cx="46" cy="46" r="38" fill="none" stroke="#1A7F5A" stroke-width="10"
+            stroke-dasharray="208 239" stroke-linecap="round"
+            transform="rotate(-90 46 46)"/>
+    <text x="46" y="43" font-family="Inter,sans-serif" font-size="16"
+          font-weight="900" fill="#1A2332" text-anchor="middle">87%</text>
+    <text x="46" y="56" font-family="Inter,sans-serif" font-size="5.5"
+          fill="#718096" text-anchor="middle">time saved</text>
+    <text x="46" y="92" font-family="Inter,sans-serif" font-size="5.5"
+          fill="#718096" text-anchor="middle">on admin work</text>
+  </svg>
+          <div class="donut-label">
+            <strong>87%</strong><br>
+            reduction in admin time — every week, permanently.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body-cols -->
+
+  <!-- QUOTE BAND -->
+  <div class="quote-band">
+    <div class="quote-mark">"</div>
+    <div class="quote-body">
+      <div class="quote-text">I used to dread inspection week. Now everything is one click away.</div>
+      <div class="quote-attr">— Maria G., Restaurant Owner · Miami, FL</div>
+    </div>
+  </div>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <div class="cta-left">
+      <div class="cta-headline">Ready to stop running your business on paper?</div>
+      <div class="cta-sub">Book a free 30-minute workflow assessment with Andres Ramirez — no commitment, no jargon.</div>
+    </div>
+    <div class="cta-right">
+      <div class="cta-url">valuconnect.com</div>
+      <div class="cta-lang">Hablamos tu idioma · We speak your language</div>
+    </div>
+  </div>
+
+  <!-- PROCESS FOOTER -->
+  <div class="process-footer">
+    <div class="proc-label">How it works</div>
+    <div class="proc-steps">
+      
+        <div class="proc-step">
+          <div class="proc-num">1</div>
+          <div class="proc-text">Free 30-min assessment</div>
+        </div>
+        <div class="proc-arrow">›</div>
+        <div class="proc-step">
+          <div class="proc-num">2</div>
+          <div class="proc-text">Custom digital roadmap</div>
+        </div>
+        <div class="proc-arrow">›</div>
+        <div class="proc-step">
+          <div class="proc-num">3</div>
+          <div class="proc-text">Implementation & training</div>
+        </div>
+        
+    </div>
+    <div class="founder-note">Bilingual EN/ES · ValuConnect Solutions</div>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
