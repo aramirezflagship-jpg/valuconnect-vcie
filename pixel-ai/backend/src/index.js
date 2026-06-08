@@ -47,6 +47,9 @@ app.get('/health', (_req, res) => {
   });
 });
 
+// ── Admin dashboard (static HTML, served at /admin) ──────────────────────────
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/capture', captureRouter);
 app.use('/api/events', eventsRouter);

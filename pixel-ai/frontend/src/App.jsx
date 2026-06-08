@@ -7,6 +7,9 @@ import Processing from './components/Processing.jsx';
 import Preview from './components/Preview.jsx';
 import Delivery from './components/Delivery.jsx';
 import { getEventConfig, uploadCapture, pollJobStatus } from './utils/api.js';
+import useNetworkStatus from './hooks/useNetworkStatus.js';
+import useOfflineQueue from './hooks/useOfflineQueue.js';
+import { processQueue } from './utils/retry.js';
 
 // ─── Default event config (fallback when no ?event= param) ───────────────────
 const DEFAULT_CONFIG = {
@@ -43,6 +46,23 @@ export default function App() {
 
   // ── Language (derived from config) ───────────────────────────────────────
   const lang = config.lang || 'es';
+
+  // ── Offline queue ─────────────────────────────────────────────────────────
+  const { isOnline, wasOffline } = useNetworkStatus();
+  const { queue, queueSize, addToQueue, removeFromQueue } = useOfflineQueue();
+  const [processingOfflineQueue, setProcessingOfflineQueue] = useState(false);
+
+  // Auto-process queue when signal returns
+  useEffect(() => {
+    if (!isOnline || !wasOffline || queueSize === 0 || processingOfflineQueue) return;
+    setProcessingOfflineQueue(true);
+    processQueue(
+      queue,
+      (item) => uploadCapture(item.blob, item.eventId, item.themeId),
+      (item) => removeFromQueue(item.id),
+      (item) => removeFromQueue(item.id) // leave failed items removed — they showed error
+    ).finally(() => setProcessingOfflineQueue(false));
+  }, [isOnline, wasOffline]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Load event config on mount ───────────────────────────────────────────
   useEffect(() => {
@@ -107,9 +127,16 @@ export default function App() {
           throw new Error('No resultUrl or statusUrl in API response');
         }
       } catch (err) {
+        // Network failure → queue for retry when signal returns
+        const isNetworkErr = !err.response && err.request != null;
+        if (isNetworkErr && blob) {
+          await addToQueue(blob, config.eventId, selectedTheme?.id || 'galaxy');
+          setProcessingError('queued');
+        } else {
+          setProcessingError(err.message || 'Processing failed');
+        }
         console.error('[App] Processing error:', err);
-        setProcessingError(err.message || 'Processing failed');
-        setScreen('preview'); // go to preview in error state
+        setScreen('preview');
       }
     },
     [config.eventId, selectedTheme]
@@ -145,6 +172,22 @@ export default function App() {
   }
 
   return (
+    <>
+      {/* Offline / queued banner */}
+      {(queueSize > 0 || processingOfflineQueue) && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+          background: processingOfflineQueue ? 'var(--success)' : '#b45309',
+          color: '#fff', textAlign: 'center', padding: '8px 16px',
+          fontSize: '0.85rem', fontWeight: 600,
+        }}>
+          {processingOfflineQueue
+            ? (lang === 'es' ? '📶 Subiendo fotos en cola...' : '📶 Uploading queued photos...')
+            : (lang === 'es'
+                ? `📵 ${queueSize} foto${queueSize > 1 ? 's' : ''} en cola — esperando señal`
+                : `📵 ${queueSize} photo${queueSize > 1 ? 's' : ''} queued — waiting for signal`)}
+        </div>
+      )}
     <AnimatePresence mode="wait">
       {screen === 'welcome' && (
         <motion.div
@@ -235,5 +278,6 @@ export default function App() {
         </motion.div>
       )}
     </AnimatePresence>
+    </>
   );
 }

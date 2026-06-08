@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Pixel AI — La experiencia de foto booth con IA que tu evento merece. Mismo tú. Mundos infinitos."/>
+<meta property="og:title" content="Pixel AI — Tu evento, nuestra magia."/>
+<meta property="og:description" content="AI photo booth para bodas, quinceañeras y eventos corporativos."/>
+<meta name="theme-color" content="#0d0d1a"/>
+<title>Pixel AI — Tu evento, nuestra magia.</title>
+<style>
+  :root {
+    --bg: #0d0d1a; --surface: #12121f; --border: #1e1e3a;
+    --accent: #7c3aed; --accent2: #a855f7; --gold: #f59e0b;
+    --success: #10b981; --text: #f1f5f9; --muted: #94a3b8;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+  /* ── Nav ── */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(13,13,26,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 16px; }
+  .nav-logo { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex: 1; }
+  .lang-toggle { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+  .lang-toggle:hover { border-color: var(--accent); color: var(--accent2); }
+  .nav-cta { background: #25d366; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; }
+  .nav-cta:hover { background: #22c55e; }
+
+  /* ── Hero ── */
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 80px 24px 60px; overflow: hidden; }
+  #particles { position: absolute; inset: 0; pointer-events: none; }
+  .particle { position: absolute; border-radius: 50%; animation: twinkle var(--dur, 3s) ease-in-out var(--delay, 0s) infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.4)} }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; }
+  .hero-tag { display: inline-block; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: var(--accent2); padding: 4px 14px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 24px; }
+  h1 { font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 900; line-height: 1.05; margin-bottom: 20px; }
+  h1 .gradient { background: linear-gradient(135deg, #a855f7, #ec4899, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-sub { font-size: clamp(1rem, 2.5vw, 1.25rem); color: var(--muted); max-width: 560px; margin: 0 auto 40px; line-height: 1.6; }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-ghost { background: transparent; border: 2px solid var(--accent); color: var(--accent2); padding: 14px 28px; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .btn-ghost:hover { background: var(--accent); color: #fff; }
+  .btn-wa { background: #25d366; color: #fff; border: none; padding: 14px 28px; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+  .btn-wa:hover { background: #22c55e; }
+
+  /* ── Sections ── */
+  section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title { text-align: center; margin-bottom: 48px; }
+  .section-title h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; }
+  .section-title p { color: var(--muted); margin-top: 10px; font-size: 1rem; }
+
+  /* ── How it works ── */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+  .step { text-align: center; padding: 32px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; transition: transform 0.2s, border-color 0.2s; }
+  .step:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .step-icon { font-size: 3rem; margin-bottom: 16px; }
+  .step h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+
+  /* ── Themes ── */
+  .themes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+  .theme-card { border-radius: 16px; aspect-ratio: 2/3; display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; overflow: hidden; position: relative; transition: transform 0.2s; cursor: default; border: 2px solid transparent; }
+  .theme-card:hover { transform: scale(1.03); border-color: rgba(255,255,255,0.2); }
+  .theme-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%); }
+  .theme-card span { position: relative; z-index: 1; font-weight: 700; font-size: 0.95rem; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+  .theme-card small { position: relative; z-index: 1; font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  /* ── Pricing ── */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px; position: relative; transition: transform 0.2s; }
+  .price-card:hover { transform: translateY(-4px); }
+  .price-card.featured { border-color: var(--accent); background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(168,85,247,0.05)); }
+  .price-card.featured::before { content: '⭐ RECOMENDADO'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 14px; border-radius: 99px; white-space: nowrap; letter-spacing: 0.05em; }
+  .price-name { font-size: 1.1rem; font-weight: 700; color: var(--accent2); margin-bottom: 8px; }
+  .price-amount { font-size: 2.4rem; font-weight: 900; margin-bottom: 4px; }
+  .price-amount span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .price-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; }
+  .price-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .price-features li { font-size: 0.9rem; display: flex; align-items: flex-start; gap: 8px; color: var(--muted); }
+  .price-features li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .price-cta { display: block; text-align: center; background: var(--accent); color: #fff; border: none; padding: 12px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+  .price-cta:hover { background: var(--accent2); }
+  .price-cta.wa { background: #25d366; }
+  .price-cta.wa:hover { background: #22c55e; }
+  .price-note-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 20px; }
+
+  /* ── Testimonials ── */
+  .testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .testimonial { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+  .testimonial blockquote { font-size: 0.95rem; line-height: 1.6; color: var(--muted); margin-bottom: 16px; font-style: italic; }
+  .testimonial blockquote::before { content: '"'; color: var(--accent2); font-size: 2rem; line-height: 0; vertical-align: -0.6rem; margin-right: 2px; }
+  .testimonial cite { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+  .testimonial cite span { color: var(--muted); font-weight: 400; }
+
+  /* ── Contact ── */
+  .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  @media (max-width: 680px) { .contact-wrap { grid-template-columns: 1fr; } }
+  .contact-info h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; }
+  .contact-info p { color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+  .contact-form { display: flex; flex-direction: column; gap: 14px; }
+  .contact-form input, .contact-form select, .contact-form textarea { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; width: 100%; }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { outline: none; border-color: var(--accent); }
+  .contact-form textarea { min-height: 100px; resize: vertical; }
+  .form-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ── Footer ── */
+  footer { border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; background: var(--surface); }
+  footer .footer-logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  footer p { color: var(--muted); font-size: 0.85rem; }
+  .social-links { display: flex; gap: 16px; justify-content: center; margin: 16px 0; }
+  .social-links a { color: var(--muted); transition: color 0.15s; }
+  .social-links a:hover { color: var(--accent2); }
+
+  /* ── Floating WA ── */
+  #wa-float { position: fixed; bottom: 24px; right: 24px; background: #25d366; color: #fff; border: none; border-radius: 50%; width: 56px; height: 56px; font-size: 1.6rem; cursor: pointer; box-shadow: 0 4px 20px rgba(37,211,102,0.4); display: flex; align-items: center; justify-content: center; text-decoration: none; z-index: 50; transition: transform 0.2s; }
+  #wa-float:hover { transform: scale(1.1); }
+
+  /* ── Scroll fade-in ── */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Full-width bg sections ── */
+  .section-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 2rem; }
+    .hero-btns { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">Pixel AI ✨</div>
+  <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
+  <a href="https://wa.me/521XXXXXXXXXX?text=Hola%20Pixel%20AI%2C%20me%20interesa%20cotizar%20un%20evento" target="_blank" class="nav-cta" data-es="📱 Reservar" data-en="📱 Book Now">📱 Reservar</a>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-tag" data-es="✨ AI Photo Experience" data-en="✨ AI Photo Experience">✨ AI Photo Experience</div>
+    <h1><span class="gradient" data-es="Mismo tú." data-en="Same you.">Mismo tú.</span><br><span data-es="Mundos infinitos." data-en="Infinite worlds.">Mundos infinitos.</span></h1>
+    <p class="hero-sub" data-es="La experiencia de foto booth con IA que tu evento merece. El mismo tú, transportado a mundos increíbles." data-en="The AI photo booth experience your event deserves. Same you, teleported to incredible worlds.">La experiencia de foto booth con IA que tu evento merece. El mismo tú, transportado a mundos increíbles.</p>
+    <div class="hero-btns">
+      <a href="#pricing" class="btn-ghost" data-es="Ver paquetes" data-en="See packages">Ver paquetes</a>
+      <a href="https://wa.me/521XXXXXXXXXX?text=Hola%20Pixel%20AI%2C%20me%20interesa%20cotizar" target="_blank" class="btn-wa">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        <span data-es="WhatsApp" data-en="WhatsApp">WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<div class="section-bg">
+<section class="fade-in">
+  <div class="section-title">
+    <h2 data-es="¿Cómo funciona?" data-en="How does it work?">¿Cómo funciona?</h2>
+    <p data-es="Tres pasos. Magia instantánea." data-en="Three steps. Instant magic.">Tres pasos. Magia instantánea.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-icon">📸</div>
+      <h3 data-es="Toma tu foto" data-en="Take your photo">Toma tu foto</h3>
+      <p data-es="Toca la pantalla, sonríe y listo. Cuenta regresiva de 3 segundos." data-en="Tap the screen, smile, done. 3-second countdown.">Toca la pantalla, sonríe y listo. Cuenta regresiva de 3 segundos.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">✨</div>
+      <h3 data-es="La IA hace la magia" data-en="AI does the magic">La IA hace la magia</h3>
+      <p data-es="Tu fondo desaparece y apareces en el mundo que elegiste. Tu cara, siempre perfecta." data-en="Your background disappears and you appear in the world you chose. Your face, always perfect.">Tu fondo desaparece y apareces en el mundo que elegiste. Tu cara, siempre perfecta.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">📱</div>
+      <h3 data-es="Recibe tu foto" data-en="Get your photo">Recibe tu foto</h3>
+      <p data-es="Escanea el QR o recíbela por WhatsApp/SMS al instante. Sin app, sin espera." data-en="Scan the QR or receive it via WhatsApp/SMS instantly. No app, no wait.">Escanea el QR o recíbela por WhatsApp/SMS al instante. Sin app, sin espera.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- Themes -->
+<section class="fade-in" id="themes">
+  <div class="section-title">
+    <h2 data-es="Elige tu mundo" data-en="Choose your world">Elige tu mundo</h2>
+    <p data-es="Más de 8 temas. Cada evento puede tener su propio estilo." data-en="8+ themes. Each event can have its own style.">Más de 8 temas. Cada evento puede tener su propio estilo.</p>
+  </div>
+  <div class="themes-grid">
+    <div class="theme-card" style="background:linear-gradient(160deg,#0f0c29,#302b63)"><span data-es="Galaxia" data-en="Galaxy">Galaxia</span><small data-es="Cosmos y nebulosas" data-en="Cosmos & nebulae">Cosmos y nebulosas</small></div>
+    <div class="theme-card" style="background:linear-gradient(160deg,#134e5e,#71b280)"><span data-es="Selva" data-en="Jungle">Selva</span><small data-es="Paraíso tropical" data-en="Tropical paradise">Paraíso tropical</small></div>
+    <div class="theme-card" style="background:linear-gradient(160deg,#4776e6,#8e54e9)"><span data-es="Corte Real" data-en="Royal Court">Corte Real</span><small data-es="Palacio majestuoso" data-en="Majestic palace">Palacio majestuoso</small></div>
+    <div class="theme-card" style="background:linear-gradient(160deg,#f7971e,#ffd200)"><span data-es="Atardecer" data-en="Sunset">Atardecer</span><small data-es="Playa dorada" data-en="Golden beach">Playa dorada</small></div>
+    <div class="theme-card" style="background:linear-gradient(160deg,#bdc3c7,#2c3e50)"><span data-es="Elegante" data-en="Elegant">Elegante</span><small data-es="Recepción romántica" data-en="Romantic reception">Recepción romántica</small></div>
+    <div class="theme-card" style="background:linear-gradient(160deg,#f953c6,#b91d73)"><span>Quinceañera</span><small data-es="Palacio de princesa" data-en="Princess palace">Palacio de princesa</small></div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<div class="section-bg">
+<section class="fade-in" id="pricing">
+  <div class="section-title">
+    <h2 data-es="Paquetes" data-en="Packages">Paquetes</h2>
+    <p data-es="Sin contratos. Sin sorpresas. Solo magia." data-en="No contracts. No surprises. Just magic.">Sin contratos. Sin sorpresas. Solo magia.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name" data-es="Digital" data-en="Digital">Digital</div>
+      <div class="price-amount">$X<span data-es=" /evento" data-en=" /event"> /evento</span></div>
+      <div class="price-note" data-es="Hasta 100 fotos" data-en="Up to 100 photos">Hasta 100 fotos</div>
+      <ul class="price-features">
+        <li data-es="Entrega digital instantánea" data-en="Instant digital delivery">Entrega digital instantánea</li>
+        <li data-es="QR + WhatsApp + SMS" data-en="QR + WhatsApp + SMS">QR + WhatsApp + SMS</li>
+        <li data-es="1 tema personalizado" data-en="1 custom theme">1 tema personalizado</li>
+        <li data-es="Galería del evento" data-en="Event gallery">Galería del evento</li>
+        <li data-es="Branding del evento" data-en="Event branding">Branding del evento</li>
+      </ul>
+      <a href="https://wa.me/521XXXXXXXXXX?text=Hola%2C%20me%20interesa%20el%20paquete%20Digital" target="_blank" class="price-cta wa" data-es="Cotizar por WhatsApp" data-en="Quote via WhatsApp">Cotizar por WhatsApp</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-name" data-es="Premium" data-en="Premium">Premium</div>
+      <div class="price-amount">$X<span data-es=" /evento" data-en=" /event"> /evento</span></div>
+      <div class="price-note" data-es="Hasta 200 fotos" data-en="Up to 200 photos">Hasta 200 fotos</div>
+      <ul class="price-features">
+        <li data-es="Todo del paquete Digital" data-en="Everything in Digital">Todo del paquete Digital</li>
+        <li data-es="3 temas a elegir" data-en="3 themes to choose">3 temas a elegir</li>
+        <li data-es="Branding personalizado completo" data-en="Full custom branding">Branding personalizado completo</li>
+        <li data-es="Galería privada para el anfitrión" data-en="Private host gallery">Galería privada para el anfitrión</li>
+        <li data-es="Soporte técnico en el evento" data-en="On-site tech support">Soporte técnico en el evento</li>
+      </ul>
+      <a href="https://wa.me/521XXXXXXXXXX?text=Hola%2C%20me%20interesa%20el%20paquete%20Premium" target="_blank" class="price-cta wa" data-es="Cotizar por WhatsApp" data-en="Quote via WhatsApp">Cotizar por WhatsApp</a>
+    </div>
+    <div class="price-card">
+      <div class="price-name" data-es="Corporativo" data-en="Corporate">Corporativo</div>
+      <div class="price-amount">$X<span data-es=" /evento" data-en=" /event"> /evento</span></div>
+      <div class="price-note" data-es="Fotos ilimitadas" data-en="Unlimited photos">Fotos ilimitadas</div>
+      <ul class="price-features">
+        <li data-es="Todo del paquete Premium" data-en="Everything in Premium">Todo del paquete Premium</li>
+        <li data-es="Temas ilimitados" data-en="Unlimited themes">Temas ilimitados</li>
+        <li data-es="Logos y marca corporativa" data-en="Corporate logos & branding">Logos y marca corporativa</li>
+        <li data-es="Reportes de actividad" data-en="Activity reports">Reportes de actividad</li>
+        <li data-es="Impresión de fotos (precio aparte)" data-en="Photo printing (add-on)">Impresión de fotos (precio aparte)</li>
+      </ul>
+      <a href="https://wa.me/521XXXXXXXXXX?text=Hola%2C%20me%20interesa%20el%20paquete%20Corporativo" target="_blank" class="price-cta wa" data-es="Cotizar por WhatsApp" data-en="Quote via WhatsApp">Cotizar por WhatsApp</a>
+    </div>
+  </div>
+  <p class="price-note-bottom" data-es="Precios para eventos en CDMX y área metropolitana. Consulta disponibilidad para otras ciudades." data-en="Pricing for CDMX metro area. Ask about availability in other cities.">Precios para eventos en CDMX y área metropolitana. Consulta disponibilidad para otras ciudades.</p>
+</section>
+</div>
+
+<!-- Testimonials -->
+<section class="fade-in">
+  <div class="section-title">
+    <h2 data-es="Lo que dicen nuestros clientes" data-en="What our clients say">Lo que dicen nuestros clientes</h2>
+  </div>
+  <div class="testimonials">
+    <div class="testimonial">
+      <blockquote data-es="Todos mis invitados lo amaron. No podían creer que eran ellos mismos en otro mundo. La experiencia más original que hemos tenido en una boda." data-en="All my guests loved it. They couldn't believe it was themselves in another world. The most original experience we've had at a wedding.">Todos mis invitados lo amaron. No podían creer que eran ellos mismos en otro mundo. La experiencia más original que hemos tenido en una boda.</blockquote>
+      <cite>María G. <span data-es="— Boda, CDMX" data-en="— Wedding, CDMX">— Boda, CDMX</span></cite>
+    </div>
+    <div class="testimonial">
+      <blockquote data-es="El boom de la noche. Todos hacían fila para tomarse la foto. Mis hijos seguían hablando de ello al día siguiente. ¡Tiene que estar en mi quinceañera!" data-en="The hit of the night. Everyone was lining up for their photo. My kids were still talking about it the next day.">El boom de la noche. Todos hacían fila para tomarse la foto. Mis hijos seguían hablando de ello al día siguiente.</blockquote>
+      <cite>Carlos R. <span data-es="— Quinceañera, Guadalajara" data-en="— Quinceañera, Guadalajara">— Quinceañera, Guadalajara</span></cite>
+    </div>
+    <div class="testimonial">
+      <blockquote data-es="Nuestros colaboradores siguieron hablando de ello semanas después. Fue el toque perfecto para nuestro evento corporativo de fin de año." data-en="Our team kept talking about it weeks later. It was the perfect touch for our year-end corporate event.">Nuestros colaboradores siguieron hablando de ello semanas después. Fue el toque perfecto para nuestro evento corporativo de fin de año.</blockquote>
+      <cite>Ana L. <span data-es="— Evento Corporativo" data-en="— Corporate Event">— Evento Corporativo</span></cite>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<div class="section-bg">
+<section class="fade-in" id="contact">
+  <div class="section-title">
+    <h2 data-es="Reserva tu fecha" data-en="Book your date">Reserva tu fecha</h2>
+    <p data-es="Escríbenos por WhatsApp o llena el formulario." data-en="Message us on WhatsApp or fill out the form.">Escríbenos por WhatsApp o llena el formulario.</p>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <h3 data-es="¿Hablamos?" data-en="Let's talk?">¿Hablamos?</h3>
+      <p data-es="Cuéntanos de tu evento — fecha, tipo, número de invitados — y te preparamos una cotización en menos de 24 horas." data-en="Tell us about your event — date, type, number of guests — and we'll prepare a quote in less than 24 hours.">Cuéntanos de tu evento — fecha, tipo, número de invitados — y te preparamos una cotización en menos de 24 horas.</p>
+      <a href="https://wa.me/521XXXXXXXXXX?text=Hola%20Pixel%20AI%2C%20me%20interesa%20cotizar%20mi%20evento" target="_blank" class="btn-wa" style="display:inline-flex">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        <span data-es="Escribir por WhatsApp" data-en="Message on WhatsApp">Escribir por WhatsApp</span>
+      </a>
+    </div>
+    <form class="contact-form" onsubmit="submitForm(event)">
+      <input type="text" id="cf-name" required placeholder="" data-placeholder-es="Nombre" data-placeholder-en="Name"/>
+      <input type="email" id="cf-email" required placeholder="" data-placeholder-es="Correo electrónico" data-placeholder-en="Email address"/>
+      <select id="cf-type">
+        <option value="" data-es="Tipo de evento" data-en="Event type">Tipo de evento</option>
+        <option value="boda" data-es="Boda / Wedding" data-en="Wedding">Boda / Wedding</option>
+        <option value="xv" data-es="Quinceañera" data-en="Quinceañera">Quinceañera</option>
+        <option value="corp" data-es="Corporativo" data-en="Corporate">Corporativo</option>
+        <option value="otro" data-es="Otro" data-en="Other">Otro</option>
+      </select>
+      <input type="date" id="cf-date"/>
+      <textarea id="cf-msg" rows="3" placeholder="" data-placeholder-es="Cuéntanos de tu evento..." data-placeholder-en="Tell us about your event..."></textarea>
+      <div class="form-btns">
+        <button type="submit" class="price-cta" style="flex:1" data-es="Enviar solicitud" data-en="Send request">Enviar solicitud</button>
+      </div>
+    </form>
+  </div>
+</section>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Pixel AI ✨</div>
+  <div class="social-links">
+    <a href="#" aria-label="Instagram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="#" aria-label="TikTok">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+    </a>
+  </div>
+  <p data-es="© 2026 Pixel AI · Tu evento, nuestra magia. · Powered by AI ✨" data-en="© 2026 Pixel AI · Your event, our magic. · Powered by AI ✨">© 2026 Pixel AI · Tu evento, nuestra magia. · Powered by AI ✨</p>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a id="wa-float" href="https://wa.me/521XXXXXXXXXX?text=Hola%20Pixel%20AI" target="_blank" aria-label="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<script>
+// ── Language toggle ────────────────────────────────────────────────────────
+let currentLang = 'es';
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  applyLang();
+}
+function applyLang() {
+  const btn = document.getElementById('lang-btn');
+  btn.textContent = currentLang === 'es' ? 'EN' : 'ES';
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('[data-es]').forEach(el => {
+    const key = 'data-' + currentLang;
+    if (el.hasAttribute(key)) el.textContent = el.getAttribute(key);
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-placeholder-es]').forEach(el => {
+    el.placeholder = el.getAttribute('data-placeholder-' + currentLang) || '';
+  });
+}
+
+// ── Particle canvas ────────────────────────────────────────────────────────
+(function initParticles() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random(), y: Math.random(),
+      r: Math.random() * 1.5 + 0.5,
+      speed: Math.random() * 0.0003 + 0.0001,
+      opacity: Math.random(),
+      dir: Math.random() > 0.5 ? 1 : -1,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.opacity += p.speed * p.dir;
+      if (p.opacity >= 1 || p.opacity <= 0) p.dir *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x * canvas.width, p.y * canvas.height, p.r, 0, Math.PI * 2);
+      const color = Math.random() > 0.7 ? `rgba(168,85,247,${p.opacity})` : `rgba(241,245,249,${p.opacity * 0.6})`;
+      ctx.fillStyle = color;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Scroll fade-in ─────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ── Contact form ───────────────────────────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault();
+  const name = document.getElementById('cf-name').value;
+  const email = document.getElementById('cf-email').value;
+  const type = document.getElementById('cf-type').value;
+  const date = document.getElementById('cf-date').value;
+  const msg = document.getElementById('cf-msg').value;
+  const body = `Hola Pixel AI,%0A%0ANombre: ${encodeURIComponent(name)}%0AEmail: ${encodeURIComponent(email)}%0ATipo de evento: ${encodeURIComponent(type)}%0AFecha: ${encodeURIComponent(date)}%0AMensaje: ${encodeURIComponent(msg)}`;
+  window.open(`https://wa.me/521XXXXXXXXXX?text=${body}`, '_blank');
+}
+</script>
+</body>
+</html>
