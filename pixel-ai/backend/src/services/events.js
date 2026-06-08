@@ -12,7 +12,7 @@ const { v4: uuidv4 } = require('uuid');
  */
 const STORE_PATH = path.resolve(
   process.env.EVENTS_STORE_PATH ||
-  path.join(__dirname, '../../../../config/events.json')
+  path.join(__dirname, '../../../config/events.json')
 );
 
 // ── In-memory cache ───────────────────────────────────────────────────────────
