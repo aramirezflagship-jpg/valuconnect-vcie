@@ -1,0 +1,32 @@
+[
+  {
+    "id": "demo",
+    "pin": "0000",
+    "name": "Pixel AI Demo",
+    "active": true,
+    "language": "es",
+    "branding": {
+      "primaryColor": "#7c3aed",
+      "accentColor": "#f59e0b",
+      "logoUrl": null,
+      "eventName": "Pixel AI Demo",
+      "tagline": "Tu evento, nuestra magia."
+    },
+    "themes": ["galaxy", "jungle", "royal", "sunset", "wedding", "xv"],
+    "delivery": {
+      "smsEnabled": true,
+      "whatsappEnabled": true,
+      "qrEnabled": true
+    },
+    "printing": {
+      "enabled": false,
+      "copies": 1
+    },
+    "stats": {
+      "photosTaken": 0,
+      "photosDelivered": 0,
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    "photos": []
+  }
+]

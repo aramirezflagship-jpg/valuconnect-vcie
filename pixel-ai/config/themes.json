@@ -1,0 +1,82 @@
+[
+  {
+    "id": "galaxy",
+    "name": { "en": "Galaxy", "es": "Galaxia" },
+    "description": { "en": "A breathtaking cosmic nebula", "es": "Una nebulosa cósmica impresionante" },
+    "prompt": "cinematic photo, person standing in front of a breathtaking cosmic nebula, vibrant purple and blue galaxy, stars, aurora borealis, epic lighting, ultra realistic, 8k, professional photography",
+    "negativePrompt": "blurry, deformed, ugly, low quality, cartoon, drawing",
+    "style": "cosmic",
+    "gradient": ["#0f0c29", "#302b63", "#24243e"],
+    "previewColor": "#1a1040"
+  },
+  {
+    "id": "jungle",
+    "name": { "en": "Jungle", "es": "Selva" },
+    "description": { "en": "Lush tropical paradise", "es": "Paraíso tropical exuberante" },
+    "prompt": "cinematic photo, person standing in a lush tropical rainforest, exotic flowers, waterfall in background, golden hour light, vibrant greens, professional photography, 8k",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "nature",
+    "gradient": ["#134e5e", "#71b280"],
+    "previewColor": "#1a5e3a"
+  },
+  {
+    "id": "royal",
+    "name": { "en": "Royal Court", "es": "Corte Real" },
+    "description": { "en": "Majestic palace ballroom", "es": "Grandioso salón de palacio" },
+    "prompt": "cinematic photo, person standing in a magnificent royal palace ballroom, golden chandeliers, marble columns, ornate architecture, elegant lighting, ultra realistic, 8k",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "elegant",
+    "gradient": ["#4776e6", "#8e54e9"],
+    "previewColor": "#2d3b8a"
+  },
+  {
+    "id": "sunset",
+    "name": { "en": "Golden Sunset", "es": "Atardecer Dorado" },
+    "description": { "en": "Epic golden hour beach", "es": "Playa en hora dorada épica" },
+    "prompt": "cinematic photo, person at a breathtaking beach sunset, golden hour, orange and pink sky, ocean waves, warm light, professional photography, 8k, gorgeous",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "outdoor",
+    "gradient": ["#f7971e", "#ffd200"],
+    "previewColor": "#c47a15"
+  },
+  {
+    "id": "wedding",
+    "name": { "en": "Elegant", "es": "Elegante" },
+    "description": { "en": "Romantic garden reception", "es": "Recepción romántica en jardín" },
+    "prompt": "cinematic photo, person at an elegant outdoor wedding reception, soft bokeh fairy lights, white roses, romantic atmosphere, soft warm lighting, professional photography, 8k",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "wedding",
+    "gradient": ["#bdc3c7", "#2c3e50"],
+    "previewColor": "#5a6a7a"
+  },
+  {
+    "id": "xv",
+    "name": { "en": "Quinceañera", "es": "Quinceañera" },
+    "description": { "en": "Magical pink palace", "es": "Palacio mágico rosa" },
+    "prompt": "cinematic photo, person at a magical quinceañera celebration, pink and gold decorations, flower arch, sparkles, princess ballroom, magical atmosphere, ultra realistic, 8k",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "celebration",
+    "gradient": ["#f953c6", "#b91d73"],
+    "previewColor": "#8a1450"
+  },
+  {
+    "id": "corporate",
+    "name": { "en": "Corporate", "es": "Corporativo" },
+    "description": { "en": "Modern city skyline", "es": "Horizonte urbano moderno" },
+    "prompt": "cinematic photo, person standing in front of a stunning modern city skyline at night, skyscrapers with lights, professional business atmosphere, clean and sharp, 8k",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "corporate",
+    "gradient": ["#141e30", "#243b55"],
+    "previewColor": "#1a2840"
+  },
+  {
+    "id": "paris",
+    "name": { "en": "Paris", "es": "París" },
+    "description": { "en": "Eiffel Tower at night", "es": "Torre Eiffel de noche" },
+    "prompt": "cinematic photo, person standing in front of the illuminated Eiffel Tower Paris at night, city lights, romantic atmosphere, beautiful bokeh, professional travel photography, 8k",
+    "negativePrompt": "blurry, deformed, ugly, low quality",
+    "style": "travel",
+    "gradient": ["#1c1c5e", "#2a2a8a"],
+    "previewColor": "#13134a"
+  }
+]
