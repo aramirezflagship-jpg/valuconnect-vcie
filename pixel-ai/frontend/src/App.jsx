@@ -74,7 +74,8 @@ export default function App() {
     setConfigLoading(true);
     getEventConfig(eventId)
       .then((data) => {
-        setConfig({ ...DEFAULT_CONFIG, ...data, eventId });
+        // null means demo mode — backend unreachable, use defaults
+        setConfig({ ...DEFAULT_CONFIG, ...(data || {}), eventId });
       })
       .catch((err) => {
         console.warn('[App] Could not load event config, using defaults.', err);
@@ -113,6 +114,7 @@ export default function App() {
         // If the API returns a direct result URL, skip polling
         if (result.resultUrl) {
           setResultUrl(result.resultUrl);
+          if (result.demo) setProcessingError('demo');
           setScreen('preview');
           return;
         }

@@ -32,7 +32,29 @@ export default function Preview({ lang, imageUrl, error, onApprove, onRetake }) 
           position: 'relative',
         }}
       >
-        {error ? (
+        {error === 'demo' ? (
+          /* Demo mode — show the original photo with a banner */
+          <>
+            <motion.img
+              key={imageUrl}
+              src={imageUrl}
+              alt="Demo capture"
+              initial={{ opacity: 0, scale: 0.88 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.55, ease: 'backOut' }}
+              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 8 }}
+              draggable={false}
+            />
+            <div style={{
+              position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%)',
+              background: 'rgba(124,58,237,0.85)', backdropFilter: 'blur(8px)',
+              color: '#fff', fontSize: '0.85rem', padding: '6px 16px', borderRadius: 20,
+              fontWeight: 600, whiteSpace: 'nowrap',
+            }}>
+              ✨ Demo — sin fondo IA (backend no conectado)
+            </div>
+          </>
+        ) : error ? (
           /* Error state */
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}

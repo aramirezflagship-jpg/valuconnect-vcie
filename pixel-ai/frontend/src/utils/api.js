@@ -7,12 +7,34 @@ const api = axios.create({
   timeout: 60_000, // generous — AI processing can take a while
 });
 
+// ── Demo mode ─────────────────────────────────────────────────────────────────
+// Active when VITE_DEMO_MODE=true OR when the backend health check fails within
+// 4 seconds (e.g. GitHub Pages deploy without a live backend).
+let _demoMode = import.meta.env.VITE_DEMO_MODE === 'true';
+let _healthChecked = false;
+
+async function checkBackendReachable() {
+  if (_healthChecked) return;
+  _healthChecked = true;
+  try {
+    await axios.get(`${BASE_URL}/health`, { timeout: 4000 });
+  } catch {
+    console.warn('[api] Backend unreachable — switching to demo mode');
+    _demoMode = true;
+  }
+}
+
+// Kick off the health check immediately so it resolves before the first capture.
+checkBackendReachable();
+
 /**
  * Fetch event configuration from the backend.
  * @param {string} eventId
  * @returns {Promise<Object>} event config object
  */
 export async function getEventConfig(eventId) {
+  await checkBackendReachable();
+  if (_demoMode) return null; // caller falls back to default config
   const { data } = await api.get(`/api/events/${encodeURIComponent(eventId)}`);
   return data;
 }
@@ -28,6 +50,16 @@ export async function getEventConfig(eventId) {
  * @returns {Promise<{ jobId: string, resultUrl?: string }>}
  */
 export async function uploadCapture(imageBlob, eventId, themeId, phone = '', onProgress) {
+  await checkBackendReachable();
+
+  // Demo mode: skip the backend and return the original capture as the result.
+  if (_demoMode) {
+    if (onProgress) onProgress(100);
+    await new Promise((r) => setTimeout(r, 1800)); // simulate brief processing
+    const resultUrl = URL.createObjectURL(imageBlob);
+    return { resultUrl, demo: true };
+  }
+
   const formData = new FormData();
   formData.append('image', imageBlob, 'capture.jpg');
   formData.append('eventId', eventId);
