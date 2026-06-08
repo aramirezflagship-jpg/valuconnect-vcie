@@ -15,16 +15,22 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
+// FRONTEND_URL can be a comma-separated list for multiple origins
+// e.g. "https://pixel-ai.vercel.app,https://booth.pixelai.mx"
 const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL]
+  ? process.env.FRONTEND_URL.split(',').map((u) => u.trim()).filter(Boolean)
   : ['http://localhost:3001', 'http://localhost:8080'];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, same-origin)
+      // Allow requests with no origin (mobile apps, curl, iPad kiosk same-origin)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
+      // In development, allow any localhost port
+      if (process.env.NODE_ENV !== 'production' && /^https?:\/\/localhost(:\d+)?$/.test(origin)) {
+        return callback(null, true);
+      }
       callback(new Error(`CORS: origin ${origin} not allowed`));
     },
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -49,6 +55,12 @@ app.get('/health', (_req, res) => {
 
 // ── Admin dashboard (static HTML, served at /admin) ──────────────────────────
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+// ── Public guest gallery page (served at /gallery?event=ID) ──────────────────
+app.use('/gallery', express.static(path.join(__dirname, 'public')));
+app.get('/gallery', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'gallery.html'));
+});
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/capture', captureRouter);
