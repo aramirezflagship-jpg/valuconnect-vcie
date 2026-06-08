@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- PWA / iOS kiosk meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Pixel AI" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Viewport: lock scale for kiosk use -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/valuconnect-vcie/manifest.json" />
+
+    <!-- Favicon placeholder -->
+    <link rel="icon" type="image/svg+xml" href="/valuconnect-vcie/favicon.svg" />
+
+    <!-- iOS home screen icon -->
+    <link rel="apple-touch-icon" href="/valuconnect-vcie/icon.svg" />
+
+    <title>Pixel AI</title>
+    <script type="module" crossorigin src="/valuconnect-vcie/assets/index-BMJziVSd.js"></script>
+    <link rel="stylesheet" crossorigin href="/valuconnect-vcie/assets/index-Cqd3Rbkk.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
