@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { t } from '../utils/i18n.js';
 
