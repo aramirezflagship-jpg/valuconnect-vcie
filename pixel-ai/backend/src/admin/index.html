@@ -334,7 +334,7 @@ async function loadOverviewEvents() {
   loading.style.display = 'flex'; table.style.display = 'none';
   try {
     const res = await api('/api/admin/events');
-    const events = res.ok ? await res.json() : [];
+    const events = res.ok ? ((await res.json()).events || []) : [];
     allEvents = events;
     const tbody = document.getElementById('overview-events-body');
     tbody.innerHTML = events.slice(0,5).map(ev => `
@@ -356,7 +356,7 @@ async function loadEvents() {
   loading.style.display = 'flex'; table.style.display = 'none';
   try {
     const res = await api('/api/admin/events');
-    const events = res.ok ? await res.json() : [];
+    const events = res.ok ? ((await res.json()).events || []) : [];
     allEvents = events;
     const tbody = document.getElementById('events-body');
     tbody.innerHTML = events.map(ev => {
@@ -383,7 +383,7 @@ async function populateGallerySelect() {
   const sel = document.getElementById('gallery-event-select');
   if (allEvents.length === 0) {
     const res = await api('/api/admin/events');
-    if (res.ok) allEvents = await res.json();
+    if (res.ok) allEvents = (await res.json()).events || [];
   }
   sel.innerHTML = '<option value="">— Select event —</option>' +
     allEvents.map(ev => `<option value="${ev.id}">${esc(ev.name)}</option>`).join('');
