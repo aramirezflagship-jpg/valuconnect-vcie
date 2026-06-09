@@ -161,12 +161,13 @@
     letter-spacing: -.3px;
   }
 
-  /* Text info */
+  /* Text info — all left-justified */
   .front-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: .8mm;
+    text-align: left;
   }
 
   .front-name {
@@ -175,6 +176,7 @@
     color: #FFFFFF;
     line-height: 1.05;
     letter-spacing: -.4px;
+    text-align: left;
   }
 
   .front-title {
@@ -185,6 +187,7 @@
     text-transform: uppercase;
     letter-spacing: .5px;
     margin-top: .5mm;
+    text-align: left;
   }
 
   .front-url {
@@ -192,6 +195,7 @@
     font-weight: 700;
     color: #FFFFFF;
     margin-top: 1.5mm;
+    text-align: left;
   }
 
   .front-email {
@@ -199,6 +203,7 @@
     font-weight: 400;
     color: rgba(255,255,255,.45);
     margin-top: .5mm;
+    text-align: left;
   }
 
   /* Bottom strip */
@@ -266,7 +271,8 @@
   .back-band-left {
     display: flex;
     flex-direction: column;
-    gap: 2mm;
+    gap: 1.5mm;
+    flex: 1;
   }
 
   .back-logo {
@@ -277,7 +283,14 @@
   }
   .back-logo-accent { color: #93C5FD; }
 
-  /* Product pills sit right under the logo */
+  /* Thin separator between logo row and products */
+  .back-divider {
+    height: 1px;
+    background: rgba(255,255,255,.15);
+    margin: .5mm 0;
+  }
+
+  /* Product pills — sit under the separator */
   .back-products {
     display: flex;
     gap: 2mm;
@@ -286,8 +299,13 @@
   .bp {
     display: flex;
     flex-direction: column;
-    gap: .4mm;
+    gap: .3mm;
+    padding: 1.2mm 2mm;
+    border-radius: 1.5mm;
   }
+
+  .bp-vc4   { background: rgba(15,118,110,.25); }
+  .bp-flash { background: rgba(37,99,235,.25); }
 
   .bp-code {
     font-size: 7pt;
@@ -298,9 +316,9 @@
   .bp-flash .bp-code { color: #93C5FD; }
 
   .bp-name {
-    font-size: 5pt;
+    font-size: 4.5pt;
     font-weight: 500;
-    color: rgba(255,255,255,.45);
+    color: rgba(255,255,255,.4);
     line-height: 1.2;
   }
 
@@ -326,15 +344,43 @@
     font-style: italic;
   }
 
-  /* QR code — centered in the white body area */
+  /* QR code — right-aligned in the white body area */
   .back-qr-area {
     flex: 1;
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4mm;
+    padding: 2.5mm 4.5mm;
+  }
+
+  .qr-cta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+  }
+
+  .qr-cta-en {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #0D1B2A;
+    letter-spacing: -.1px;
+  }
+
+  .qr-cta-es {
+    font-size: 5.5pt;
+    font-weight: 500;
+    color: #64748B;
+    font-style: italic;
+  }
+
+  .qr-right {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 2mm;
-    padding: 3mm;
+    gap: 1.5mm;
+    flex-shrink: 0;
   }
 
   .qr-wrap {
@@ -424,7 +470,7 @@
         
     <div class="card card-front">
 
-      <!-- SVG background: grain texture + V watermark + diagonal amber swoosh -->
+      <!-- SVG background: grain texture + gold shimmer + V watermark + swoosh -->
       <svg class="front-svg-bg" viewBox="0 0 270 165" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="grain" x="0%" y="0%" width="100%" height="100%">
@@ -434,9 +480,15 @@
               in="noise" result="blueGrain"/>
             <feBlend in="SourceGraphic" in2="blueGrain" mode="soft-light"/>
           </filter>
+          <radialGradient id="goldShimmer" cx="25%" cy="25%" r="65%">
+            <stop offset="0%"   stop-color="#D4AF37" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+          </radialGradient>
         </defs>
         <!-- Grain texture layer -->
         <rect x="0" y="0" width="270" height="165" fill="transparent" filter="url(#grain)"/>
+        <!-- Very light gold shimmer top-left -->
+        <rect x="0" y="0" width="270" height="165" fill="url(#goldShimmer)"/>
         <!-- Mascot "V" watermark -->
         <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
               fill="rgba(255,255,255,0.05)" text-anchor="middle">V</text>
@@ -485,7 +537,7 @@
         
     <div class="card card-front">
 
-      <!-- SVG background: grain texture + V watermark + diagonal amber swoosh -->
+      <!-- SVG background: grain texture + gold shimmer + V watermark + swoosh -->
       <svg class="front-svg-bg" viewBox="0 0 270 165" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="grain" x="0%" y="0%" width="100%" height="100%">
@@ -495,9 +547,15 @@
               in="noise" result="blueGrain"/>
             <feBlend in="SourceGraphic" in2="blueGrain" mode="soft-light"/>
           </filter>
+          <radialGradient id="goldShimmer" cx="25%" cy="25%" r="65%">
+            <stop offset="0%"   stop-color="#D4AF37" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+          </radialGradient>
         </defs>
         <!-- Grain texture layer -->
         <rect x="0" y="0" width="270" height="165" fill="transparent" filter="url(#grain)"/>
+        <!-- Very light gold shimmer top-left -->
+        <rect x="0" y="0" width="270" height="165" fill="url(#goldShimmer)"/>
         <!-- Mascot "V" watermark -->
         <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
               fill="rgba(255,255,255,0.05)" text-anchor="middle">V</text>
@@ -556,12 +614,13 @@
         
     <div class="card card-back">
 
-      <!-- Navy header: company name + products underneath -->
+      <!-- Navy header: company name + separator + products -->
       <div class="back-band">
         <div class="back-band-left">
           <div class="back-logo">
             Valu<span class="back-logo-accent">Connect</span> Solutions
           </div>
+          <div class="back-divider"></div>
           <div class="back-products">
             <div class="bp bp-vc4">
               <div class="bp-code">VC4</div>
@@ -575,15 +634,21 @@
         </div>
         <div class="back-tagline-col">
           <div class="back-tag-en">Work Smarter, Not Harder.</div>
-          <div class="back-tag-es">Trabaja Inteligente.</div>
+          <div class="back-tag-es">Trabaja Inteligentemente.</div>
         </div>
       </div>
 
-      <!-- QR code centered in white body -->
+      <!-- QR code right-aligned in white body -->
       <div class="back-qr-area">
-        <div class="qr-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#FAFAF8" d="M0 0h35v35H0z"/><path stroke="#0D1B2A" d="M1 1.5h7m2 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m2 0h3m3 0h2m1 0h1m2 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m4 0h5m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m3 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m1 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M1 9.5h1m1 0h5m4 0h1m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h5M1 10.5h1m2 0h1m1 0h1m2 0h2m2 0h2m1 0h5m3 0h1m2 0h2m1 0h2M7 11.5h1m1 0h1m1 0h8m4 0h1m5 0h1m1 0h2M1 12.5h1m1 0h4m1 0h1m1 0h3m1 0h1m2 0h3m7 0h1m1 0h3M1 13.5h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h3m2 0h1m3 0h1M2 14.5h3m3 0h2m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2M1 15.5h4m1 0h2m2 0h5m1 0h3m2 0h2m3 0h2m1 0h1m1 0h2M1 16.5h1m4 0h1m3 0h2m2 0h1m1 0h1m5 0h2m1 0h3m2 0h2M1 17.5h3m2 0h4m4 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h4m1 0h1M3 18.5h2m3 0h2m1 0h4m4 0h6m2 0h2m1 0h3M1 19.5h1m2 0h1m1 0h5m4 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h2M3 20.5h1m1 0h2m4 0h2m1 0h1m1 0h2m4 0h2m4 0h4M4 21.5h2m1 0h1m1 0h5m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1M1 22.5h3m1 0h1m4 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1M1 23.5h1m1 0h1m3 0h3m1 0h4m3 0h1m1 0h1m7 0h2m2 0h1M1 24.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h3m1 0h3M1 25.5h1m3 0h1m1 0h2m1 0h2m1 0h2m3 0h1m1 0h2m3 0h5m1 0h3M9 26.5h1m1 0h1m2 0h2m1 0h5m3 0h1m3 0h1m1 0h3M1 27.5h7m3 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h1m4 0h6m4 0h2m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h3m1 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m4 0h3m2 0h3m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m1 0h8m2 0h1m1 0h1m1 0h1m1 0h2m1 0h2M1 32.5h1m5 0h1m2 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3M1 33.5h7m1 0h1m3 0h2m1 0h1m1 0h1m4 0h3m1 0h2m1 0h3"/></svg>
+        <div class="qr-cta">
+          <div class="qr-cta-en">Let's connect</div>
+          <div class="qr-cta-es">Escanea y reserva</div>
+        </div>
+        <div class="qr-right">
+          <div class="qr-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#FAFAF8" d="M0 0h35v35H0z"/><path stroke="#0D1B2A" d="M1 1.5h7m2 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m2 0h3m3 0h2m1 0h1m2 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m4 0h5m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m3 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m1 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M1 9.5h1m1 0h5m4 0h1m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h5M1 10.5h1m2 0h1m1 0h1m2 0h2m2 0h2m1 0h5m3 0h1m2 0h2m1 0h2M7 11.5h1m1 0h1m1 0h8m4 0h1m5 0h1m1 0h2M1 12.5h1m1 0h4m1 0h1m1 0h3m1 0h1m2 0h3m7 0h1m1 0h3M1 13.5h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h3m2 0h1m3 0h1M2 14.5h3m3 0h2m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2M1 15.5h4m1 0h2m2 0h5m1 0h3m2 0h2m3 0h2m1 0h1m1 0h2M1 16.5h1m4 0h1m3 0h2m2 0h1m1 0h1m5 0h2m1 0h3m2 0h2M1 17.5h3m2 0h4m4 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h4m1 0h1M3 18.5h2m3 0h2m1 0h4m4 0h6m2 0h2m1 0h3M1 19.5h1m2 0h1m1 0h5m4 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h2M3 20.5h1m1 0h2m4 0h2m1 0h1m1 0h2m4 0h2m4 0h4M4 21.5h2m1 0h1m1 0h5m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1M1 22.5h3m1 0h1m4 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1M1 23.5h1m1 0h1m3 0h3m1 0h4m3 0h1m1 0h1m7 0h2m2 0h1M1 24.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h3m1 0h3M1 25.5h1m3 0h1m1 0h2m1 0h2m1 0h2m3 0h1m1 0h2m3 0h5m1 0h3M9 26.5h1m1 0h1m2 0h2m1 0h5m3 0h1m3 0h1m1 0h3M1 27.5h7m3 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h1m4 0h6m4 0h2m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h3m1 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m4 0h3m2 0h3m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m1 0h8m2 0h1m1 0h1m1 0h1m1 0h2m1 0h2M1 32.5h1m5 0h1m2 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3M1 33.5h7m1 0h1m3 0h2m1 0h1m1 0h1m4 0h3m1 0h2m1 0h3"/></svg>
 </div>
-        <div class="qr-label">Scan to book a meeting</div>
+          <div class="qr-label">Scan to book a meeting</div>
+        </div>
       </div>
 
       <!-- Amber footer -->
@@ -596,12 +661,13 @@
         
     <div class="card card-back">
 
-      <!-- Navy header: company name + products underneath -->
+      <!-- Navy header: company name + separator + products -->
       <div class="back-band">
         <div class="back-band-left">
           <div class="back-logo">
             Valu<span class="back-logo-accent">Connect</span> Solutions
           </div>
+          <div class="back-divider"></div>
           <div class="back-products">
             <div class="bp bp-vc4">
               <div class="bp-code">VC4</div>
@@ -615,15 +681,21 @@
         </div>
         <div class="back-tagline-col">
           <div class="back-tag-en">Work Smarter, Not Harder.</div>
-          <div class="back-tag-es">Trabaja Inteligente.</div>
+          <div class="back-tag-es">Trabaja Inteligentemente.</div>
         </div>
       </div>
 
-      <!-- QR code centered in white body -->
+      <!-- QR code right-aligned in white body -->
       <div class="back-qr-area">
-        <div class="qr-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#FAFAF8" d="M0 0h35v35H0z"/><path stroke="#0D1B2A" d="M1 1.5h7m2 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m2 0h3m3 0h2m1 0h1m2 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m4 0h5m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m3 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m1 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M1 9.5h1m1 0h5m4 0h1m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h5M1 10.5h1m2 0h1m1 0h1m2 0h2m2 0h2m1 0h5m3 0h1m2 0h2m1 0h2M7 11.5h1m1 0h1m1 0h8m4 0h1m5 0h1m1 0h2M1 12.5h1m1 0h4m1 0h1m1 0h3m1 0h1m2 0h3m7 0h1m1 0h3M1 13.5h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h3m2 0h1m3 0h1M2 14.5h3m3 0h2m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2M1 15.5h4m1 0h2m2 0h5m1 0h3m2 0h2m3 0h2m1 0h1m1 0h2M1 16.5h1m4 0h1m3 0h2m2 0h1m1 0h1m5 0h2m1 0h3m2 0h2M1 17.5h3m2 0h4m4 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h4m1 0h1M3 18.5h2m3 0h2m1 0h4m4 0h6m2 0h2m1 0h3M1 19.5h1m2 0h1m1 0h5m4 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h2M3 20.5h1m1 0h2m4 0h2m1 0h1m1 0h2m4 0h2m4 0h4M4 21.5h2m1 0h1m1 0h5m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1M1 22.5h3m1 0h1m4 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1M1 23.5h1m1 0h1m3 0h3m1 0h4m3 0h1m1 0h1m7 0h2m2 0h1M1 24.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h3m1 0h3M1 25.5h1m3 0h1m1 0h2m1 0h2m1 0h2m3 0h1m1 0h2m3 0h5m1 0h3M9 26.5h1m1 0h1m2 0h2m1 0h5m3 0h1m3 0h1m1 0h3M1 27.5h7m3 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h1m4 0h6m4 0h2m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h3m1 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m4 0h3m2 0h3m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m1 0h8m2 0h1m1 0h1m1 0h1m1 0h2m1 0h2M1 32.5h1m5 0h1m2 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3M1 33.5h7m1 0h1m3 0h2m1 0h1m1 0h1m4 0h3m1 0h2m1 0h3"/></svg>
+        <div class="qr-cta">
+          <div class="qr-cta-en">Let's connect</div>
+          <div class="qr-cta-es">Escanea y reserva</div>
+        </div>
+        <div class="qr-right">
+          <div class="qr-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#FAFAF8" d="M0 0h35v35H0z"/><path stroke="#0D1B2A" d="M1 1.5h7m2 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m2 0h3m3 0h2m1 0h1m2 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m4 0h5m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m3 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m1 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M1 9.5h1m1 0h5m4 0h1m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h5M1 10.5h1m2 0h1m1 0h1m2 0h2m2 0h2m1 0h5m3 0h1m2 0h2m1 0h2M7 11.5h1m1 0h1m1 0h8m4 0h1m5 0h1m1 0h2M1 12.5h1m1 0h4m1 0h1m1 0h3m1 0h1m2 0h3m7 0h1m1 0h3M1 13.5h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h3m2 0h1m3 0h1M2 14.5h3m3 0h2m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2M1 15.5h4m1 0h2m2 0h5m1 0h3m2 0h2m3 0h2m1 0h1m1 0h2M1 16.5h1m4 0h1m3 0h2m2 0h1m1 0h1m5 0h2m1 0h3m2 0h2M1 17.5h3m2 0h4m4 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h4m1 0h1M3 18.5h2m3 0h2m1 0h4m4 0h6m2 0h2m1 0h3M1 19.5h1m2 0h1m1 0h5m4 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h2M3 20.5h1m1 0h2m4 0h2m1 0h1m1 0h2m4 0h2m4 0h4M4 21.5h2m1 0h1m1 0h5m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1M1 22.5h3m1 0h1m4 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1M1 23.5h1m1 0h1m3 0h3m1 0h4m3 0h1m1 0h1m7 0h2m2 0h1M1 24.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h3m1 0h3M1 25.5h1m3 0h1m1 0h2m1 0h2m1 0h2m3 0h1m1 0h2m3 0h5m1 0h3M9 26.5h1m1 0h1m2 0h2m1 0h5m3 0h1m3 0h1m1 0h3M1 27.5h7m3 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h1m4 0h6m4 0h2m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h3m1 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m4 0h3m2 0h3m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m1 0h8m2 0h1m1 0h1m1 0h1m1 0h2m1 0h2M1 32.5h1m5 0h1m2 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3M1 33.5h7m1 0h1m3 0h2m1 0h1m1 0h1m4 0h3m1 0h2m1 0h3"/></svg>
 </div>
-        <div class="qr-label">Scan to book a meeting</div>
+          <div class="qr-label">Scan to book a meeting</div>
+        </div>
       </div>
 
       <!-- Amber footer -->

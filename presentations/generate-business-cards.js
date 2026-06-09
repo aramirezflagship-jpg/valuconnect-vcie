@@ -28,7 +28,7 @@ const CO = {
   name:       'ValuConnect Solutions',
   url:        'vcsolutions.us',
   tagline:    'Work Smarter, Not Harder.',
-  tagline_es: 'Trabaja Inteligente.',
+  tagline_es: 'Trabaja Inteligentemente.',
   bilingual:  'EN · ES',
   mascot:     'Valu',
   products: [
@@ -243,12 +243,13 @@ const CSS = `
     letter-spacing: -.3px;
   }
 
-  /* Text info */
+  /* Text info — all left-justified */
   .front-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: .8mm;
+    text-align: left;
   }
 
   .front-name {
@@ -257,6 +258,7 @@ const CSS = `
     color: ${P.white};
     line-height: 1.05;
     letter-spacing: -.4px;
+    text-align: left;
   }
 
   .front-title {
@@ -267,6 +269,7 @@ const CSS = `
     text-transform: uppercase;
     letter-spacing: .5px;
     margin-top: .5mm;
+    text-align: left;
   }
 
   .front-url {
@@ -274,6 +277,7 @@ const CSS = `
     font-weight: 700;
     color: ${P.white};
     margin-top: 1.5mm;
+    text-align: left;
   }
 
   .front-email {
@@ -281,6 +285,7 @@ const CSS = `
     font-weight: 400;
     color: rgba(255,255,255,.45);
     margin-top: .5mm;
+    text-align: left;
   }
 
   /* Bottom strip */
@@ -348,7 +353,8 @@ const CSS = `
   .back-band-left {
     display: flex;
     flex-direction: column;
-    gap: 2mm;
+    gap: 1.5mm;
+    flex: 1;
   }
 
   .back-logo {
@@ -359,7 +365,14 @@ const CSS = `
   }
   .back-logo-accent { color: #93C5FD; }
 
-  /* Product pills sit right under the logo */
+  /* Thin separator between logo row and products */
+  .back-divider {
+    height: 1px;
+    background: rgba(255,255,255,.15);
+    margin: .5mm 0;
+  }
+
+  /* Product pills — sit under the separator */
   .back-products {
     display: flex;
     gap: 2mm;
@@ -368,8 +381,13 @@ const CSS = `
   .bp {
     display: flex;
     flex-direction: column;
-    gap: .4mm;
+    gap: .3mm;
+    padding: 1.2mm 2mm;
+    border-radius: 1.5mm;
   }
+
+  .bp-vc4   { background: rgba(15,118,110,.25); }
+  .bp-flash { background: rgba(37,99,235,.25); }
 
   .bp-code {
     font-size: 7pt;
@@ -380,9 +398,9 @@ const CSS = `
   .bp-flash .bp-code { color: #93C5FD; }
 
   .bp-name {
-    font-size: 5pt;
+    font-size: 4.5pt;
     font-weight: 500;
-    color: rgba(255,255,255,.45);
+    color: rgba(255,255,255,.4);
     line-height: 1.2;
   }
 
@@ -408,15 +426,43 @@ const CSS = `
     font-style: italic;
   }
 
-  /* QR code — centered in the white body area */
+  /* QR code — right-aligned in the white body area */
   .back-qr-area {
     flex: 1;
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4mm;
+    padding: 2.5mm 4.5mm;
+  }
+
+  .qr-cta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+  }
+
+  .qr-cta-en {
+    font-size: 7pt;
+    font-weight: 700;
+    color: ${P.navy};
+    letter-spacing: -.1px;
+  }
+
+  .qr-cta-es {
+    font-size: 5.5pt;
+    font-weight: 500;
+    color: ${P.muted};
+    font-style: italic;
+  }
+
+  .qr-right {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 2mm;
-    padding: 3mm;
+    gap: 1.5mm;
+    flex-shrink: 0;
   }
 
   .qr-wrap {
@@ -496,7 +542,7 @@ function cardFront(person) {
   return `
     <div class="card card-front">
 
-      <!-- SVG background: grain texture + V watermark + diagonal amber swoosh -->
+      <!-- SVG background: grain texture + gold shimmer + V watermark + swoosh -->
       <svg class="front-svg-bg" viewBox="0 0 270 165" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="grain" x="0%" y="0%" width="100%" height="100%">
@@ -506,9 +552,15 @@ function cardFront(person) {
               in="noise" result="blueGrain"/>
             <feBlend in="SourceGraphic" in2="blueGrain" mode="soft-light"/>
           </filter>
+          <radialGradient id="goldShimmer" cx="25%" cy="25%" r="65%">
+            <stop offset="0%"   stop-color="#D4AF37" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+          </radialGradient>
         </defs>
         <!-- Grain texture layer -->
         <rect x="0" y="0" width="270" height="165" fill="transparent" filter="url(#grain)"/>
+        <!-- Very light gold shimmer top-left -->
+        <rect x="0" y="0" width="270" height="165" fill="url(#goldShimmer)"/>
         <!-- Mascot "V" watermark -->
         <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
               fill="rgba(255,255,255,0.05)" text-anchor="middle">V</text>
@@ -561,12 +613,13 @@ function cardBack(qrSvg) {
   return `
     <div class="card card-back">
 
-      <!-- Navy header: company name + products underneath -->
+      <!-- Navy header: company name + separator + products -->
       <div class="back-band">
         <div class="back-band-left">
           <div class="back-logo">
             Valu<span class="back-logo-accent">Connect</span> Solutions
           </div>
+          <div class="back-divider"></div>
           <div class="back-products">
             <div class="bp bp-vc4">
               <div class="bp-code">${vcie.code}</div>
@@ -584,10 +637,16 @@ function cardBack(qrSvg) {
         </div>
       </div>
 
-      <!-- QR code centered in white body -->
+      <!-- QR code right-aligned in white body -->
       <div class="back-qr-area">
-        <div class="qr-wrap">${qrSvg}</div>
-        <div class="qr-label">Scan to book a meeting</div>
+        <div class="qr-cta">
+          <div class="qr-cta-en">Let's connect</div>
+          <div class="qr-cta-es">Escanea y reserva</div>
+        </div>
+        <div class="qr-right">
+          <div class="qr-wrap">${qrSvg}</div>
+          <div class="qr-label">Scan to book a meeting</div>
+        </div>
       </div>
 
       <!-- Amber footer -->
