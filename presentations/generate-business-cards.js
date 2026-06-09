@@ -335,14 +335,20 @@ const CSS = `
     border: 1px solid ${P.border};
   }
 
-  /* Dark navy header — inverted from front amber bar */
+  /* Dark navy header — company name + products underneath */
   .back-band {
     background: ${P.navy};
-    padding: 3mm 4.5mm;
+    padding: 2.5mm 4.5mm 3mm;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     flex-shrink: 0;
+  }
+
+  .back-band-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
   }
 
   .back-logo {
@@ -353,11 +359,39 @@ const CSS = `
   }
   .back-logo-accent { color: ${P.amber}; }
 
+  /* Product pills sit right under the logo */
+  .back-products {
+    display: flex;
+    gap: 2mm;
+  }
+
+  .bp {
+    display: flex;
+    flex-direction: column;
+    gap: .4mm;
+  }
+
+  .bp-code {
+    font-size: 7pt;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .bp-vc4   .bp-code { color: #5EEAD4; }
+  .bp-flash .bp-code { color: #FDBA74; }
+
+  .bp-name {
+    font-size: 5pt;
+    font-weight: 500;
+    color: rgba(255,255,255,.45);
+    line-height: 1.2;
+  }
+
   .back-tagline-col {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: .5mm;
+    padding-top: .5mm;
   }
 
   .back-tag-en {
@@ -375,79 +409,21 @@ const CSS = `
     opacity: .75;
   }
 
-  /* Back body: products column + QR column */
-  .back-products {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding: 2mm 4.5mm;
-    gap: 3mm;
-  }
-
-  /* Left: stacked product entries */
-  .bp-col {
+  /* QR code — centered in the white body area */
+  .back-qr-area {
     flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 2.5mm;
-  }
-
-  .bp {
-    display: flex;
-    flex-direction: column;
-    gap: .6mm;
-    padding-left: 2.5mm;
-    border-left: 2px solid;
-  }
-
-  .bp-vc4   { border-color: ${P.teal}; }
-  .bp-flash { border-color: ${P.orange}; }
-
-  .bp-tag {
-    font-size: 4.5pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: ${P.muted};
-  }
-
-  .bp-code {
-    font-size: 8pt;
-    font-weight: 900;
-    line-height: 1;
-  }
-  .bp-vc4   .bp-code { color: ${P.teal}; }
-  .bp-flash .bp-code { color: ${P.orange}; }
-
-  .bp-name {
-    font-size: 5.5pt;
-    font-weight: 600;
-    color: ${P.navy};
-    line-height: 1.2;
-  }
-
-  .bp-desc {
-    font-size: 4.5pt;
-    color: ${P.muted};
-    line-height: 1.3;
-  }
-
-  /* Right: QR code column */
-  .qr-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5mm;
-    flex-shrink: 0;
-    padding-left: 3mm;
-    border-left: 1px solid ${P.border};
+    gap: 2mm;
+    padding: 3mm;
   }
 
   .qr-wrap {
-    width: 16mm;
-    height: 16mm;
-    border-radius: 1.5mm;
+    width: 20mm;
+    height: 20mm;
+    border-radius: 2mm;
     overflow: hidden;
   }
 
@@ -458,13 +434,12 @@ const CSS = `
   }
 
   .qr-label {
-    font-size: 4.5pt;
+    font-size: 5pt;
     font-weight: 700;
     color: ${P.muted};
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    line-height: 1.3;
+    letter-spacing: 1.2px;
   }
 
   /* Amber footer — inverted from back navy header */
@@ -576,10 +551,22 @@ function cardBack(qrSvg) {
   return `
     <div class="card card-back">
 
-      <!-- Navy header band -->
+      <!-- Navy header: company name + products underneath -->
       <div class="back-band">
-        <div class="back-logo">
-          Valu<span class="back-logo-accent">Connect</span> Solutions
+        <div class="back-band-left">
+          <div class="back-logo">
+            Valu<span class="back-logo-accent">Connect</span> Solutions
+          </div>
+          <div class="back-products">
+            <div class="bp bp-vc4">
+              <div class="bp-code">${vcie.code}</div>
+              <div class="bp-name">${vcie.full}</div>
+            </div>
+            <div class="bp bp-flash">
+              <div class="bp-code">${flash.code}</div>
+              <div class="bp-name">${flash.full}</div>
+            </div>
+          </div>
         </div>
         <div class="back-tagline-col">
           <div class="back-tag-en">${CO.tagline}</div>
@@ -587,26 +574,10 @@ function cardBack(qrSvg) {
         </div>
       </div>
 
-      <!-- Products + QR code -->
-      <div class="back-products">
-        <div class="bp-col">
-          <div class="bp bp-vc4">
-            <div class="bp-tag">Product</div>
-            <div class="bp-code">${vcie.code}</div>
-            <div class="bp-name">${vcie.full}</div>
-            <div class="bp-desc">${vcie.desc}</div>
-          </div>
-          <div class="bp bp-flash">
-            <div class="bp-tag">Product</div>
-            <div class="bp-code">${flash.code}</div>
-            <div class="bp-name">${flash.full}</div>
-            <div class="bp-desc">${flash.desc}</div>
-          </div>
-        </div>
-        <div class="qr-col">
-          <div class="qr-wrap">${qrSvg}</div>
-          <div class="qr-label">Book a<br>meeting</div>
-        </div>
+      <!-- QR code centered in white body -->
+      <div class="back-qr-area">
+        <div class="qr-wrap">${qrSvg}</div>
+        <div class="qr-label">Scan to book a meeting</div>
       </div>
 
       <!-- Amber footer -->
