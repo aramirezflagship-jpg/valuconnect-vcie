@@ -178,9 +178,10 @@ const CSS = `
     height: 100%;
   }
 
-  /* Top amber identity bar */
+  /* Top identity bar — frosted glass on blue texture */
   .front-bar {
-    background: ${P.amber};
+    background: rgba(255,255,255,.1);
+    border-bottom: 1px solid rgba(255,255,255,.12);
     padding: 1.8mm 4.5mm;
     display: flex;
     align-items: center;
@@ -191,23 +192,22 @@ const CSS = `
   .front-brand {
     font-size: 7pt;
     font-weight: 900;
-    color: ${P.navy};
+    color: ${P.white};
     letter-spacing: -.2px;
     text-transform: uppercase;
   }
 
   .front-brand-dim {
     font-weight: 500;
-    opacity: .65;
+    opacity: .55;
   }
 
   .front-bilingual-badge {
     font-size: 5.5pt;
     font-weight: 700;
-    color: ${P.navy};
-    opacity: .6;
+    color: rgba(255,255,255,.7);
     letter-spacing: 1.2px;
-    border: 1px solid rgba(13,27,42,.25);
+    border: 1px solid rgba(255,255,255,.25);
     padding: 0.5px 4px;
     border-radius: 6px;
   }
@@ -226,20 +226,20 @@ const CSS = `
     width: 14mm;
     height: 14mm;
     border-radius: 50%;
-    background: ${P.amber};
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.35);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     box-shadow:
-      0 0 0 2px rgba(232,150,28,.3),
-      0 0 0 4px rgba(232,150,28,.1);
+      0 0 0 2px rgba(255,255,255,.08);
   }
 
   .front-avatar-text {
     font-size: 7pt;
     font-weight: 900;
-    color: ${P.navy};
+    color: ${P.white};
     letter-spacing: -.3px;
   }
 
@@ -272,7 +272,7 @@ const CSS = `
   .front-url {
     font-size: 7pt;
     font-weight: 700;
-    color: ${P.amber};
+    color: ${P.white};
     margin-top: 1.5mm;
   }
 
@@ -357,7 +357,7 @@ const CSS = `
     color: ${P.white};
     letter-spacing: -.2px;
   }
-  .back-logo-accent { color: ${P.amber}; }
+  .back-logo-accent { color: #93C5FD; }
 
   /* Product pills sit right under the logo */
   .back-products {
@@ -404,9 +404,8 @@ const CSS = `
   .back-tag-es {
     font-size: 5pt;
     font-weight: 500;
-    color: ${P.amber};
+    color: rgba(255,255,255,.45);
     font-style: italic;
-    opacity: .75;
   }
 
   /* QR code — centered in the white body area */
@@ -442,27 +441,27 @@ const CSS = `
     letter-spacing: 1.2px;
   }
 
-  /* Amber footer — inverted from back navy header */
+  /* Footer — navy, matches header */
   .back-footer {
     padding: 2mm 4.5mm;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: ${P.amber};
+    background: ${P.navy};
     flex-shrink: 0;
   }
 
   .back-url {
     font-size: 7.5pt;
     font-weight: 900;
-    color: ${P.navy};
+    color: ${P.white};
     letter-spacing: .2px;
   }
 
   .back-bilingual {
     font-size: 5.5pt;
-    font-weight: 600;
-    color: rgba(13,27,42,.55);
+    font-weight: 500;
+    color: rgba(255,255,255,.45);
     font-style: italic;
   }
 
@@ -513,13 +512,13 @@ function cardFront(person) {
         <!-- Mascot "V" watermark -->
         <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
               fill="rgba(255,255,255,0.05)" text-anchor="middle">V</text>
-        <!-- Diagonal amber swoosh — bottom right -->
-        <polygon points="168,165 270,72 270,165" fill="#E8961C" opacity="0.14"/>
-        <polygon points="210,165 270,112 270,165" fill="#E8961C" opacity="0.18"/>
-        <!-- Dot accents in the swoosh -->
-        <circle cx="237" cy="128" r="2.8" fill="#E8961C" opacity="0.18"/>
-        <circle cx="252" cy="114" r="1.8" fill="#E8961C" opacity="0.14"/>
-        <circle cx="261" cy="104" r="1.2" fill="#E8961C" opacity="0.1"/>
+        <!-- Diagonal white swoosh — bottom right -->
+        <polygon points="168,165 270,72 270,165" fill="white" opacity="0.05"/>
+        <polygon points="210,165 270,112 270,165" fill="white" opacity="0.07"/>
+        <!-- Dot accents -->
+        <circle cx="237" cy="128" r="2.8" fill="white" opacity="0.07"/>
+        <circle cx="252" cy="114" r="1.8" fill="white" opacity="0.05"/>
+        <circle cx="261" cy="104" r="1.2" fill="white" opacity="0.04"/>
       </svg>
 
       <div class="front-inner">
