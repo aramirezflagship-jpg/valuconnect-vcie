@@ -363,56 +363,54 @@ const CSS = `
     opacity: .75;
   }
 
-  /* Two product panels */
+  /* Two product entries — minimal, no heavy backgrounds */
   .back-products {
     flex: 1;
     display: flex;
-    gap: 3mm;
-    padding: 3mm 4mm;
+    align-items: center;
+    padding: 0 4.5mm;
+    gap: 0;
   }
 
   .bp {
     flex: 1;
-    border-radius: 2mm;
-    padding: 2.8mm 3mm;
     display: flex;
     flex-direction: column;
-    gap: .8mm;
+    gap: 1mm;
+    padding: 0 4mm 0 3mm;
+    border-left: 2px solid;
   }
 
-  .bp-vc4   { background: #CCFBF1; border: 1px solid #99F6E4; }
-  .bp-flash { background: #FFEDD5; border: 1px solid #FED7AA; }
+  .bp-vc4   { border-color: ${P.teal};   margin-right: 2mm; }
+  .bp-flash { border-color: ${P.orange}; }
 
   .bp-tag {
-    font-size: 5pt;
+    font-size: 4.5pt;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
+    color: ${P.muted};
   }
-  .bp-vc4   .bp-tag { color: ${P.teal}; }
-  .bp-flash .bp-tag { color: ${P.orange}; }
 
   .bp-code {
-    font-size: 11pt;
+    font-size: 8.5pt;
     font-weight: 900;
     line-height: 1;
-    margin-top: .5mm;
   }
   .bp-vc4   .bp-code { color: ${P.teal}; }
   .bp-flash .bp-code { color: ${P.orange}; }
 
   .bp-name {
-    font-size: 6.5pt;
-    font-weight: 700;
+    font-size: 6pt;
+    font-weight: 600;
     color: ${P.navy};
-    line-height: 1.2;
+    line-height: 1.25;
   }
 
   .bp-desc {
-    font-size: 5.5pt;
+    font-size: 5pt;
     color: ${P.muted};
-    line-height: 1.35;
-    margin-top: auto;
+    line-height: 1.3;
   }
 
   /* Amber footer — inverted from back navy header */
