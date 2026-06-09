@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ValuConnect Business Card — Yolanda Ribeyro</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #94A3B8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── Print sheet ── */
+  .sheet {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 8mm auto;
+    padding: 15mm;
+    box-shadow: 0 4px 30px rgba(0,0,0,.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10mm;
+  }
+
+  .sheet-title {
+    font-size: 8pt;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 2mm;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  /* ── Card row ── */
+  .card-row {
+    display: flex;
+    gap: 8mm;
+    align-items: flex-start;
+  }
+
+  .card-row-label {
+    font-size: 6.5pt;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  .cards-wrap {
+    display: flex;
+    gap: 5mm;
+  }
+
+  /* ── Business card base ── */
+  .card {
+    width: 90mm;
+    height: 55mm;
+    border-radius: 2.5mm;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    /* Cut guide shadow */
+    box-shadow: 0 0 0 0.5px #CBD5E0, 0 2px 8px rgba(0,0,0,.12);
+  }
+
+  /* ── FRONT card ── */
+  .card-front {
+    background: #1E293B;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .front-top {
+    flex: 1;
+    display: flex;
+    padding: 5mm 5.5mm 4mm;
+    gap: 4mm;
+  }
+
+  /* Left amber stripe */
+  .front-stripe {
+    width: 4mm;
+    background: #D97706;
+    border-radius: 1mm 0 0 1mm;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .front-stripe::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 12mm;
+    background: linear-gradient(to top, rgba(255,255,255,.15), transparent);
+  }
+
+  .front-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .front-logo {
+    font-size: 7pt;
+    font-weight: 800;
+    color: rgba(255,255,255,.55);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+  .front-logo span { color: #D97706; }
+
+  .front-name {
+    font-size: 14pt;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1.1;
+    margin-top: 3mm;
+  }
+
+  .front-title {
+    font-size: 7pt;
+    font-weight: 500;
+    color: rgba(255,255,255,.60);
+    line-height: 1.4;
+    margin-top: 1.5mm;
+  }
+
+  .front-url {
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: #D97706;
+    margin-top: 2mm;
+    letter-spacing: .3px;
+  }
+
+  /* Product pills row at bottom of front */
+  .front-bottom {
+    background: rgba(255,255,255,.06);
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding: 2.5mm 5.5mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product-pills {
+    display: flex;
+    gap: 2.5mm;
+  }
+
+  .prod-pill {
+    font-size: 6pt;
+    font-weight: 800;
+    padding: 1.5px 6px;
+    border-radius: 10px;
+    letter-spacing: .3px;
+  }
+
+  .pill-vcie {
+    background: rgba(29,78,216,.35);
+    color: #93C5FD;
+    border: 1px solid rgba(147,197,253,.25);
+  }
+
+  .pill-flashit {
+    background: rgba(217,119,6,.25);
+    color: #D97706;
+    border: 1px solid rgba(217,119,6,.3);
+  }
+
+  .front-lang {
+    font-size: 6pt;
+    font-weight: 600;
+    color: rgba(255,255,255,.3);
+  }
+
+  /* ── BACK card ── */
+  .card-back {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top amber band */
+  .back-band {
+    background: #D97706;
+    padding: 3.5mm 5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .back-logo {
+    font-size: 8.5pt;
+    font-weight: 900;
+    color: #111827;
+    letter-spacing: -.2px;
+  }
+
+  .back-tagline {
+    font-size: 6pt;
+    font-weight: 600;
+    color: rgba(17,24,39,.6);
+    font-style: italic;
+  }
+
+  /* Products section */
+  .back-products {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    padding: 4mm 5mm;
+  }
+
+  .back-product {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 3mm 3.5mm;
+    border-radius: 2mm;
+    gap: 1.5mm;
+  }
+
+  .bp-vcie    { background: #DBEAFE; margin-right: 2mm; }
+  .bp-flashit { background: #FEF3C7; }
+
+  .bp-label {
+    font-size: 5.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #64748B;
+    margin-bottom: 1mm;
+  }
+
+  .bp-code {
+    font-size: 10.5pt;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1mm;
+  }
+
+  .bp-vcie    .bp-code { color: #1D4ED8; }
+  .bp-flashit .bp-code { color: #D97706; }
+
+  .bp-full {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+  }
+
+  .bp-desc {
+    font-size: 6pt;
+    color: #64748B;
+    line-height: 1.4;
+    margin-top: auto;
+  }
+
+  /* Bottom strip */
+  .back-footer {
+    background: #1E293B;
+    padding: 2.5mm 5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .back-url {
+    font-size: 7.5pt;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: .2px;
+  }
+
+  .back-bilingual {
+    font-size: 6pt;
+    color: rgba(255,255,255,.45);
+    font-style: italic;
+  }
+
+  /* ── Cut guide ── */
+  .cut-guide {
+    border: 1px dashed #CBD5E0;
+    border-radius: 3mm;
+    padding: 4mm;
+    margin-top: 2mm;
+  }
+
+  .cut-note {
+    font-size: 6pt;
+    color: #CBD5E0;
+    text-align: center;
+    margin-bottom: 3mm;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: white; }
+    .sheet { margin: 0; box-shadow: none; padding: 12mm; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="sheet-title">
+    ValuConnect Solutions · Business Card · Yolanda Ribeyro · Print &amp; Cut
+  </div>
+
+  <!-- FRONT cards (print 2 for double-sided cutting) -->
+  <div class="cut-guide">
+    <div class="cut-note">✂ Front of Card — print 2 copies or use as-is</div>
+    <div class="card-row">
+      <div class="card-row-label">Front</div>
+      <div class="cards-wrap">
+        
+    <div class="card card-front">
+      <div class="front-top">
+        <div class="front-stripe"></div>
+        <div class="front-content">
+          <div class="front-logo">Valu<span>Connect</span> Solutions</div>
+          <div>
+            <div class="front-name">Yolanda Ribeyro</div>
+            <div class="front-title">Director of Sales & Marketing LATAM</div>
+            <div class="front-url">valuconnect.com</div>
+          </div>
+        </div>
+      </div>
+      <div class="front-bottom">
+        <div class="product-pills">
+          <span class="prod-pill pill-vcie">VC4</span>
+          <span class="prod-pill pill-flashit">Flash-It</span>
+        </div>
+        <div class="front-lang">EN · ES</div>
+      </div>
+    </div>
+        
+    <div class="card card-front">
+      <div class="front-top">
+        <div class="front-stripe"></div>
+        <div class="front-content">
+          <div class="front-logo">Valu<span>Connect</span> Solutions</div>
+          <div>
+            <div class="front-name">Yolanda Ribeyro</div>
+            <div class="front-title">Director of Sales & Marketing LATAM</div>
+            <div class="front-url">valuconnect.com</div>
+          </div>
+        </div>
+      </div>
+      <div class="front-bottom">
+        <div class="product-pills">
+          <span class="prod-pill pill-vcie">VC4</span>
+          <span class="prod-pill pill-flashit">Flash-It</span>
+        </div>
+        <div class="front-lang">EN · ES</div>
+      </div>
+    </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACK cards (flip sheet to print on reverse) -->
+  <div class="cut-guide">
+    <div class="cut-note">✂ Back of Card — flip sheet and print on reverse side</div>
+    <div class="card-row">
+      <div class="card-row-label">Back</div>
+      <div class="cards-wrap">
+        
+    <div class="card card-back">
+      <div class="back-band">
+        <div class="back-logo">ValuConnect Solutions</div>
+        <div class="back-tagline">Work Smarter, Not Harder.</div>
+      </div>
+      <div class="back-products">
+        <div class="back-product bp-vcie">
+          <div class="bp-label">Product</div>
+          <div class="bp-code">VC4</div>
+          <div class="bp-full">Content Intelligence Engine</div>
+          <div class="bp-desc">AI-powered bilingual content automation</div>
+        </div>
+        <div class="back-product bp-flashit">
+          <div class="bp-label">Product</div>
+          <div class="bp-code">Flash-It</div>
+          <div class="bp-full">AI Photo Booth Platform</div>
+          <div class="bp-desc">iPad kiosk · cloud delivery · guest pipeline</div>
+        </div>
+      </div>
+      <div class="back-footer">
+        <div class="back-url">valuconnect.com</div>
+        <div class="back-bilingual">Hablamos tu idioma · We speak your language</div>
+      </div>
+    </div>
+        
+    <div class="card card-back">
+      <div class="back-band">
+        <div class="back-logo">ValuConnect Solutions</div>
+        <div class="back-tagline">Work Smarter, Not Harder.</div>
+      </div>
+      <div class="back-products">
+        <div class="back-product bp-vcie">
+          <div class="bp-label">Product</div>
+          <div class="bp-code">VC4</div>
+          <div class="bp-full">Content Intelligence Engine</div>
+          <div class="bp-desc">AI-powered bilingual content automation</div>
+        </div>
+        <div class="back-product bp-flashit">
+          <div class="bp-label">Product</div>
+          <div class="bp-code">Flash-It</div>
+          <div class="bp-full">AI Photo Booth Platform</div>
+          <div class="bp-desc">iPad kiosk · cloud delivery · guest pipeline</div>
+        </div>
+      </div>
+      <div class="back-footer">
+        <div class="back-url">valuconnect.com</div>
+        <div class="back-bilingual">Hablamos tu idioma · We speak your language</div>
+      </div>
+    </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage instructions -->
+  <div style="font-size:7pt;color:#94A3B8;line-height:1.6;border-top:1px solid #E2E8F0;padding-top:4mm;">
+    <strong style="color:#64748B;">Print instructions:</strong>
+    Print page 1 → flip sheet → print page 1 again (duplex) → cut along dashed guides.
+    Card size: 90mm × 55mm. Recommended: 350gsm card stock, matte or gloss finish.
+  </div>
+
+</div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 /**
  * ValuConnect Sales One-Pager Generator
  * Source: marketing.md blueprint only.
- * Output: A4 portrait single-page brochure, print-to-PDF ready.
+ * Output: A5 portrait single-page brochure, print-to-PDF ready.
  *
  * Usage:  node presentations/generate-onepager.js
  * Output: presentations/output/onepager-[industry].html
@@ -419,8 +419,8 @@ function buildOnePager(ind) {
 
     /* ── Page shell ── */
     .page {
-      width: 210mm;
-      min-height: 297mm;
+      width: 148mm;
+      min-height: 210mm;
       background: ${P.white};
       margin: 8mm auto;
       display: flex;
@@ -432,36 +432,36 @@ function buildOnePager(ind) {
     /* ── HEADER ── */
     .hdr {
       background: ${P.ink};
-      padding: 7mm 9mm 6mm;
+      padding: 5mm 6mm 4mm;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
     }
     .hdr-left {}
     .hdr-logo {
-      font-size: 15pt;
+      font-size: 11pt;
       font-weight: 900;
       color: #fff;
       letter-spacing: -.3px;
       line-height: 1;
-      margin-bottom: 1.5mm;
+      margin-bottom: 1mm;
     }
     .hdr-logo span { color: ${P.amber}; }
     .hdr-tagline {
-      font-size: 7.5pt;
+      font-size: 6pt;
       color: rgba(255,255,255,.55);
       font-style: italic;
     }
     .hdr-right { text-align: right; }
     .hdr-industry {
-      font-size: 10pt;
+      font-size: 8pt;
       font-weight: 800;
       color: #fff;
       line-height: 1.2;
       margin-bottom: 1mm;
     }
     .hdr-industry-sub {
-      font-size: 6.5pt;
+      font-size: 5.5pt;
       color: rgba(255,255,255,.5);
       text-transform: uppercase;
       letter-spacing: 1.5px;
@@ -470,50 +470,50 @@ function buildOnePager(ind) {
     /* ── HERO STRIP ── */
     .hero {
       background: ${P.accent};
-      padding: 6mm 9mm;
+      padding: 4mm 6mm;
     }
     .hero h1 {
-      font-size: 16pt;
+      font-size: 12pt;
       font-weight: 900;
       color: #fff;
       line-height: 1.15;
-      margin-bottom: 2mm;
+      margin-bottom: 1.5mm;
     }
     .hero p {
-      font-size: 8.5pt;
+      font-size: 7pt;
       color: rgba(255,255,255,.82);
-      line-height: 1.6;
-      max-width: 160mm;
+      line-height: 1.55;
+      max-width: 130mm;
     }
 
     /* ── COMPANY STRIP ── */
     .company-strip {
       background: ${P.offwhite};
       border-bottom: 1.5px solid ${P.border};
-      padding: 4mm 9mm;
+      padding: 3mm 6mm;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6mm;
+      gap: 4mm;
     }
     .company-intro {
-      font-size: 7.5pt;
+      font-size: 6.5pt;
       color: ${P.body};
-      line-height: 1.55;
-      max-width: 105mm;
+      line-height: 1.5;
+      max-width: 80mm;
     }
     .company-intro strong { color: ${P.ink}; }
     .services-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 3px;
+      gap: 2px;
     }
     .svc-pill {
       background: ${P.accent};
       color: #fff;
-      font-size: 6pt;
+      font-size: 5.5pt;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 1.5px 5px;
       border-radius: 10px;
       white-space: nowrap;
     }
@@ -527,19 +527,19 @@ function buildOnePager(ind) {
     }
 
     .col {
-      padding: 5mm 5mm 5mm;
+      padding: 4mm 4mm;
       display: flex;
       flex-direction: column;
     }
     .col + .col { border-left: 1.5px solid ${P.border}; }
 
     .col-head {
-      font-size: 7pt;
+      font-size: 6pt;
       font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      padding-bottom: 3mm;
-      margin-bottom: 3mm;
+      padding-bottom: 2.5mm;
+      margin-bottom: 2.5mm;
       border-bottom: 2px solid currentColor;
       display: flex;
       align-items: center;
@@ -551,19 +551,19 @@ function buildOnePager(ind) {
 
     /* Challenges */
     .col-challenges { background: ${P.redBg}; }
-    .pain-list { list-style: none; display: flex; flex-direction: column; gap: 3mm; }
+    .pain-list { list-style: none; display: flex; flex-direction: column; gap: 2mm; }
     .pain-item {
-      display: flex; gap: 4px; align-items: flex-start;
-      font-size: 8pt; color: ${P.body}; line-height: 1.45;
+      display: flex; gap: 3px; align-items: flex-start;
+      font-size: 6.5pt; color: ${P.body}; line-height: 1.4;
     }
-    .pain-icon { flex-shrink: 0; font-size: 10pt; margin-top: -1px; }
+    .pain-icon { flex-shrink: 0; font-size: 9pt; margin-top: -1px; }
 
     /* Solutions */
     .col-solutions { background: ${P.greenBg}; }
-    .sol-list { list-style: none; display: flex; flex-direction: column; gap: 3mm; }
+    .sol-list { list-style: none; display: flex; flex-direction: column; gap: 2mm; }
     .sol-item {
-      display: flex; gap: 4px; align-items: flex-start;
-      font-size: 8pt; color: ${P.body}; line-height: 1.45;
+      display: flex; gap: 3px; align-items: flex-start;
+      font-size: 6.5pt; color: ${P.body}; line-height: 1.4;
     }
     .sol-check { color: ${P.green}; font-weight: 900; flex-shrink: 0; margin-top: 1px; }
 
@@ -571,83 +571,83 @@ function buildOnePager(ind) {
     .col-results { background: ${P.white}; }
     .metrics-grid {
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 3mm; margin-bottom: 4mm;
+      gap: 2mm; margin-bottom: 3mm;
     }
     .metric-chip {
       background: ${P.amberBg};
       border: 1px solid #F6D98A;
-      border-radius: 6px;
-      padding: 3.5mm 2mm;
+      border-radius: 5px;
+      padding: 2.5mm 2mm;
       text-align: center;
     }
     .metric-num {
-      font-size: 14pt; font-weight: 900;
-      color: ${P.amber}; line-height: 1; margin-bottom: 1.5mm;
+      font-size: 11pt; font-weight: 900;
+      color: ${P.amber}; line-height: 1; margin-bottom: 1mm;
     }
     .metric-label {
-      font-size: 6pt; color: ${P.muted}; line-height: 1.35;
+      font-size: 5.5pt; color: ${P.muted}; line-height: 1.3;
     }
-    .chart-section { margin-top: 2mm; }
+    .chart-section { margin-top: 1.5mm; }
     .chart-section-head {
-      font-size: 6.5pt; font-weight: 700; color: ${P.muted};
+      font-size: 5.5pt; font-weight: 700; color: ${P.muted};
       text-transform: uppercase; letter-spacing: 1px;
-      margin-bottom: 2mm;
+      margin-bottom: 1.5mm;
     }
     .donut-row {
-      display: flex; align-items: center; gap: 4mm; margin-top: 3mm;
+      display: flex; align-items: center; gap: 3mm; margin-top: 2mm;
     }
     .donut-label {
-      font-size: 7pt; color: ${P.body}; line-height: 1.5; flex: 1;
+      font-size: 6pt; color: ${P.body}; line-height: 1.45; flex: 1;
     }
-    .donut-label strong { color: ${P.green}; font-size: 9pt; }
+    .donut-label strong { color: ${P.green}; font-size: 8pt; }
 
     /* ── QUOTE BAND ── */
     .quote-band {
       background: ${P.ink};
-      padding: 5mm 9mm;
+      padding: 4mm 6mm;
       display: flex;
       align-items: center;
-      gap: 6mm;
+      gap: 4mm;
     }
     .quote-mark {
-      font-size: 32pt; font-weight: 900;
+      font-size: 24pt; font-weight: 900;
       color: ${P.amber}; line-height: .6;
       flex-shrink: 0; opacity: .6;
     }
     .quote-body {}
     .quote-text {
-      font-size: 9pt; font-style: italic; font-weight: 600;
-      color: #fff; line-height: 1.55; margin-bottom: 1.5mm;
+      font-size: 7.5pt; font-style: italic; font-weight: 600;
+      color: #fff; line-height: 1.5; margin-bottom: 1mm;
     }
     .quote-attr {
-      font-size: 7pt; font-weight: 700;
+      font-size: 6pt; font-weight: 700;
       color: ${P.amber}; letter-spacing: .3px;
     }
 
     /* ── CTA BAND ── */
     .cta-band {
       background: ${P.amber};
-      padding: 4.5mm 9mm;
+      padding: 3.5mm 6mm;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .cta-left {}
     .cta-headline {
-      font-size: 10pt; font-weight: 900;
+      font-size: 8pt; font-weight: 900;
       color: ${P.ink}; line-height: 1.2; margin-bottom: 1mm;
     }
     .cta-sub {
-      font-size: 7pt; color: rgba(26,35,50,.65);
+      font-size: 6pt; color: rgba(26,35,50,.65);
     }
     .cta-right { text-align: right; }
     .cta-url {
-      font-size: 11pt; font-weight: 900;
+      font-size: 9pt; font-weight: 900;
       color: ${P.ink}; letter-spacing: -.3px;
       line-height: 1.1;
     }
     .cta-lang {
-      font-size: 6.5pt; color: rgba(26,35,50,.55);
+      font-size: 5.5pt; color: rgba(26,35,50,.55);
       font-style: italic; margin-top: 1mm;
     }
 
@@ -655,46 +655,46 @@ function buildOnePager(ind) {
     .process-footer {
       background: ${P.offwhite};
       border-top: 1.5px solid ${P.border};
-      padding: 4mm 9mm;
+      padding: 3mm 6mm;
       display: flex;
       align-items: center;
       gap: 0;
     }
     .proc-label {
-      font-size: 6pt; font-weight: 700;
+      font-size: 5.5pt; font-weight: 700;
       text-transform: uppercase; letter-spacing: 1.5px;
-      color: ${P.muted}; margin-right: 5mm; white-space: nowrap;
+      color: ${P.muted}; margin-right: 4mm; white-space: nowrap;
     }
     .proc-steps {
       display: flex; gap: 0; flex: 1; align-items: center;
     }
     .proc-step {
-      display: flex; align-items: center; gap: 3px;
+      display: flex; align-items: center; gap: 2px;
     }
     .proc-num {
-      width: 5mm; height: 5mm; border-radius: 50%;
+      width: 4.5mm; height: 4.5mm; border-radius: 50%;
       background: ${P.accent}; color: #fff;
-      font-size: 6.5pt; font-weight: 800;
+      font-size: 6pt; font-weight: 800;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
     .proc-text {
-      font-size: 7pt; font-weight: 600; color: ${P.body};
+      font-size: 6pt; font-weight: 600; color: ${P.body};
     }
     .proc-arrow {
-      font-size: 9pt; color: ${P.muted};
-      margin: 0 3mm; flex-shrink: 0;
+      font-size: 8pt; color: ${P.muted};
+      margin: 0 2mm; flex-shrink: 0;
     }
     .founder-note {
-      font-size: 6.5pt; color: ${P.muted};
-      text-align: right; white-space: nowrap; margin-left: 6mm;
+      font-size: 5.5pt; color: ${P.muted};
+      text-align: right; white-space: nowrap; margin-left: 4mm;
     }
 
     /* ── PRINT ── */
     @media print {
       body { background: white; }
-      .page { margin: 0; box-shadow: none; width: 210mm; min-height: 297mm; }
-      @page { size: A4 portrait; margin: 0; }
+      .page { margin: 0; box-shadow: none; width: 148mm; min-height: 210mm; }
+      @page { size: A5 portrait; margin: 0; }
     }
   </style>
 </head>
