@@ -77,7 +77,7 @@ const P = {
   amber:  '#E8961C',
   amberD: '#B45309',
   teal:   '#0F766E',
-  orange: '#C2410C',
+  blue:   '#2563EB',
   white:  '#FFFFFF',
   cream:  '#FAFAF8',
   muted:  '#64748B',
@@ -312,9 +312,9 @@ const CSS = `
   }
 
   .pill-flash {
-    background: rgba(194,65,12,.35);
-    color: #FDBA74;
-    border: 1px solid rgba(253,186,116,.22);
+    background: rgba(37,99,235,.2);
+    color: #93C5FD;
+    border: 1px solid rgba(147,197,253,.18);
   }
 
   .front-mascot {
@@ -377,7 +377,7 @@ const CSS = `
     line-height: 1;
   }
   .bp-vc4   .bp-code { color: #5EEAD4; }
-  .bp-flash .bp-code { color: #FDBA74; }
+  .bp-flash .bp-code { color: #93C5FD; }
 
   .bp-name {
     font-size: 5pt;
