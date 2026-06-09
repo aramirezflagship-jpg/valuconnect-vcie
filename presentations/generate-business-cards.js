@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * ValuConnect Business Card Generator
- * Produces print-ready A4 sheets with front + back business cards.
- * Each person gets their own HTML file — print, cut on the guides.
+ * ValuConnect Business Card Generator — Creative Edition
+ * Brand DNA: Warm · Practical · Bilingual EN/ES · Knowledgeable Neighbor
+ * Source of truth: marketing.md
  *
  * Card size: 90mm × 55mm (standard business card)
  * Layout per file: 4 cards per A4 sheet (2 front + 2 back), with cut guides
@@ -20,23 +20,30 @@ const path = require('path');
 const OUT  = path.join(__dirname, 'output');
 if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
 
-// ── Company + Product data ────────────────────────────────────────────────────
-// Sources: marketing.md (VCIE, brand), monday.com Flash-It board (Pixel AI workspace)
+// ── Brand data (source: marketing.md) ────────────────────────────────────────
 const CO = {
-  name:    'ValuConnect Solutions',
-  url:     'valuconnect.com',
-  tagline: 'Work Smarter, Not Harder.',
-  langs:   'EN · ES',
+  name:       'ValuConnect Solutions',
+  url:        'valuconnect.com',
+  tagline:    'Work Smarter, Not Harder.',
+  tagline_es: 'Trabaja Inteligente.',
+  bilingual:  'EN · ES',
+  mascot:     'Valu',
   products: [
     {
       code:  'VC4',
       full:  'Content Intelligence Engine',
       desc:  'AI-powered bilingual content automation',
+      color: '#0F766E',
+      light: '#CCFBF1',
+      border:'#99F6E4',
     },
     {
       code:  'Flash-It',
       full:  'AI Photo Booth Platform',
       desc:  'iPad kiosk · cloud delivery · guest pipeline',
+      color: '#C2410C',
+      light: '#FFEDD5',
+      border:'#FED7AA',
     },
   ],
 };
@@ -60,21 +67,21 @@ const PEOPLE = [
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const P = {
-  ink:    '#111827',   // near-black
-  slate:  '#1E293B',   // card dark bg
+  navy:   '#0D1B2A',
+  navyM:  '#162233',
+  amber:  '#E8961C',
+  amberD: '#B45309',
+  teal:   '#0F766E',
+  orange: '#C2410C',
   white:  '#FFFFFF',
-  offwht: '#F8FAFC',
-  amber:  '#D97706',   // primary accent
-  amberL: '#FEF3C7',   // light amber
-  blue:   '#1D4ED8',   // product accent
-  blueL:  '#DBEAFE',
+  cream:  '#FAFAF8',
   muted:  '#64748B',
   border: '#E2E8F0',
 };
 
 // ── CSS ───────────────────────────────────────────────────────────────────────
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -104,7 +111,6 @@ const CSS = `
     color: ${P.muted};
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin-bottom: 2mm;
     padding-bottom: 3mm;
     border-bottom: 1px solid ${P.border};
   }
@@ -128,238 +134,308 @@ const CSS = `
     flex-shrink: 0;
   }
 
-  .cards-wrap {
-    display: flex;
-    gap: 5mm;
-  }
+  .cards-wrap { display: flex; gap: 5mm; }
 
   /* ── Business card base ── */
   .card {
     width: 90mm;
     height: 55mm;
-    border-radius: 2.5mm;
+    border-radius: 3mm;
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
-    /* Cut guide shadow */
-    box-shadow: 0 0 0 0.5px #CBD5E0, 0 2px 8px rgba(0,0,0,.12);
+    box-shadow: 0 0 0 0.5px #CBD5E0, 0 4px 16px rgba(0,0,0,.2);
   }
 
-  /* ── FRONT card ── */
+  /* ═══════════════════════════════
+     FRONT CARD
+  ═══════════════════════════════ */
   .card-front {
-    background: ${P.slate};
+    background: ${P.navy};
     display: flex;
     flex-direction: column;
   }
 
-  .front-top {
+  /* SVG bg sits behind everything */
+  .front-svg-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .front-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Top amber identity bar */
+  .front-bar {
+    background: ${P.amber};
+    padding: 1.8mm 4.5mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .front-brand {
+    font-size: 7pt;
+    font-weight: 900;
+    color: ${P.navy};
+    letter-spacing: -.2px;
+    text-transform: uppercase;
+  }
+
+  .front-brand-dim {
+    font-weight: 500;
+    opacity: .65;
+  }
+
+  .front-bilingual-badge {
+    font-size: 5.5pt;
+    font-weight: 700;
+    color: ${P.navy};
+    opacity: .6;
+    letter-spacing: 1.2px;
+    border: 1px solid rgba(13,27,42,.25);
+    padding: 0.5px 4px;
+    border-radius: 6px;
+  }
+
+  /* Body: avatar + info side by side */
+  .front-body {
     flex: 1;
     display: flex;
-    padding: 5mm 5.5mm 4mm;
+    align-items: center;
+    padding: 3mm 4.5mm;
     gap: 4mm;
   }
 
-  /* Left amber stripe */
-  .front-stripe {
-    width: 4mm;
+  /* Initials circle */
+  .front-avatar {
+    width: 14mm;
+    height: 14mm;
+    border-radius: 50%;
     background: ${P.amber};
-    border-radius: 1mm 0 0 1mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    position: relative;
+    box-shadow:
+      0 0 0 2px rgba(232,150,28,.3),
+      0 0 0 4px rgba(232,150,28,.1);
   }
 
-  .front-stripe::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 12mm;
-    background: linear-gradient(to top, rgba(255,255,255,.15), transparent);
+  .front-avatar-text {
+    font-size: 7pt;
+    font-weight: 900;
+    color: ${P.navy};
+    letter-spacing: -.3px;
   }
 
-  .front-content {
+  /* Text info */
+  .front-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: .8mm;
   }
-
-  .front-logo {
-    font-size: 7pt;
-    font-weight: 800;
-    color: rgba(255,255,255,.55);
-    letter-spacing: .5px;
-    text-transform: uppercase;
-  }
-  .front-logo span { color: ${P.amber}; }
 
   .front-name {
-    font-size: 14pt;
+    font-size: 13pt;
     font-weight: 900;
     color: ${P.white};
-    line-height: 1.1;
-    margin-top: 3mm;
+    line-height: 1.05;
+    letter-spacing: -.4px;
   }
 
   .front-title {
-    font-size: 7pt;
+    font-size: 6pt;
     font-weight: 500;
-    color: rgba(255,255,255,.60);
-    line-height: 1.4;
-    margin-top: 1.5mm;
+    color: rgba(255,255,255,.5);
+    line-height: 1.35;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-top: .5mm;
   }
 
   .front-url {
-    font-size: 7.5pt;
+    font-size: 7pt;
     font-weight: 700;
     color: ${P.amber};
-    margin-top: 2mm;
-    letter-spacing: .3px;
+    margin-top: 1.5mm;
   }
 
-  /* Product pills row at bottom of front */
+  /* Bottom strip */
   .front-bottom {
-    background: rgba(255,255,255,.06);
-    border-top: 1px solid rgba(255,255,255,.1);
-    padding: 2.5mm 5.5mm;
+    padding: 1.8mm 4.5mm;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: rgba(0,0,0,.28);
+    border-top: 1px solid rgba(255,255,255,.07);
+    flex-shrink: 0;
   }
 
-  .product-pills {
-    display: flex;
-    gap: 2.5mm;
-  }
+  .front-pills { display: flex; gap: 2mm; }
 
-  .prod-pill {
-    font-size: 6pt;
+  .pill {
+    font-size: 5.5pt;
     font-weight: 800;
     padding: 1.5px 6px;
     border-radius: 10px;
-    letter-spacing: .3px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
   }
 
-  .pill-vcie {
-    background: rgba(29,78,216,.35);
-    color: #93C5FD;
-    border: 1px solid rgba(147,197,253,.25);
+  .pill-vc4 {
+    background: rgba(15,118,110,.4);
+    color: #5EEAD4;
+    border: 1px solid rgba(94,234,212,.2);
   }
 
-  .pill-flashit {
-    background: rgba(217,119,6,.25);
-    color: ${P.amber};
-    border: 1px solid rgba(217,119,6,.3);
+  .pill-flash {
+    background: rgba(194,65,12,.35);
+    color: #FDBA74;
+    border: 1px solid rgba(253,186,116,.22);
   }
 
-  .front-lang {
-    font-size: 6pt;
-    font-weight: 600;
-    color: rgba(255,255,255,.3);
+  .front-mascot {
+    font-size: 5.5pt;
+    font-weight: 700;
+    color: rgba(255,255,255,.18);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
   }
 
-  /* ── BACK card ── */
+  /* ═══════════════════════════════
+     BACK CARD
+  ═══════════════════════════════ */
   .card-back {
-    background: ${P.white};
-    border: 1px solid ${P.border};
+    background: ${P.cream};
     display: flex;
     flex-direction: column;
+    border: 1px solid ${P.border};
   }
 
-  /* Top amber band */
+  /* Dark navy header — inverted from front amber bar */
   .back-band {
-    background: ${P.amber};
-    padding: 3.5mm 5mm;
+    background: ${P.navy};
+    padding: 3mm 4.5mm;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
   }
 
   .back-logo {
     font-size: 8.5pt;
     font-weight: 900;
-    color: ${P.ink};
+    color: ${P.white};
     letter-spacing: -.2px;
   }
+  .back-logo-accent { color: ${P.amber}; }
 
-  .back-tagline {
-    font-size: 6pt;
+  .back-tagline-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .5mm;
+  }
+
+  .back-tag-en {
+    font-size: 5.5pt;
     font-weight: 600;
-    color: rgba(17,24,39,.6);
+    color: rgba(255,255,255,.55);
     font-style: italic;
   }
 
-  /* Products section */
+  .back-tag-es {
+    font-size: 5pt;
+    font-weight: 500;
+    color: ${P.amber};
+    font-style: italic;
+    opacity: .75;
+  }
+
+  /* Two product panels */
   .back-products {
     flex: 1;
     display: flex;
-    gap: 0;
-    padding: 4mm 5mm;
+    gap: 3mm;
+    padding: 3mm 4mm;
   }
 
-  .back-product {
+  .bp {
     flex: 1;
+    border-radius: 2mm;
+    padding: 2.8mm 3mm;
     display: flex;
     flex-direction: column;
-    padding: 3mm 3.5mm;
-    border-radius: 2mm;
-    gap: 1.5mm;
+    gap: .8mm;
   }
 
-  .bp-vcie    { background: ${P.blueL}; margin-right: 2mm; }
-  .bp-flashit { background: ${P.amberL}; }
+  .bp-vc4   { background: #CCFBF1; border: 1px solid #99F6E4; }
+  .bp-flash { background: #FFEDD5; border: 1px solid #FED7AA; }
 
-  .bp-label {
-    font-size: 5.5pt;
+  .bp-tag {
+    font-size: 5pt;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: ${P.muted};
-    margin-bottom: 1mm;
   }
+  .bp-vc4   .bp-tag { color: ${P.teal}; }
+  .bp-flash .bp-tag { color: ${P.orange}; }
 
   .bp-code {
-    font-size: 10.5pt;
+    font-size: 11pt;
     font-weight: 900;
     line-height: 1;
-    margin-bottom: 1mm;
+    margin-top: .5mm;
   }
+  .bp-vc4   .bp-code { color: ${P.teal}; }
+  .bp-flash .bp-code { color: ${P.orange}; }
 
-  .bp-vcie    .bp-code { color: ${P.blue}; }
-  .bp-flashit .bp-code { color: ${P.amber}; }
-
-  .bp-full {
-    font-size: 7pt;
+  .bp-name {
+    font-size: 6.5pt;
     font-weight: 700;
-    color: ${P.ink};
+    color: ${P.navy};
     line-height: 1.2;
   }
 
   .bp-desc {
-    font-size: 6pt;
+    font-size: 5.5pt;
     color: ${P.muted};
-    line-height: 1.4;
+    line-height: 1.35;
     margin-top: auto;
   }
 
-  /* Bottom strip */
+  /* Amber footer — inverted from back navy header */
   .back-footer {
-    background: ${P.slate};
-    padding: 2.5mm 5mm;
+    padding: 2mm 4.5mm;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: ${P.amber};
+    flex-shrink: 0;
   }
 
   .back-url {
     font-size: 7.5pt;
-    font-weight: 800;
-    color: ${P.white};
+    font-weight: 900;
+    color: ${P.navy};
     letter-spacing: .2px;
   }
 
   .back-bilingual {
-    font-size: 6pt;
-    color: rgba(255,255,255,.45);
+    font-size: 5.5pt;
+    font-weight: 600;
+    color: rgba(13,27,42,.55);
     font-style: italic;
   }
 
@@ -389,27 +465,56 @@ const CSS = `
 `;
 
 // ── Card builders ─────────────────────────────────────────────────────────────
+
 function cardFront(person) {
   return `
     <div class="card card-front">
-      <div class="front-top">
-        <div class="front-stripe"></div>
-        <div class="front-content">
-          <div class="front-logo">Valu<span>Connect</span> Solutions</div>
-          <div>
+
+      <!-- SVG background: V watermark + diagonal amber swoosh -->
+      <svg class="front-svg-bg" viewBox="0 0 270 165" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <!-- Mascot "V" watermark -->
+        <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
+              fill="rgba(255,255,255,0.04)" text-anchor="middle">V</text>
+        <!-- Diagonal amber swoosh — bottom right -->
+        <polygon points="168,165 270,72 270,165" fill="#E8961C" opacity="0.14"/>
+        <polygon points="210,165 270,112 270,165" fill="#E8961C" opacity="0.18"/>
+        <!-- Dot accents in the swoosh -->
+        <circle cx="237" cy="128" r="2.8" fill="#E8961C" opacity="0.18"/>
+        <circle cx="252" cy="114" r="1.8" fill="#E8961C" opacity="0.14"/>
+        <circle cx="261" cy="104" r="1.2" fill="#E8961C" opacity="0.1"/>
+      </svg>
+
+      <div class="front-inner">
+        <!-- Amber identity bar -->
+        <div class="front-bar">
+          <div class="front-brand">
+            VALU<span class="front-brand-dim">CONNECT</span>
+          </div>
+          <div class="front-bilingual-badge">EN · ES</div>
+        </div>
+
+        <!-- Body: avatar + info -->
+        <div class="front-body">
+          <div class="front-avatar">
+            <span class="front-avatar-text">${person.initials}</span>
+          </div>
+          <div class="front-info">
             <div class="front-name">${person.name}</div>
             <div class="front-title">${person.title}</div>
-            <div class="front-url">${CO.url}</div>
+            <div class="front-url">valuconnect.com</div>
           </div>
         </div>
-      </div>
-      <div class="front-bottom">
-        <div class="product-pills">
-          <span class="prod-pill pill-vcie">VC4</span>
-          <span class="prod-pill pill-flashit">Flash-It</span>
+
+        <!-- Bottom: product pills + mascot mark -->
+        <div class="front-bottom">
+          <div class="front-pills">
+            <span class="pill pill-vc4">VC4</span>
+            <span class="pill pill-flash">Flash-It</span>
+          </div>
+          <div class="front-mascot">VALU ◆</div>
         </div>
-        <div class="front-lang">${CO.langs}</div>
       </div>
+
     </div>`;
 }
 
@@ -417,28 +522,40 @@ function cardBack() {
   const [vcie, flash] = CO.products;
   return `
     <div class="card card-back">
+
+      <!-- Navy header band -->
       <div class="back-band">
-        <div class="back-logo">ValuConnect Solutions</div>
-        <div class="back-tagline">${CO.tagline}</div>
+        <div class="back-logo">
+          Valu<span class="back-logo-accent">Connect</span> Solutions
+        </div>
+        <div class="back-tagline-col">
+          <div class="back-tag-en">${CO.tagline}</div>
+          <div class="back-tag-es">${CO.tagline_es}</div>
+        </div>
       </div>
+
+      <!-- Product panels -->
       <div class="back-products">
-        <div class="back-product bp-vcie">
-          <div class="bp-label">Product</div>
+        <div class="bp bp-vc4">
+          <div class="bp-tag">Product</div>
           <div class="bp-code">${vcie.code}</div>
-          <div class="bp-full">${vcie.full}</div>
+          <div class="bp-name">${vcie.full}</div>
           <div class="bp-desc">${vcie.desc}</div>
         </div>
-        <div class="back-product bp-flashit">
-          <div class="bp-label">Product</div>
+        <div class="bp bp-flash">
+          <div class="bp-tag">Product</div>
           <div class="bp-code">${flash.code}</div>
-          <div class="bp-full">${flash.full}</div>
+          <div class="bp-name">${flash.full}</div>
           <div class="bp-desc">${flash.desc}</div>
         </div>
       </div>
+
+      <!-- Amber footer -->
       <div class="back-footer">
         <div class="back-url">${CO.url}</div>
         <div class="back-bilingual">Hablamos tu idioma · We speak your language</div>
       </div>
+
     </div>`;
 }
 
@@ -458,7 +575,7 @@ function buildCardPage(person) {
     ValuConnect Solutions · Business Card · ${person.name} · Print &amp; Cut
   </div>
 
-  <!-- FRONT cards (print 2 for double-sided cutting) -->
+  <!-- FRONT cards -->
   <div class="cut-guide">
     <div class="cut-note">✂ Front of Card — print 2 copies or use as-is</div>
     <div class="card-row">
@@ -470,7 +587,7 @@ function buildCardPage(person) {
     </div>
   </div>
 
-  <!-- BACK cards (flip sheet to print on reverse) -->
+  <!-- BACK cards -->
   <div class="cut-guide">
     <div class="cut-note">✂ Back of Card — flip sheet and print on reverse side</div>
     <div class="card-row">
@@ -482,7 +599,7 @@ function buildCardPage(person) {
     </div>
   </div>
 
-  <!-- Usage instructions -->
+  <!-- Print instructions -->
   <div style="font-size:7pt;color:#94A3B8;line-height:1.6;border-top:1px solid #E2E8F0;padding-top:4mm;">
     <strong style="color:#64748B;">Print instructions:</strong>
     Print page 1 → flip sheet → print page 1 again (duplex) → cut along dashed guides.
@@ -503,6 +620,7 @@ for (const person of PEOPLE) {
 }
 
 console.log('\n🎉 Business cards ready → presentations/output/bizcard-[name].html');
+console.log('\nDesign: Brand V watermark · Amber diagonal · Avatar initials · Bilingual identity');
 console.log('\nProducts on card:');
 CO.products.forEach(p => console.log(`  · ${p.code} — ${p.full}`));
 console.log('\nTo print: Chrome → File → Print → A4 Portrait · Background graphics ON · Margins = None');
