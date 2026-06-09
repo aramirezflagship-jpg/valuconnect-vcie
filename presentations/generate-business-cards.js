@@ -15,10 +15,13 @@
  *   A4 Portrait · Background graphics ON · Margins = None
  */
 
-const fs   = require('fs');
-const path = require('path');
-const OUT  = path.join(__dirname, 'output');
+const fs      = require('fs');
+const path    = require('path');
+const QRCode  = require('qrcode');
+const OUT     = path.join(__dirname, 'output');
 if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
+
+const CALENDAR_URL = 'https://calendar.app.google/SfotPLRERGRDzEiw5';
 
 // ── Brand data (source: marketing.md) ────────────────────────────────────────
 const CO = {
@@ -372,25 +375,33 @@ const CSS = `
     opacity: .75;
   }
 
-  /* Two product entries — minimal, no heavy backgrounds */
+  /* Back body: products column + QR column */
   .back-products {
     flex: 1;
     display: flex;
     align-items: center;
-    padding: 0 4.5mm;
-    gap: 0;
+    padding: 2mm 4.5mm;
+    gap: 3mm;
   }
 
-  .bp {
+  /* Left: stacked product entries */
+  .bp-col {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1mm;
-    padding: 0 4mm 0 3mm;
+    justify-content: center;
+    gap: 2.5mm;
+  }
+
+  .bp {
+    display: flex;
+    flex-direction: column;
+    gap: .6mm;
+    padding-left: 2.5mm;
     border-left: 2px solid;
   }
 
-  .bp-vc4   { border-color: ${P.teal};   margin-right: 2mm; }
+  .bp-vc4   { border-color: ${P.teal}; }
   .bp-flash { border-color: ${P.orange}; }
 
   .bp-tag {
@@ -402,7 +413,7 @@ const CSS = `
   }
 
   .bp-code {
-    font-size: 8.5pt;
+    font-size: 8pt;
     font-weight: 900;
     line-height: 1;
   }
@@ -410,15 +421,49 @@ const CSS = `
   .bp-flash .bp-code { color: ${P.orange}; }
 
   .bp-name {
-    font-size: 6pt;
+    font-size: 5.5pt;
     font-weight: 600;
     color: ${P.navy};
-    line-height: 1.25;
+    line-height: 1.2;
   }
 
   .bp-desc {
-    font-size: 5pt;
+    font-size: 4.5pt;
     color: ${P.muted};
+    line-height: 1.3;
+  }
+
+  /* Right: QR code column */
+  .qr-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5mm;
+    flex-shrink: 0;
+    padding-left: 3mm;
+    border-left: 1px solid ${P.border};
+  }
+
+  .qr-wrap {
+    width: 16mm;
+    height: 16mm;
+    border-radius: 1.5mm;
+    overflow: hidden;
+  }
+
+  .qr-wrap svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .qr-label {
+    font-size: 4.5pt;
+    font-weight: 700;
+    color: ${P.muted};
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     line-height: 1.3;
   }
 
@@ -526,7 +571,7 @@ function cardFront(person) {
     </div>`;
 }
 
-function cardBack() {
+function cardBack(qrSvg) {
   const [vcie, flash] = CO.products;
   return `
     <div class="card card-back">
@@ -542,19 +587,25 @@ function cardBack() {
         </div>
       </div>
 
-      <!-- Product panels -->
+      <!-- Products + QR code -->
       <div class="back-products">
-        <div class="bp bp-vc4">
-          <div class="bp-tag">Product</div>
-          <div class="bp-code">${vcie.code}</div>
-          <div class="bp-name">${vcie.full}</div>
-          <div class="bp-desc">${vcie.desc}</div>
+        <div class="bp-col">
+          <div class="bp bp-vc4">
+            <div class="bp-tag">Product</div>
+            <div class="bp-code">${vcie.code}</div>
+            <div class="bp-name">${vcie.full}</div>
+            <div class="bp-desc">${vcie.desc}</div>
+          </div>
+          <div class="bp bp-flash">
+            <div class="bp-tag">Product</div>
+            <div class="bp-code">${flash.code}</div>
+            <div class="bp-name">${flash.full}</div>
+            <div class="bp-desc">${flash.desc}</div>
+          </div>
         </div>
-        <div class="bp bp-flash">
-          <div class="bp-tag">Product</div>
-          <div class="bp-code">${flash.code}</div>
-          <div class="bp-name">${flash.full}</div>
-          <div class="bp-desc">${flash.desc}</div>
+        <div class="qr-col">
+          <div class="qr-wrap">${qrSvg}</div>
+          <div class="qr-label">Book a<br>meeting</div>
         </div>
       </div>
 
@@ -568,7 +619,7 @@ function cardBack() {
 }
 
 // ── Full page builder ─────────────────────────────────────────────────────────
-function buildCardPage(person) {
+function buildCardPage(person, qrSvg) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -601,8 +652,8 @@ function buildCardPage(person) {
     <div class="card-row">
       <div class="card-row-label">Back</div>
       <div class="cards-wrap">
-        ${cardBack()}
-        ${cardBack()}
+        ${cardBack(qrSvg)}
+        ${cardBack(qrSvg)}
       </div>
     </div>
   </div>
@@ -620,15 +671,30 @@ function buildCardPage(person) {
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────────
-for (const person of PEOPLE) {
-  const html = buildCardPage(person);
-  const file = path.join(OUT, `bizcard-${person.id}.html`);
-  fs.writeFileSync(file, html);
-  console.log(`✓  bizcard-${person.id}.html  (${person.name} · ${person.title})`);
-}
+(async () => {
+  // Generate QR SVG once — same calendar link for all cards
+  const rawSvg = await QRCode.toString(CALENDAR_URL, {
+    type: 'svg',
+    margin: 1,
+    errorCorrectionLevel: 'M',
+    color: { dark: '#0D1B2A', light: '#FAFAF8' },
+  });
+  // Strip fixed width/height so CSS controls the print size
+  const qrSvg = rawSvg
+    .replace(/width="\d+"/, 'width="100%"')
+    .replace(/height="\d+"/, 'height="100%"');
 
-console.log('\n🎉 Business cards ready → presentations/output/bizcard-[name].html');
-console.log('\nDesign: Brand V watermark · Amber diagonal · Avatar initials · Bilingual identity');
-console.log('\nProducts on card:');
-CO.products.forEach(p => console.log(`  · ${p.code} — ${p.full}`));
-console.log('\nTo print: Chrome → File → Print → A4 Portrait · Background graphics ON · Margins = None');
+  for (const person of PEOPLE) {
+    const html = buildCardPage(person, qrSvg);
+    const file = path.join(OUT, `bizcard-${person.id}.html`);
+    fs.writeFileSync(file, html);
+    console.log(`✓  bizcard-${person.id}.html  (${person.name} · ${person.title})`);
+  }
+
+  console.log('\n🎉 Business cards ready → presentations/output/bizcard-[name].html');
+  console.log('\nDesign: Brand V watermark · Amber diagonal · Avatar initials · QR calendar booking');
+  console.log('\nProducts on card:');
+  CO.products.forEach(p => console.log(`  · ${p.code} — ${p.full}`));
+  console.log(`\nCalendar QR: ${CALENDAR_URL}`);
+  console.log('\nTo print: Chrome → File → Print → A4 Portrait · Background graphics ON · Margins = None');
+})();
