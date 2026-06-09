@@ -23,7 +23,7 @@ if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
 // ── Brand data (source: marketing.md) ────────────────────────────────────────
 const CO = {
   name:       'ValuConnect Solutions',
-  url:        'valuconnect.com',
+  url:        'vcsolutions.us',
   tagline:    'Work Smarter, Not Harder.',
   tagline_es: 'Trabaja Inteligente.',
   bilingual:  'EN · ES',
@@ -54,6 +54,7 @@ const PEOPLE = [
     name:     'Andres Ramirez',
     title:    'Founder & Implementation Director',
     initials: 'AR',
+    email:    'info@vcsolutions.us',
     quote:    '"Trabajemos con inteligencia, no con esfuerzo."',
   },
   {
@@ -61,6 +62,7 @@ const PEOPLE = [
     name:     'Yolanda Ribeyro',
     title:    'Director of Sales & Marketing LATAM',
     initials: 'YR',
+    email:    'yolanda@vcsolutions.us',
     quote:    '"Your success is our success — we grow together."',
   },
 ];
@@ -269,6 +271,13 @@ const CSS = `
     font-weight: 700;
     color: ${P.amber};
     margin-top: 1.5mm;
+  }
+
+  .front-email {
+    font-size: 6pt;
+    font-weight: 400;
+    color: rgba(255,255,255,.45);
+    margin-top: .5mm;
   }
 
   /* Bottom strip */
@@ -499,7 +508,8 @@ function cardFront(person) {
           <div class="front-info">
             <div class="front-name">${person.name}</div>
             <div class="front-title">${person.title}</div>
-            <div class="front-url">valuconnect.com</div>
+            <div class="front-url">${CO.url}</div>
+            <div class="front-email">${person.email}</div>
           </div>
         </div>
 
@@ -550,7 +560,7 @@ function cardBack() {
 
       <!-- Amber footer -->
       <div class="back-footer">
-        <div class="back-url">${CO.url}</div>
+        <div class="back-url">vcsolutions.us</div>
         <div class="back-bilingual">Hablamos tu idioma · We speak your language</div>
       </div>
 
