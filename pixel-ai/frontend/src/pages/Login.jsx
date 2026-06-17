@@ -112,6 +112,15 @@ export default function Login() {
 
           {error && <ErrorBanner>{error}</ErrorBanner>}
 
+          <div style={{ textAlign: 'right', marginTop: '-.35rem' }}>
+            <Link
+              to="/forgot-password"
+              style={{ color: 'var(--accent-light)', textDecoration: 'none', fontSize: '.78rem', fontWeight: 500 }}
+            >
+              Forgot password?
+            </Link>
+          </div>
+
           <button
             type="submit"
             disabled={submitting}

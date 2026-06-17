@@ -63,7 +63,12 @@ export async function uploadCapture(imageBlob, eventId, themeId, phone = '', onP
   const formData = new FormData();
   formData.append('image', imageBlob, 'capture.jpg');
   formData.append('eventId', eventId);
-  formData.append('themeId', themeId);
+  // Backend accepts either `backgroundId` or its legacy alias `themeId`; we send
+  // both so a selected themed background is composited regardless of field name.
+  if (themeId) {
+    formData.append('backgroundId', themeId);
+    formData.append('themeId', themeId);
+  }
   if (phone) formData.append('phone', phone);
 
   const { data } = await api.post('/api/capture', formData, {
@@ -249,6 +254,90 @@ export async function purchaseAddon(eventId, addon, token) {
     { addon },
     { headers: authHeaders(token) }
   );
+  return data;
+}
+
+// ── Host events (self-serve) ──────────────────────────────────────────────────
+
+/**
+ * Create an event owned by the logged-in host.
+ * @param {Object} payload { name, date?, venue?, deliveryChannels?, backgroundIds?, defaultBackgroundId? }
+ * @param {string} token
+ * @returns {Promise<Object>} created event { id, code, pin, name, ... }
+ */
+export async function createMyEvent(payload, token) {
+  const { data } = await api.post('/api/events/mine', payload, {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+/**
+ * List events owned by the logged-in host.
+ * @param {string} token
+ * @returns {Promise<{ events: Array, count: number }>}
+ */
+export async function getMyEvents(token) {
+  const { data } = await api.get('/api/events/mine', {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+// ── Backgrounds (themed art per occasion) ─────────────────────────────────────
+
+/**
+ * List themed backgrounds, optionally filtered by category.
+ * @param {string} [category]  one of wedding, quinceanera, corporate, birthday, holiday, fiesta
+ * @returns {Promise<{ backgrounds: Array, count: number }>}
+ */
+export async function getBackgrounds(category) {
+  const { data } = await api.get('/api/backgrounds', {
+    params: category ? { category } : undefined,
+  });
+  return data;
+}
+
+/**
+ * Upload a new themed background.
+ * multipart fields: image (file) + category (string) + name (string)
+ * @param {File} imageFile
+ * @param {string} category
+ * @param {string} name
+ * @param {string} token
+ * @returns {Promise<Object>} background record { id, category, name, url, thumbnailUrl }
+ */
+export async function uploadBackground(imageFile, category, name, token) {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+  formData.append('category', category);
+  formData.append('name', name);
+  const { data } = await api.post('/api/backgrounds', formData, {
+    headers: { ...authHeaders(token), 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+}
+
+// ── Password reset ────────────────────────────────────────────────────────────
+
+/**
+ * Request a password-reset email. Always resolves (no user enumeration).
+ * @param {string} email
+ * @returns {Promise<{ ok: true }>}
+ */
+export async function requestPasswordReset(email) {
+  const { data } = await api.post('/api/accounts/forgot-password', { email });
+  return data;
+}
+
+/**
+ * Complete a password reset with the emailed token.
+ * @param {string} token
+ * @param {string} newPassword
+ * @returns {Promise<{ ok: true }>}
+ */
+export async function resetPassword(token, newPassword) {
+  const { data } = await api.post('/api/accounts/reset-password', { token, newPassword });
   return data;
 }
 
