@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const STORAGE_KEY = 'pixel-ai-queue';
+const STORAGE_KEY = 'flash-it-queue';
 
 /**
  * Convert a Blob to a base64 data URL string.

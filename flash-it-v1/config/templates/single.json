@@ -1,0 +1,15 @@
+{
+  "id": "single",
+  "name": "Classic Single",
+  "description": "One photo with event branding",
+  "type": "single",
+  "printWidth": 1200,
+  "printHeight": 1800,
+  "photoCount": 1,
+  "photoSlots": [
+    { "index": 0, "x": 60, "y": 60, "width": 1080, "height": 1530 }
+  ],
+  "logoSlot": { "x": 900, "y": 1640, "width": 240, "height": 100 },
+  "textSlot": { "x": 60, "y": 1660, "maxWidth": 820, "fontSize": 28, "color": "#ffffff" },
+  "background": "#0d0d1a"
+}

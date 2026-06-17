@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Flash-it — Admin</title>
+<style>
+  :root {
+    --bg: #0d0d1a; --surface: #141428; --border: #2a2a4a;
+    --accent: #7c3aed; --accent2: #a855f7; --success: #10b981;
+    --danger: #ef4444; --warn: #f59e0b; --text: #f1f5f9;
+    --muted: #94a3b8; --card: #1a1a30;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  a { color: var(--accent2); text-decoration: none; }
+
+  /* Layout */
+  #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  #app { display: none; flex-direction: column; min-height: 100vh; }
+  #app.visible { display: flex; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.25rem; font-weight: 700; background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  header span { color: var(--muted); font-size: 0.85rem; flex: 1; }
+  nav { display: flex; gap: 8px; }
+  nav button { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.15s; }
+  nav button.active, nav button:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  main { flex: 1; padding: 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+
+  /* Cards / tables */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--accent2); }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .stat .value { font-size: 2rem; font-weight: 700; color: var(--accent2); }
+  .stat .label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { text-align: left; padding: 10px 12px; color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,58,237,0.05); }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.75rem; font-weight: 600; }
+  .badge-green { background: rgba(16,185,129,0.15); color: var(--success); }
+  .badge-gray { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-warn { background: rgba(245,158,11,0.15); color: var(--warn); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.15s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
+  .btn-danger { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
+  .btn-success { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+  .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent2); }
+
+  /* Gallery */
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  .photo-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .photo-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+  .photo-card .photo-meta { padding: 8px; font-size: 0.75rem; color: var(--muted); }
+
+  /* Forms */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; width: 100%; }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
+  .checkbox-group label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; text-transform: none; letter-spacing: 0; color: var(--text); cursor: pointer; }
+  .checkbox-group input[type=checkbox] { width: auto; }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+  .modal h3 { margin-bottom: 20px; font-size: 1.1rem; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+  /* Login */
+  .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 40px; width: 100%; max-width: 380px; text-align: center; }
+  .login-card h1 { font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  .login-card p { color: var(--muted); margin-bottom: 28px; font-size: 0.9rem; }
+  .login-card input { text-align: center; letter-spacing: 0.1em; font-size: 1rem; padding: 12px; margin-bottom: 16px; }
+  #login-error { color: var(--danger); font-size: 0.85rem; margin-top: 8px; min-height: 20px; }
+
+  /* Toast */
+  #toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+  .toast-msg { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; font-size: 0.875rem; box-shadow: 0 4px 24px rgba(0,0,0,0.4); animation: slide-in 0.2s ease; display: flex; align-items: center; gap: 10px; }
+  .toast-msg.success { border-color: var(--success); color: var(--success); }
+  .toast-msg.error { border-color: var(--danger); color: var(--danger); }
+  @keyframes slide-in { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* Loading spinner */
+  .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-row { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>Flash-it</h1>
+    <p>Admin Dashboard</p>
+    <div class="form-group">
+      <input type="password" id="secret-input" placeholder="Admin secret" autocomplete="current-password"/>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Enter</button>
+    <div id="login-error"></div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <header>
+    <h1>Flash-it Admin</h1>
+    <span id="header-user"></span>
+    <nav>
+      <button class="active" onclick="showTab('overview')">Overview</button>
+      <button onclick="showTab('events')">Events</button>
+      <button onclick="showTab('gallery')">Gallery</button>
+      <button onclick="showTab('print-queue')">Print Queue</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview" class="tab active">
+      <div class="stats-row" id="stats-row">
+        <div class="stat"><div class="spinner"></div><div class="label">Loading...</div></div>
+      </div>
+      <div class="card">
+        <h2>Recent Events</h2>
+        <div id="overview-events-loading" class="loading-row"><div class="spinner"></div> Loading events...</div>
+        <table id="overview-events-table" style="display:none">
+          <thead><tr><th>Event</th><th>Photos</th><th>Status</th><th>Created</th><th></th></tr></thead>
+          <tbody id="overview-events-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EVENTS TAB -->
+    <div id="tab-events" class="tab">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="font-size:1.1rem;font-weight:700">All Events</h2>
+        <button class="btn btn-primary" onclick="openCreateModal()">+ Create Event</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div id="events-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <table id="events-table" style="display:none">
+          <thead><tr><th>Name</th><th>PIN</th><th>Language</th><th>Photos</th><th>Delivery</th><th>Actions</th></tr></thead>
+          <tbody id="events-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GALLERY TAB -->
+    <div id="tab-gallery" class="tab">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <select id="gallery-event-select" onchange="loadGallery()" style="max-width:280px">
+          <option value="">— Select event —</option>
+        </select>
+        <span id="gallery-count" style="color:var(--muted);font-size:0.85rem"></span>
+      </div>
+      <div id="gallery-grid" class="photo-grid"></div>
+      <div id="gallery-empty" style="color:var(--muted);text-align:center;padding:60px;display:none">No photos yet for this event.</div>
+      <div id="gallery-loading" class="loading-row" style="display:none"><div class="spinner"></div> Loading photos...</div>
+    </div>
+
+    <!-- PRINT QUEUE TAB -->
+    <div id="tab-print-queue" class="tab">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="font-size:1.1rem;font-weight:700">Print Queue</h2>
+        <button class="btn btn-outline btn-sm" onclick="loadPrintQueue()">↻ Refresh</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div id="pq-loading" class="loading-row"><div class="spinner"></div> Loading...</div>
+        <table id="pq-table" style="display:none">
+          <thead><tr><th>Photo</th><th>Event</th><th>Queued</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="pq-body"></tbody>
+        </table>
+        <div id="pq-empty" style="color:var(--muted);text-align:center;padding:40px;display:none">Print queue is empty.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Create/Edit Event Modal -->
+<div class="overlay" id="event-modal">
+  <div class="modal">
+    <h3 id="modal-title">Create Event</h3>
+    <input type="hidden" id="edit-event-id"/>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Event Name</label>
+        <input type="text" id="ev-name" placeholder="e.g. Boda García — Junio 2026"/>
+      </div>
+      <div class="form-group">
+        <label>Language</label>
+        <select id="ev-lang"><option value="es">Español</option><option value="en">English</option></select>
+      </div>
+      <div class="form-group">
+        <label>Brand Color</label>
+        <input type="color" id="ev-color" value="#7c3aed"/>
+      </div>
+      <div class="form-group full">
+        <label>Tagline</label>
+        <input type="text" id="ev-tagline" placeholder="Tu evento, nuestra magia."/>
+      </div>
+      <div class="form-group full">
+        <label>Themes</label>
+        <div class="checkbox-group" id="themes-checkboxes"></div>
+      </div>
+      <div class="form-group full">
+        <label>Delivery Channels</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="ev-sms" checked/> SMS</label>
+          <label><input type="checkbox" id="ev-whatsapp" checked/> WhatsApp</label>
+          <label><input type="checkbox" id="ev-qr" checked/> QR Code</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEvent()">Save Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast"></div>
+
+<script>
+const THEMES = ['galaxy','jungle','royal','sunset','wedding','xv','corporate','paris'];
+const THEME_NAMES = {galaxy:'Galaxy',jungle:'Jungle',royal:'Royal',sunset:'Sunset',wedding:'Elegant',xv:'Quinceañera',corporate:'Corporate',paris:'Paris'};
+
+let API_BASE = '';
+let adminSecret = '';
+let allEvents = [];
+let autoRefreshInterval = null;
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function doLogin() {
+  const val = document.getElementById('secret-input').value.trim();
+  if (!val) { document.getElementById('login-error').textContent = 'Enter your admin secret.'; return; }
+  adminSecret = val;
+  sessionStorage.setItem('flash-it-secret', val);
+  document.getElementById('login-error').textContent = '';
+  verifyAndShow();
+}
+document.getElementById('secret-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+
+async function verifyAndShow() {
+  try {
+    const res = await api('/api/admin/stats');
+    if (!res.ok) throw new Error('bad');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    initApp();
+  } catch {
+    document.getElementById('login-error').textContent = 'Invalid secret. Try again.';
+    adminSecret = '';
+    sessionStorage.removeItem('flash-it-secret');
+  }
+}
+
+// Auto-restore session
+(function restoreSession() {
+  const saved = sessionStorage.getItem('flash-it-secret');
+  if (saved) { adminSecret = saved; verifyAndShow(); }
+})();
+
+// ── API helper ────────────────────────────────────────────────────────────────
+async function api(path, options = {}) {
+  return fetch(API_BASE + path, {
+    ...options,
+    headers: { 'X-Admin-Secret': adminSecret, 'Content-Type': 'application/json', ...(options.headers || {}) },
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function initApp() {
+  buildThemeCheckboxes();
+  loadOverview();
+  autoRefreshInterval = setInterval(loadStats, 30000);
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'overview') loadOverview();
+  if (name === 'events') loadEvents();
+  if (name === 'gallery') populateGallerySelect();
+  if (name === 'print-queue') loadPrintQueue();
+}
+
+// ── Overview ──────────────────────────────────────────────────────────────────
+async function loadOverview() {
+  loadStats();
+  loadOverviewEvents();
+}
+
+async function loadStats() {
+  try {
+    const res = await api('/api/admin/stats');
+    if (!res.ok) return;
+    const data = await res.json();
+    const row = document.getElementById('stats-row');
+    row.innerHTML = `
+      <div class="stat"><div class="value">${data.totalEvents ?? 0}</div><div class="label">Events</div></div>
+      <div class="stat"><div class="value">${data.totalPhotos ?? 0}</div><div class="label">Total Photos</div></div>
+      <div class="stat"><div class="value">${data.photosToday ?? 0}</div><div class="label">Photos Today</div></div>
+      <div class="stat"><div class="value">$${((data.estimatedCostToday ?? 0)).toFixed(2)}</div><div class="label">Cost Today</div></div>
+    `;
+  } catch {}
+}
+
+async function loadOverviewEvents() {
+  const loading = document.getElementById('overview-events-loading');
+  const table = document.getElementById('overview-events-table');
+  loading.style.display = 'flex'; table.style.display = 'none';
+  try {
+    const res = await api('/api/admin/events');
+    const events = res.ok ? ((await res.json()).events || []) : [];
+    allEvents = events;
+    const tbody = document.getElementById('overview-events-body');
+    tbody.innerHTML = events.slice(0,5).map(ev => `
+      <tr>
+        <td><strong>${esc(ev.name)}</strong></td>
+        <td>${ev.stats?.photosTaken ?? 0}</td>
+        <td>${ev.active ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">Inactive</span>'}</td>
+        <td>${fmtDate(ev.stats?.createdAt)}</td>
+        <td><a href="?event=${ev.id}" target="_blank" style="font-size:0.8rem">Kiosk ↗</a></td>
+      </tr>`).join('');
+    loading.style.display = 'none'; table.style.display = 'table';
+  } catch { loading.innerHTML = '<span style="color:var(--danger)">Failed to load events</span>'; }
+}
+
+// ── Events Tab ────────────────────────────────────────────────────────────────
+async function loadEvents() {
+  const loading = document.getElementById('events-loading');
+  const table = document.getElementById('events-table');
+  loading.style.display = 'flex'; table.style.display = 'none';
+  try {
+    const res = await api('/api/admin/events');
+    const events = res.ok ? ((await res.json()).events || []) : [];
+    allEvents = events;
+    const tbody = document.getElementById('events-body');
+    tbody.innerHTML = events.map(ev => {
+      const d = ev.delivery || {};
+      const channels = [d.smsEnabled&&'SMS', d.whatsappEnabled&&'WhatsApp', d.qrEnabled&&'QR'].filter(Boolean).join(', ');
+      return `<tr>
+        <td><strong>${esc(ev.name)}</strong><br><span style="font-size:0.75rem;color:var(--muted)">${ev.id}</span></td>
+        <td><code style="background:var(--bg);padding:2px 6px;border-radius:4px">${ev.pin ?? '—'}</code></td>
+        <td>${ev.language === 'es' ? '🇲🇽 ES' : '🇺🇸 EN'}</td>
+        <td>${ev.stats?.photosTaken ?? 0}</td>
+        <td style="font-size:0.8rem">${channels}</td>
+        <td style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-outline" onclick="editEvent('${ev.id}')">Edit</button>
+          <a href="?event=${ev.id}" target="_blank" class="btn btn-sm btn-outline" style="text-decoration:none">Kiosk ↗</a>
+        </td>
+      </tr>`;
+    }).join('');
+    loading.style.display = 'none'; table.style.display = 'table';
+  } catch { loading.innerHTML = '<span style="color:var(--danger)">Failed to load</span>'; }
+}
+
+// ── Gallery ───────────────────────────────────────────────────────────────────
+async function populateGallerySelect() {
+  const sel = document.getElementById('gallery-event-select');
+  if (allEvents.length === 0) {
+    const res = await api('/api/admin/events');
+    if (res.ok) allEvents = (await res.json()).events || [];
+  }
+  sel.innerHTML = '<option value="">— Select event —</option>' +
+    allEvents.map(ev => `<option value="${ev.id}">${esc(ev.name)}</option>`).join('');
+}
+
+async function loadGallery() {
+  const eventId = document.getElementById('gallery-event-select').value;
+  const grid = document.getElementById('gallery-grid');
+  const empty = document.getElementById('gallery-empty');
+  const loading = document.getElementById('gallery-loading');
+  if (!eventId) { grid.innerHTML = ''; empty.style.display = 'none'; return; }
+  grid.innerHTML = ''; empty.style.display = 'none'; loading.style.display = 'flex';
+  try {
+    const res = await api(`/api/events/${eventId}/gallery`);
+    const photos = res.ok ? await res.json() : [];
+    loading.style.display = 'none';
+    document.getElementById('gallery-count').textContent = `${photos.length} photo${photos.length !== 1 ? 's' : ''}`;
+    if (photos.length === 0) { empty.style.display = 'block'; return; }
+    grid.innerHTML = photos.map(p => `
+      <div class="photo-card">
+        <img src="${esc(p.thumbnailUrl || p.url)}" alt="photo" loading="lazy" onerror="this.style.display='none'"/>
+        <div class="photo-meta">
+          <div>${fmtDate(p.createdAt)}</div>
+          ${p.phone ? `<div>${maskPhone(p.phone)}</div>` : ''}
+          <div>${p.delivered ? '<span class="badge badge-green">Delivered</span>' : '<span class="badge badge-gray">Not sent</span>'}</div>
+        </div>
+      </div>`).join('');
+  } catch { loading.style.display = 'none'; }
+}
+
+// ── Print Queue ───────────────────────────────────────────────────────────────
+async function loadPrintQueue() {
+  const loading = document.getElementById('pq-loading');
+  const table = document.getElementById('pq-table');
+  const empty = document.getElementById('pq-empty');
+  loading.style.display = 'flex'; table.style.display = 'none'; empty.style.display = 'none';
+  try {
+    const res = await api('/api/admin/print-queue');
+    const jobs = res.ok ? await res.json() : [];
+    loading.style.display = 'none';
+    if (jobs.length === 0) { empty.style.display = 'block'; return; }
+    table.style.display = 'table';
+    document.getElementById('pq-body').innerHTML = jobs.map(job => `
+      <tr>
+        <td><img src="${esc(job.thumbnailUrl||job.photoUrl)}" style="width:48px;height:64px;object-fit:cover;border-radius:4px"/></td>
+        <td>${esc(job.eventName || job.eventId || '—')}</td>
+        <td style="font-size:0.8rem;color:var(--muted)">${fmtDate(job.createdAt)}</td>
+        <td>${statusBadge(job.status)}</td>
+        <td>${job.status !== 'printed' ? `<button class="btn btn-sm btn-success" onclick="markPrinted('${job.id}')">✓ Mark Printed</button>` : '—'}</td>
+      </tr>`).join('');
+  } catch { loading.innerHTML = '<span style="color:var(--danger)">Failed to load</span>'; }
+}
+
+async function markPrinted(jobId) {
+  try {
+    const res = await api(`/api/admin/print-queue/${jobId}`, { method: 'PATCH', body: JSON.stringify({ status: 'printed', printedAt: new Date().toISOString() }) });
+    if (res.ok) { toast('Marked as printed', 'success'); loadPrintQueue(); }
+    else throw new Error();
+  } catch { toast('Failed to update job', 'error'); }
+}
+
+// ── Event Modal ───────────────────────────────────────────────────────────────
+function buildThemeCheckboxes() {
+  document.getElementById('themes-checkboxes').innerHTML = THEMES.map(id =>
+    `<label><input type="checkbox" name="theme" value="${id}" checked/> ${THEME_NAMES[id]}</label>`
+  ).join('');
+}
+
+function openCreateModal() {
+  document.getElementById('modal-title').textContent = 'Create Event';
+  document.getElementById('edit-event-id').value = '';
+  document.getElementById('ev-name').value = '';
+  document.getElementById('ev-tagline').value = 'Tu evento, nuestra magia.';
+  document.getElementById('ev-lang').value = 'es';
+  document.getElementById('ev-color').value = '#7c3aed';
+  document.getElementById('ev-sms').checked = true;
+  document.getElementById('ev-whatsapp').checked = true;
+  document.getElementById('ev-qr').checked = true;
+  document.querySelectorAll('#themes-checkboxes input').forEach(cb => cb.checked = true);
+  document.getElementById('event-modal').classList.add('open');
+}
+
+function editEvent(id) {
+  const ev = allEvents.find(e => e.id === id);
+  if (!ev) return;
+  document.getElementById('modal-title').textContent = 'Edit Event';
+  document.getElementById('edit-event-id').value = id;
+  document.getElementById('ev-name').value = ev.name || '';
+  document.getElementById('ev-tagline').value = ev.branding?.tagline || '';
+  document.getElementById('ev-lang').value = ev.language || 'es';
+  document.getElementById('ev-color').value = ev.branding?.primaryColor || '#7c3aed';
+  document.getElementById('ev-sms').checked = !!ev.delivery?.smsEnabled;
+  document.getElementById('ev-whatsapp').checked = !!ev.delivery?.whatsappEnabled;
+  document.getElementById('ev-qr').checked = !!ev.delivery?.qrEnabled;
+  const selectedThemes = ev.themes || THEMES;
+  document.querySelectorAll('#themes-checkboxes input').forEach(cb => {
+    cb.checked = selectedThemes.includes(cb.value);
+  });
+  document.getElementById('event-modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('event-modal').classList.remove('open'); }
+
+async function saveEvent() {
+  const id = document.getElementById('edit-event-id').value;
+  const themes = [...document.querySelectorAll('#themes-checkboxes input:checked')].map(cb => cb.value);
+  const body = {
+    name: document.getElementById('ev-name').value.trim(),
+    language: document.getElementById('ev-lang').value,
+    themes,
+    delivery: {
+      smsEnabled: document.getElementById('ev-sms').checked,
+      whatsappEnabled: document.getElementById('ev-whatsapp').checked,
+      qrEnabled: document.getElementById('ev-qr').checked,
+    },
+    branding: {
+      primaryColor: document.getElementById('ev-color').value,
+      tagline: document.getElementById('ev-tagline').value.trim(),
+    },
+  };
+  if (!body.name) { toast('Event name is required', 'error'); return; }
+  try {
+    const res = await api(id ? `/api/events/${id}` : '/api/events', {
+      method: id ? 'PATCH' : 'POST',
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error();
+    toast(id ? 'Event updated!' : 'Event created!', 'success');
+    closeModal();
+    loadEvents();
+    populateGallerySelect();
+  } catch { toast('Failed to save event', 'error'); }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(d) { if (!d) return '—'; try { return new Date(d).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}); } catch { return d; } }
+function maskPhone(p) { const s = String(p); return s.length > 4 ? s.slice(0,-4).replace(/\d/g,'*') + s.slice(-4) : '****'; }
+function statusBadge(s) {
+  if (s === 'printed') return '<span class="badge badge-green">Printed</span>';
+  if (s === 'failed')  return '<span class="badge badge-warn" style="background:rgba(239,68,68,0.15);color:var(--danger)">Failed</span>';
+  return '<span class="badge badge-gray">Pending</span>';
+}
+
+function toast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast-msg ${type}`;
+  t.innerHTML = (type === 'success' ? '✓ ' : '✗ ') + esc(msg);
+  document.getElementById('toast').appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// Close modal on overlay click
+document.getElementById('event-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+</script>
+</body>
+</html>

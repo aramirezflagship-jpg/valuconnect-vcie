@@ -1,22 +1,23 @@
 /* ─── CSS Variables ─────────────────────────────────────────────────────── */
 :root {
-  --bg: #0d0d1a;
-  --bg2: #1a1a2e;
-  --accent: #7c3aed;
-  --accent-light: #a855f7;
-  --accent-glow: rgba(124, 58, 237, 0.4);
+  --bg: #0a1628;
+  --bg2: #0f2035;
+  --accent: #4a8fc4;
+  --accent-light: #69b3e7;
+  --accent-glow: rgba(74, 143, 196, 0.4);
   --success: #10b981;
   --success-glow: rgba(16, 185, 129, 0.35);
   --danger: #ef4444;
   --danger-glow: rgba(239, 68, 68, 0.35);
   --text: #f8fafc;
-  --text-muted: #94a3b8;
-  --border: rgba(255, 255, 255, 0.1);
-  --card-bg: rgba(255, 255, 255, 0.06);
+  --text-muted: #8ab0ce;
+  --border: rgba(74, 143, 196, 0.18);
+  --card-bg: rgba(255, 255, 255, 0.05);
   --radius: 20px;
   --radius-sm: 12px;
-  --shadow-accent: 0 0 40px rgba(124, 58, 237, 0.5);
+  --shadow-accent: 0 0 40px rgba(74, 143, 196, 0.5);
   --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
 }
 
 /* ─── Reset & Base ──────────────────────────────────────────────────────── */
@@ -72,6 +73,9 @@ textarea {
   justify-content: center;
   background: var(--bg);
   overflow: hidden;
+  /* fill true viewport on iOS Safari — address bar eats the bottom */
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
 }
 
 .btn {

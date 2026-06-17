@@ -1,0 +1,18 @@
+{
+  "evt-qr-1": {
+    "sessions": 19,
+    "byMethod": {
+      "qr": 19
+    },
+    "guestEmails": [],
+    "guestPhones": []
+  },
+  "demo": {
+    "sessions": 1,
+    "byMethod": {
+      "qr": 1
+    },
+    "guestEmails": [],
+    "guestPhones": []
+  }
+}

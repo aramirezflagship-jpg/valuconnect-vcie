@@ -16,6 +16,17 @@ const COUNTRY_CODES = [
   { code: '+56', flag: '🇨🇱', label: 'CL' },
 ];
 
+// ─── Device detection ─────────────────────────────────────────────────────────
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return isMobile;
+}
+
 // ─── Animated checkmark SVG ───────────────────────────────────────────────────
 function Checkmark() {
   return (
@@ -91,10 +102,11 @@ function CountdownBar({ seconds, totalSeconds, onComplete }) {
 }
 
 export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
+  const isMobile = useIsMobile();
   const [countryCode, setCountryCode] = useState(lang === 'es' ? '+52' : '+1');
   const [phone, setPhone] = useState('');
   const [sending, setSending] = useState(false);
-  const [sentChannel, setSentChannel] = useState(null); // null | 'sms' | 'whatsapp'
+  const [sentChannel, setSentChannel] = useState(null);
   const [sendError, setSendError] = useState(null);
   const [autoResetSecs, setAutoResetSecs] = useState(AUTO_RESET_SECONDS);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
@@ -126,7 +138,6 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
   // ─── Phone input handler ──────────────────────────────────────────────────
   const handlePhoneChange = useCallback((e) => {
     resetCountdown();
-    // Allow only digits, spaces, dashes, parens
     const raw = e.target.value.replace(/[^\d\s\-()]/g, '');
     setPhone(raw);
     setSentChannel(null);
@@ -156,40 +167,41 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
     }
   }, [countryCode, phone, photoUrl, config.eventId, lang, resetCountdown]);
 
-  // ─── QR value — the direct photo URL (or a fallback) ─────────────────────
-  const qrValue = photoUrl || 'https://pixel-ai.app';
+  const qrValue = photoUrl || 'https://flash-it.app';
+  const qrSize = isMobile ? 160 : 280;
 
   return (
     <div
       className="screen"
       style={{
-        flexDirection: 'row',
+        flexDirection: isMobile ? 'column' : 'row',
         gap: 0,
         background: 'var(--bg)',
-        overflow: 'hidden',
+        overflow: isMobile ? 'auto' : 'hidden',
+        alignItems: isMobile ? 'stretch' : 'stretch',
       }}
       onPointerDown={resetCountdown}
     >
-      {/* ══════════════════════ LEFT PANEL — QR ══════════════════════ */}
+      {/* ══════════════════════ QR PANEL ══════════════════════ */}
       <motion.div
-        initial={{ opacity: 0, x: -40 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: isMobile ? 0 : -40, y: isMobile ? -20 : 0 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.5 }}
         style={{
-          flex: 1,
-          height: '100%',
+          flex: isMobile ? 'none' : 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 24,
-          padding: '48px 56px',
-          borderRight: '1px solid var(--border)',
+          gap: isMobile ? 14 : 24,
+          padding: isMobile ? '28px 24px 20px' : '48px 56px',
+          borderRight: isMobile ? 'none' : '1px solid var(--border)',
+          borderBottom: isMobile ? '1px solid var(--border)' : 'none',
         }}
       >
         <h1
           style={{
-            fontSize: '2.4rem',
+            fontSize: isMobile ? 'clamp(1.4rem, 6vw, 2rem)' : '2.4rem',
             fontWeight: 800,
             color: 'var(--text)',
             textAlign: 'center',
@@ -205,14 +217,14 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
           transition={{ delay: 0.25, duration: 0.55, ease: 'backOut' }}
           style={{
             background: '#fff',
-            borderRadius: 24,
-            padding: 20,
+            borderRadius: isMobile ? 16 : 24,
+            padding: isMobile ? 14 : 20,
             boxShadow: '0 0 60px rgba(124,58,237,0.35), 0 12px 40px rgba(0,0,0,0.5)',
           }}
         >
           <QRCodeSVG
             value={qrValue}
-            size={280}
+            size={qrSize}
             level="M"
             includeMargin={false}
             style={{ display: 'block', borderRadius: 8 }}
@@ -222,7 +234,7 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
         <p
           style={{
             color: 'var(--text-muted)',
-            fontSize: '1.1rem',
+            fontSize: isMobile ? '0.9rem' : '1.1rem',
             textAlign: 'center',
           }}
         >
@@ -230,10 +242,10 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
         </p>
 
         {/* Auto-reset bar */}
-        <div style={{ width: '100%', maxWidth: 340 }}>
+        <div style={{ width: '100%', maxWidth: isMobile ? 280 : 340 }}>
           <p style={{
             color: 'var(--text-muted)',
-            fontSize: '0.9rem',
+            fontSize: '0.85rem',
             textAlign: 'center',
             marginBottom: 8,
           }}>
@@ -246,20 +258,20 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
         </div>
       </motion.div>
 
-      {/* ══════════════════════ RIGHT PANEL — Phone ══════════════════════ */}
+      {/* ══════════════════════ PHONE PANEL ══════════════════════ */}
       <motion.div
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: isMobile ? 0 : 40, y: isMobile ? 20 : 0 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
         style={{
-          width: 460,
-          height: '100%',
+          width: isMobile ? '100%' : 460,
+          flex: isMobile ? 'none' : undefined,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 20,
-          padding: '48px 40px',
+          gap: isMobile ? 16 : 20,
+          padding: isMobile ? '24px 20px 32px' : '48px 40px',
           background: 'rgba(255,255,255,0.03)',
           flexShrink: 0,
         }}
@@ -282,13 +294,13 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
               }}
             >
               <Checkmark />
-              <h2 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--success)' }}>
+              <h2 style={{ fontSize: isMobile ? '1.7rem' : '2.2rem', fontWeight: 800, color: 'var(--success)' }}>
                 {t('delivery.sent', lang)}
               </h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
                 {lang === 'es'
-                  ? `Enviado vía ${sentChannel === 'sms' ? 'SMS' : 'WhatsApp'} a ${countryCode} ${phone}`
-                  : `Sent via ${sentChannel === 'sms' ? 'SMS' : 'WhatsApp'} to ${countryCode} ${phone}`}
+                  ? `Enviado vía SMS a ${countryCode} ${phone}`
+                  : `Sent via SMS to ${countryCode} ${phone}`}
               </p>
             </motion.div>
           ) : (
@@ -302,23 +314,23 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 20,
+                gap: isMobile ? 14 : 20,
                 width: '100%',
               }}
             >
               <div style={{ textAlign: 'center' }}>
                 <h2
                   style={{
-                    fontSize: '1.7rem',
+                    fontSize: isMobile ? '1.3rem' : '1.7rem',
                     fontWeight: 700,
                     color: 'var(--text)',
-                    marginBottom: 8,
+                    marginBottom: 6,
                   }}
                 >
                   {t('delivery.phone_label', lang)}
                 </h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
-                  {lang === 'es' ? 'Ingresa tu número y elige cómo recibirla' : 'Enter your number and choose how to receive it'}
+                <p style={{ color: 'var(--text-muted)', fontSize: isMobile ? '0.85rem' : '1rem' }}>
+                  {lang === 'es' ? 'Recibe tu foto por SMS' : 'Get your photo via SMS'}
                 </p>
               </div>
 
@@ -337,18 +349,18 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
                     onPointerDown={(e) => { e.stopPropagation(); resetCountdown(); setShowCountryPicker((v) => !v); }}
                     style={{
                       height: '100%',
-                      minHeight: 68,
-                      padding: '0 16px',
+                      minHeight: isMobile ? 56 : 68,
+                      padding: '0 12px',
                       background: 'var(--card-bg)',
                       border: '1px solid var(--border)',
                       borderRadius: 14,
                       color: 'var(--text)',
-                      fontSize: '1.1rem',
+                      fontSize: isMobile ? '1rem' : '1.1rem',
                       fontWeight: 600,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 6,
+                      gap: 4,
                       whiteSpace: 'nowrap',
                       touchAction: 'manipulation',
                       WebkitTapHighlightColor: 'transparent',
@@ -429,13 +441,13 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
                   autoComplete="tel"
                   style={{
                     flex: 1,
-                    minHeight: 68,
-                    padding: '0 20px',
+                    minHeight: isMobile ? 56 : 68,
+                    padding: '0 16px',
                     background: 'var(--card-bg)',
                     border: `1px solid ${sendError ? 'var(--danger)' : 'var(--border)'}`,
                     borderRadius: 14,
                     color: 'var(--text)',
-                    fontSize: '1.4rem',
+                    fontSize: '1.2rem',
                     fontWeight: 600,
                     letterSpacing: '0.05em',
                     outline: 'none',
@@ -459,41 +471,21 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
                 )}
               </AnimatePresence>
 
-              {/* ── Send buttons ── */}
-              <div style={{ display: 'flex', gap: 12, width: '100%' }}>
+              {/* ── Send SMS button ── */}
+              <div style={{ width: '100%' }}>
                 <button
-                  className="btn btn-ghost"
+                  className="btn btn-primary"
                   onPointerDown={(e) => { e.stopPropagation(); handleSend('sms'); }}
                   disabled={sending}
                   style={{
-                    flex: 1,
-                    minHeight: 68,
-                    fontSize: '1.05rem',
-                    border: '1px solid var(--border)',
+                    width: '100%',
+                    minHeight: isMobile ? 56 : 68,
+                    fontSize: isMobile ? '1rem' : '1.15rem',
                     gap: 8,
                   }}
                 >
-                  <span style={{ fontSize: '1.3rem' }}>💬</span>
+                  <span style={{ fontSize: '1.2rem' }}>💬</span>
                   {t('delivery.send_sms', lang)}
-                </button>
-
-                <button
-                  className="btn"
-                  onPointerDown={(e) => { e.stopPropagation(); handleSend('whatsapp'); }}
-                  disabled={sending}
-                  style={{
-                    flex: 1,
-                    minHeight: 68,
-                    fontSize: '1.05rem',
-                    background: 'linear-gradient(135deg, #128c7e, #25d366)',
-                    color: '#fff',
-                    border: 'none',
-                    boxShadow: '0 4px 20px rgba(37,211,102,0.3)',
-                    gap: 8,
-                  }}
-                >
-                  <span style={{ fontSize: '1.3rem' }}>📱</span>
-                  {t('delivery.send_whatsapp', lang)}
                 </button>
               </div>
 
@@ -520,8 +512,8 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
           onPointerDown={(e) => { e.stopPropagation(); onNewPhoto(); }}
           style={{
             width: '100%',
-            fontSize: '1.2rem',
-            minHeight: 68,
+            fontSize: isMobile ? '1rem' : '1.2rem',
+            minHeight: isMobile ? 56 : 68,
             marginTop: 8,
           }}
         >

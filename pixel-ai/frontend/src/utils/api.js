@@ -117,8 +117,138 @@ export async function pollJobStatus(statusUrl, { intervalMs = 2000, timeoutMs = 
  * @param {string} photoUrl
  * @param {string} eventId
  */
-export async function sendDelivery(channel, phone, photoUrl, eventId) {
-  const { data } = await api.post('/api/deliver', { channel, phone, photoUrl, eventId });
+export async function sendDelivery(method, to, photoUrl, eventId, eventName, gifUrl) {
+  const { data } = await api.post('/api/deliver', { method, to, photoUrl, eventId, eventName, gifUrl });
+  return data;
+}
+
+/**
+ * Fetch all photos for an event gallery.
+ * @param {string} eventId
+ * @returns {Promise<{ photos: Array }>}
+ */
+export async function getEventGallery(eventId) {
+  await checkBackendReachable();
+  if (_demoMode) {
+    // Return empty gallery in demo mode
+    return { photos: [] };
+  }
+  const { data } = await api.get(`/api/events/${encodeURIComponent(eventId)}/gallery`);
+  return data;
+}
+
+/**
+ * Fetch event stats (config + usage counts).
+ * @param {string} eventId
+ * @returns {Promise<Object>} event object with guest_count, sms_credits_used, etc.
+ */
+export async function getEventStats(eventId) {
+  await checkBackendReachable();
+  if (_demoMode) {
+    // Return mock stats in demo mode
+    return {
+      eventId,
+      name: 'Demo Event',
+      status: 'active',
+      guest_count: 0,
+      max_guests: null,
+      sms_credits_used: 0,
+      sms_credits_limit: 30,
+      expiresAt: null,
+    };
+  }
+  const { data } = await api.get(`/api/events/${encodeURIComponent(eventId)}`);
+  return data;
+}
+
+// ── Auth helpers ──────────────────────────────────────────────────────────────
+
+/**
+ * Build Authorization header object from a token.
+ * @param {string|null} token
+ * @returns {Object}
+ */
+export function authHeaders(token) {
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+// ── Authenticated API calls ───────────────────────────────────────────────────
+
+/**
+ * Fetch payment history for the authenticated account.
+ * @param {string} token
+ * @returns {Promise<Array>}
+ */
+export async function getPaymentHistory(token) {
+  const { data } = await api.get('/api/payments/history', {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+/**
+ * Open the Stripe customer portal — returns the portal URL.
+ * @param {string} token
+ * @returns {Promise<{ url: string }>}
+ */
+export async function openCustomerPortal(token) {
+  const { data } = await api.post('/api/payments/portal', {}, {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+/**
+ * Fetch notifications for the authenticated account.
+ * @param {string} token
+ * @returns {Promise<Array>}
+ */
+export async function getNotifications(token) {
+  const { data } = await api.get('/api/notifications', {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+/**
+ * Mark a specific notification as read.
+ * @param {string|number} id
+ * @param {string} token
+ * @returns {Promise<Object>}
+ */
+export async function markNotificationRead(id, token) {
+  const { data } = await api.patch(`/api/notifications/${encodeURIComponent(id)}/read`, {}, {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+/**
+ * Send a push subscription to the backend for storage.
+ * @param {PushSubscription} subscription
+ * @param {string} token
+ * @returns {Promise<Object>}
+ */
+export async function subscribeToPush(subscription, token) {
+  const { data } = await api.post('/api/push/subscribe', subscription, {
+    headers: authHeaders(token),
+  });
+  return data;
+}
+
+/**
+ * Initiate a Stripe checkout for an event add-on.
+ * @param {string} eventId
+ * @param {string} addon  add-on identifier
+ * @param {string} token
+ * @returns {Promise<{ url: string }>}
+ */
+export async function purchaseAddon(eventId, addon, token) {
+  const { data } = await api.post(
+    `/api/events/${encodeURIComponent(eventId)}/add-on`,
+    { addon },
+    { headers: authHeaders(token) }
+  );
   return data;
 }
 

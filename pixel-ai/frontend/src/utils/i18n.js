@@ -1,5 +1,5 @@
 /**
- * Pixel AI — bilingual string lookup (EN / ES)
+ * Flash-it — bilingual string lookup (EN / ES)
  * Default language: 'es'  (LATAM market — Spanish first)
  *
  * Usage:  t('welcome.title', lang)
@@ -8,16 +8,20 @@
 const strings = {
   /* ── Welcome ─────────────────────────────────────────────────────────── */
   'welcome.title': {
-    es: 'Pixel AI',
-    en: 'Pixel AI',
+    es: '¡Bienvenido!',
+    en: 'Welcome!',
   },
   'welcome.subtitle': {
-    es: 'Tu evento, nuestra magia.',
-    en: 'Your event, our magic.',
+    es: 'Tu evento, nuestra magia ✨',
+    en: 'Your event, our magic ✨',
   },
   'welcome.start': {
-    es: 'COMENZAR',
-    en: 'START',
+    es: '📸 COMENZAR',
+    en: '📸 START',
+  },
+  'welcome.hint': {
+    es: 'Toca para comenzar tu experiencia',
+    en: 'Tap to start your experience',
   },
 
   /* ── Themes ──────────────────────────────────────────────────────────── */

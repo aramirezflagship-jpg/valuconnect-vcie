@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "a0000000-demo-4000-8000-000000000001",
+      "email": "demo@flash-it.app",
+      "name": "Demo Customer",
+      "passwordHash": "0b6b29a75959b32687c1d39788d05da3:26ec296d1a17c086ea41dccaa879c650c63761be15b225fd81ce69c927df3ca86d9f3b96977c35c9ac4d9a3652c8c761df3784f437815d4cdb20d0005f25b80f",
+      "role": "customer",
+      "createdAt": "2026-06-10T19:35:20.929Z"
+    },
+    {
+      "id": "311ce7cd-06d4-4d78-9125-b60afe5d1130",
+      "email": "admin@flash-it.app",
+      "name": "Andres (Admin)",
+      "passwordHash": "d0d18804b7241f4554326a7fbc67c2a1:51d9fb52cffbd8d98966eb945fdfebb0491ed12aa0d7d170d463984f97c9367e538c86fb2c02c24a301d5c0a5a631fe2d706601d4d8ea099722e4193beed1d1a",
+      "role": "admin",
+      "createdAt": "2026-06-10T19:35:20.979Z"
+    }
+  ]
+}

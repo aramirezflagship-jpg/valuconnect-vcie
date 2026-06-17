@@ -1,0 +1,18 @@
+{
+  "id": "strip-2x6",
+  "name": "Classic Strip",
+  "description": "4 photos on a 2×6 strip, printed twice side-by-side",
+  "type": "strip",
+  "printWidth": 600,
+  "printHeight": 1800,
+  "photoCount": 4,
+  "photoSlots": [
+    { "index": 0, "x": 30, "y": 30,  "width": 540, "height": 370 },
+    { "index": 1, "x": 30, "y": 430, "width": 540, "height": 370 },
+    { "index": 2, "x": 30, "y": 830, "width": 540, "height": 370 },
+    { "index": 3, "x": 30, "y": 1230,"width": 540, "height": 370 }
+  ],
+  "logoSlot": { "x": 380, "y": 1650, "width": 180, "height": 80 },
+  "textSlot": { "x": 30, "y": 1660, "maxWidth": 340, "fontSize": 20, "color": "#ffffff" },
+  "background": "#0d0d1a"
+}

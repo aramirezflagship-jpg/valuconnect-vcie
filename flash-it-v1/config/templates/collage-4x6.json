@@ -1,0 +1,17 @@
+{
+  "id": "collage-4x6",
+  "name": "4×6 Collage",
+  "description": "3 photos in a collage layout",
+  "type": "collage",
+  "printWidth": 1800,
+  "printHeight": 1200,
+  "photoCount": 3,
+  "photoSlots": [
+    { "index": 0, "x": 20,  "y": 20, "width": 860, "height": 1160 },
+    { "index": 1, "x": 920, "y": 20, "width": 860, "height": 560 },
+    { "index": 2, "x": 920, "y": 620,"width": 860, "height": 560 }
+  ],
+  "logoSlot": { "x": 1580, "y": 1100, "width": 180, "height": 80 },
+  "textSlot": { "x": 920, "y": 1110, "maxWidth": 640, "fontSize": 22, "color": "#ffffff" },
+  "background": "#0d0d1a"
+}

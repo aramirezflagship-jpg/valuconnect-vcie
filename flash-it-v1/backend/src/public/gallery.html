@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0d0d1a"/>
+<title>Galería — Flash-it</title>
+<style>
+  :root { --bg:#0d0d1a; --surface:#12121f; --border:#1e1e3a; --accent:#7c3aed; --accent2:#a855f7; --text:#f1f5f9; --muted:#94a3b8; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:12px}
+  .logo{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .event-name{font-size:0.9rem;color:var(--muted);flex:1}
+  main{max-width:1100px;margin:0 auto;padding:24px 16px}
+  .hero{text-align:center;padding:32px 0 24px}
+  .hero h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:8px}
+  .hero p{color:var(--muted);font-size:0.9rem}
+  .count{display:inline-block;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);color:var(--accent2);padding:3px 12px;border-radius:99px;font-size:0.8rem;margin-top:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  @media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr);gap:8px}}
+  .photo-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform 0.15s,border-color 0.15s}
+  .photo-card:hover{transform:scale(1.02);border-color:var(--accent)}
+  .photo-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block}
+  .photo-meta{padding:8px 10px;font-size:0.75rem;color:var(--muted)}
+  .empty{text-align:center;padding:80px 20px;color:var(--muted)}
+  .empty .icon{font-size:3rem;margin-bottom:16px}
+  .loading{display:flex;align-items:center;justify-content:center;gap:12px;padding:80px;color:var(--muted)}
+  .spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* Lightbox */
+  #lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px}
+  #lightbox.open{display:flex}
+  #lb-img{max-width:100%;max-height:80vh;border-radius:12px;object-fit:contain}
+  #lb-close{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:1.5rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  #lb-close:hover{background:rgba(255,255,255,0.2)}
+  #lb-actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;text-decoration:none;transition:background 0.15s}
+  .btn-dl{background:var(--accent);color:#fff}
+  .btn-dl:hover{background:var(--accent2)}
+  .btn-wa{background:#25d366;color:#fff}
+  .btn-wa:hover{background:#22c55e}
+  footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.8rem;border-top:1px solid var(--border);margin-top:40px}
+  .footer-logo{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Flash-it ✨</div>
+  <div class="event-name" id="event-label">Cargando...</div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1 id="gallery-title">Galería del evento</h1>
+    <p id="gallery-subtitle">Todas las fotos de la noche</p>
+    <div class="count" id="photo-count" style="display:none"></div>
+  </div>
+
+  <div class="loading" id="loading"><div class="spinner"></div> Cargando fotos...</div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <div class="icon">📸</div>
+    <p>No hay fotos aún.<br/>¡Sé el primero en tomarte una!</p>
+  </div>
+</main>
+
+<div id="lightbox">
+  <button id="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt="photo"/>
+  <div id="lb-actions">
+    <a id="lb-download" href="#" download="flash-it-photo.jpg" class="btn btn-dl">⬇ Descargar</a>
+    <a id="lb-share" href="#" target="_blank" class="btn btn-wa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Compartir
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Flash-it ✨</div>
+  <p>Tu evento, nuestra magia. · Powered by AI</p>
+</footer>
+
+<script>
+const params = new URLSearchParams(location.search);
+const eventId = params.get('event');
+const API = '';  // same origin — backend serves this file
+
+async function init() {
+  if (!eventId) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('empty').style.display = 'block';
+    return;
+  }
+
+  try {
+    // Load event info for branding
+    const evRes = await fetch(`${API}/api/events/${eventId}`);
+    if (evRes.ok) {
+      const ev = await evRes.json();
+      const name = ev.name || 'Flash-it';
+      document.getElementById('event-label').textContent = name;
+      document.getElementById('gallery-title').textContent = `Galería — ${name}`;
+      document.title = `Galería — ${name}`;
+      if (ev.branding?.primaryColor) {
+        document.documentElement.style.setProperty('--accent', ev.branding.primaryColor);
+      }
+    }
+
+    // Load photos
+    const res = await fetch(`${API}/api/events/${eventId}/gallery`);
+    const photos = res.ok ? await res.json() : [];
+    renderPhotos(photos);
+  } catch {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('empty').style.display = 'block';
+  }
+}
+
+function renderPhotos(photos) {
+  document.getElementById('loading').style.display = 'none';
+  const grid = document.getElementById('grid');
+
+  if (!photos.length) {
+    document.getElementById('empty').style.display = 'block';
+    return;
+  }
+
+  const countEl = document.getElementById('photo-count');
+  countEl.textContent = `${photos.length} foto${photos.length !== 1 ? 's' : ''}`;
+  countEl.style.display = 'inline-block';
+
+  grid.innerHTML = photos.map((p, i) => `
+    <div class="photo-card" onclick="openLightbox('${esc(p.url)}', ${i})">
+      <img src="${esc(p.thumbnailUrl || p.url)}" alt="Foto ${i+1}" loading="lazy" onerror="this.src='${esc(p.url)}'"/>
+      <div class="photo-meta">${fmtDate(p.createdAt)}</div>
+    </div>`).join('');
+}
+
+let currentUrl = '';
+function openLightbox(url, i) {
+  currentUrl = url;
+  document.getElementById('lb-img').src = url;
+  document.getElementById('lb-download').href = url;
+  document.getElementById('lb-share').href =
+    `https://wa.me/?text=${encodeURIComponent('Mi foto de Flash-it ✨ ' + url)}`;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeLightbox();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+function esc(s) { return String(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function fmtDate(d) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleDateString('es-MX', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }); }
+  catch { return ''; }
+}
+
+init();
+</script>
+</body>
+</html>

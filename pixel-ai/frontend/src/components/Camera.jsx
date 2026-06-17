@@ -1,21 +1,38 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { t } from '../utils/i18n.js';
+import { useCamera } from '../hooks/useCamera.js';
+import FilterStrip from './FilterStrip.jsx';
+import Props from './Props.jsx';
+import CaptureSelector from './CaptureSelector.jsx';
+import { getFilter } from '../utils/filters.js';
 
 const COUNTDOWN_SECONDS = 3;
 const FLASH_DURATION_MS = 600;
 
-// ─── Camera constraints (front-facing, full HD) ───────────────────────────────
-const VIDEO_CONSTRAINTS = {
-  facingMode: 'user',
-  width: { ideal: 1920 },
-  height: { ideal: 1080 },
-};
-
-export default function Camera({ lang, onCapture, onBack }) {
-  const videoRef = useRef(null);
-  const streamRef = useRef(null);
+/**
+ * Camera — live camera screen with countdown, filters, and digital props.
+ *
+ * Props:
+ *   lang         {string}    - 'en' | 'es'
+ *   onCapture    {function}  - called with the captured Blob
+ *   onBack       {function}  - back navigation
+ *   captureMode  {string}    - 'photo' | 'gif' | 'video'
+ *   onModeChange {function}  - called when mode changes
+ *   photoCount   {number}    - number of photos in strip layout
+ *   frameIndex   {number}    - current frame index (for strip mode display)
+ */
+export default function Camera({
+  lang,
+  onCapture,
+  onBack,
+  captureMode = 'photo',
+  onModeChange,
+  photoCount = 1,
+  frameIndex = 0,
+}) {
   const canvasRef = useRef(null);
+  const propsCanvasRef = useRef(null);
   const countdownTimerRef = useRef(null);
 
   const [phase, setPhase] = useState('preview');
@@ -23,55 +40,24 @@ export default function Camera({ lang, onCapture, onBack }) {
 
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
   const [showFlash, setShowFlash] = useState(false);
-  const [cameraError, setCameraError] = useState(null);
-  const [cameraReady, setCameraReady] = useState(false);
 
-  // ─── Start camera stream ─────────────────────────────────────────────────
-  useEffect(() => {
-    let cancelled = false;
+  // Filter & beauty state
+  const [activeFilter, setActiveFilter] = useState('normal');
+  const [beautyMode, setBeautyMode] = useState(false);
 
-    async function startCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: VIDEO_CONSTRAINTS,
-          audio: false,
-        });
+  // Props overlay state
+  const [propsActive, setPropsActive] = useState(false);
 
-        if (cancelled) {
-          stream.getTracks().forEach((t) => t.stop());
-          return;
-        }
+  const { videoRef, isReady, error: cameraError } = useCamera({
+    facingMode: 'user',
+    width: 1920,
+    height: 1080,
+  });
 
-        streamRef.current = stream;
+  // Clear countdown timer on unmount
+  useEffect(() => () => { if (countdownTimerRef.current) clearInterval(countdownTimerRef.current); }, []);
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(console.error);
-        }
-
-        setCameraReady(true);
-      } catch (err) {
-        if (!cancelled) {
-          console.error('[Camera] getUserMedia error:', err);
-          setCameraError(err.message || 'Camera unavailable');
-          setPhase('error');
-        }
-      }
-    }
-
-    startCamera();
-
-    return () => {
-      cancelled = true;
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-        streamRef.current = null;
-      }
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-    };
-  }, []);
-
-  // ─── Capture photo from video stream ─────────────────────────────────────
+  // ── Capture photo from video stream ──────────────────────────────────────
   const captureSnapshot = useCallback(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -81,21 +67,32 @@ export default function Camera({ lang, onCapture, onBack }) {
     canvas.height = video.videoHeight || 1080;
 
     const ctx = canvas.getContext('2d');
-    // Mirror the image (front camera is already mirrored in CSS, undo for actual capture)
+
+    // Build CSS filter string (filter + optional beauty layer)
+    const filterDef = getFilter(activeFilter);
+    let cssFilter = filterDef.css || '';
+    if (beautyMode) {
+      cssFilter = (cssFilter + ' brightness(1.08) contrast(0.9)').trim();
+    }
+
     ctx.save();
+    // Mirror front-camera image for actual capture (CSS mirrors the preview)
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
+
+    if (cssFilter) ctx.filter = cssFilter;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.filter = 'none';
     ctx.restore();
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
     });
-  }, []);
+  }, [videoRef, activeFilter, beautyMode]);
 
-  // ─── Start the countdown ─────────────────────────────────────────────────
+  // ── Start the countdown ───────────────────────────────────────────────────
   const startCountdown = useCallback(() => {
-    if (phase !== 'preview' || !cameraReady) return;
+    if (phase !== 'preview' || !isReady) return;
 
     setPhase('countdown');
     setCountdown(COUNTDOWN_SECONDS);
@@ -110,7 +107,6 @@ export default function Camera({ lang, onCapture, onBack }) {
         setPhase('flash');
         setShowFlash(true);
 
-        // Capture during the flash
         captureSnapshot().then((blob) => {
           setTimeout(() => {
             setShowFlash(false);
@@ -122,9 +118,9 @@ export default function Camera({ lang, onCapture, onBack }) {
         setCountdown(current);
       }
     }, 1000);
-  }, [phase, cameraReady, captureSnapshot, onCapture]);
+  }, [phase, isReady, captureSnapshot, onCapture]);
 
-  // ─── Reset to preview state ──────────────────────────────────────────────
+  // ── Reset to preview state ─────────────────────────────────────────────────
   const handleReset = useCallback(() => {
     if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     setPhase('preview');
@@ -132,7 +128,18 @@ export default function Camera({ lang, onCapture, onBack }) {
     setShowFlash(false);
   }, []);
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // Strip progress label
+  const stripLabel = photoCount > 1
+    ? (lang === 'es' ? `Foto ${frameIndex + 1} de ${photoCount}` : `Photo ${frameIndex + 1} of ${photoCount}`)
+    : null;
+
+  // Live filter string for video preview
+  const liveFilter = [
+    getFilter(activeFilter).css || '',
+    beautyMode ? 'brightness(1.08) contrast(0.9)' : '',
+  ].filter(Boolean).join(' ') || undefined;
+
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div
       style={{
@@ -146,11 +153,11 @@ export default function Camera({ lang, onCapture, onBack }) {
         overflow: 'hidden',
       }}
     >
-      {/* ── Hidden canvas for capture ── */}
+      {/* Hidden canvas for capture */}
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-      {/* ── Camera error state ── */}
-      {phase === 'error' && (
+      {/* Camera error state */}
+      {cameraError && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -170,17 +177,15 @@ export default function Camera({ lang, onCapture, onBack }) {
           <p style={{ color: 'var(--danger)', fontSize: '1.2rem', fontWeight: 600 }}>
             {t('errors.camera', lang)}
           </p>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
-            {cameraError}
-          </p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>{cameraError}</p>
           <button className="btn btn-ghost" onPointerDown={onBack}>
             ← {lang === 'es' ? 'Volver' : 'Go back'}
           </button>
         </motion.div>
       )}
 
-      {/* ── Video preview ── */}
-      {phase !== 'error' && (
+      {/* Video preview */}
+      {!cameraError && (
         <>
           <video
             ref={videoRef}
@@ -193,12 +198,56 @@ export default function Camera({ lang, onCapture, onBack }) {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              // Mirror front camera for natural selfie feel
               transform: 'scaleX(-1)',
+              filter: liveFilter,
             }}
           />
 
-          {/* ── Camera grid overlay (rule-of-thirds) ── */}
+          {/* Strip frame counter — large overlay when in multi-photo mode */}
+          {photoCount > 1 && phase === 'preview' && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 25,
+              pointerEvents: 'none',
+              textAlign: 'center',
+            }}>
+              <div style={{
+                background: 'rgba(0,0,0,0.6)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: 20,
+                padding: '1rem 2.5rem',
+                border: '2px solid rgba(255,255,255,0.15)',
+              }}>
+                <div style={{ fontSize: '1rem', color: '#69b3e7', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', fontFamily: 'system-ui', marginBottom: '.25rem' }}>
+                  {lang === 'es' ? 'Foto' : 'Photo'}
+                </div>
+                <div style={{ fontSize: '4rem', fontWeight: 900, color: '#fff', lineHeight: 1, fontFamily: 'system-ui' }}>
+                  {frameIndex + 1}
+                </div>
+                <div style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 600, fontFamily: 'system-ui' }}>
+                  {lang === 'es' ? `de ${photoCount}` : `of ${photoCount}`}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Props overlay canvas */}
+          <canvas
+            ref={propsCanvasRef}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 15,
+            }}
+          />
+
+          {/* Grid overlay */}
           <div
             style={{
               position: 'absolute',
@@ -211,61 +260,102 @@ export default function Camera({ lang, onCapture, onBack }) {
             }}
           />
 
-          {/* ── Top bar: Back + status ── */}
+          {/* Top bar: Back + status + mode selector */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '20px 32px',
-              background: 'linear-gradient(rgba(0,0,0,0.6), transparent)',
               zIndex: 20,
+              background: 'linear-gradient(rgba(0,0,0,0.65), transparent)',
             }}
           >
-            <button
-              className="btn btn-ghost"
-              onPointerDown={onBack}
-              style={{
-                minHeight: 52,
-                padding: '0 20px',
-                fontSize: '1rem',
-                background: 'rgba(0,0,0,0.5)',
-                border: '1px solid rgba(255,255,255,0.2)',
-              }}
-              disabled={phase === 'countdown' || phase === 'flash'}
-            >
-              ← {lang === 'es' ? 'Atrás' : 'Back'}
-            </button>
-
             <div
               style={{
-                color: 'rgba(255,255,255,0.8)',
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                letterSpacing: '0.05em',
-                background: 'rgba(0,0,0,0.4)',
-                padding: '8px 20px',
-                borderRadius: 20,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '20px 32px 8px',
               }}
             >
-              {!cameraReady
-                ? (lang === 'es' ? 'Iniciando cámara...' : 'Starting camera...')
-                : phase === 'preview'
-                ? t('camera.ready', lang)
-                : phase === 'countdown'
-                ? t('camera.countdown', lang)
-                : t('camera.smile', lang)}
+              <button
+                className="btn btn-ghost"
+                onPointerDown={onBack}
+                style={{
+                  minHeight: 52,
+                  padding: '0 20px',
+                  fontSize: '1rem',
+                  background: 'rgba(0,0,0,0.5)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                }}
+                disabled={phase === 'countdown' || phase === 'flash'}
+              >
+                ← {lang === 'es' ? 'Atrás' : 'Back'}
+              </button>
+
+              <div
+                style={{
+                  color: 'rgba(255,255,255,0.85)',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  background: 'rgba(0,0,0,0.4)',
+                  padding: '8px 20px',
+                  borderRadius: 20,
+                  fontFamily: 'system-ui, sans-serif',
+                }}
+              >
+                {stripLabel
+                  ? stripLabel
+                  : !isReady
+                  ? (lang === 'es' ? 'Iniciando cámara...' : 'Starting camera...')
+                  : phase === 'preview'
+                  ? t('camera.ready', lang)
+                  : phase === 'countdown'
+                  ? t('camera.countdown', lang)
+                  : t('camera.smile', lang)}
+              </div>
+
+              {/* Props toggle */}
+              <button
+                onPointerDown={() => setPropsActive((v) => !v)}
+                style={{
+                  minHeight: 52,
+                  padding: '0 16px',
+                  fontSize: '1.5rem',
+                  background: propsActive ? 'rgba(74,143,196,0.45)' : 'rgba(0,0,0,0.5)',
+                  border: propsActive ? '1px solid #4a8fc4' : '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 12,
+                  cursor: 'pointer',
+                  WebkitTapHighlightColor: 'transparent',
+                  outline: 'none',
+                  transition: 'all .15s',
+                  boxShadow: propsActive ? '0 0 12px rgba(74,143,196,0.5)' : 'none',
+                }}
+              >
+                🎭
+              </button>
             </div>
 
-            {/* Spacer */}
-            <div style={{ width: 100 }} />
+            {/* Mode selector row */}
+            {onModeChange && (
+              <CaptureSelector
+                mode={captureMode}
+                onChange={onModeChange}
+                photoCount={photoCount}
+              />
+            )}
           </div>
 
-          {/* ── Countdown number overlay ── */}
+          {/* Digital props overlay (renders the prop selector UI) */}
+          <Props
+            videoRef={videoRef}
+            canvasRef={propsCanvasRef}
+            active={propsActive}
+            onToggle={() => setPropsActive((v) => !v)}
+          />
+
+          {/* Countdown number overlay */}
           <AnimatePresence mode="wait">
             {phase === 'countdown' && (
               <motion.div
@@ -288,7 +378,7 @@ export default function Camera({ lang, onCapture, onBack }) {
                     fontWeight: 900,
                     color: '#fff',
                     lineHeight: 1,
-                    textShadow: '0 0 80px rgba(124,58,237,0.8), 0 0 20px rgba(0,0,0,0.8)',
+                    textShadow: '0 0 80px rgba(74,143,196,0.8), 0 0 20px rgba(0,0,0,0.8)',
                     filter: 'drop-shadow(0 4px 24px rgba(0,0,0,0.7))',
                   }}
                 >
@@ -298,7 +388,7 @@ export default function Camera({ lang, onCapture, onBack }) {
             )}
           </AnimatePresence>
 
-          {/* ── Camera flash overlay ── */}
+          {/* Camera flash overlay */}
           <AnimatePresence>
             {showFlash && (
               <motion.div
@@ -318,7 +408,16 @@ export default function Camera({ lang, onCapture, onBack }) {
             )}
           </AnimatePresence>
 
-          {/* ── Bottom controls ── */}
+          {/* Filter strip — sits above shutter controls */}
+          <FilterStrip
+            videoRef={videoRef}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            beautyMode={beautyMode}
+            onBeautyToggle={() => setBeautyMode((v) => !v)}
+          />
+
+          {/* Bottom controls */}
           <div
             style={{
               position: 'absolute',
@@ -334,18 +433,16 @@ export default function Camera({ lang, onCapture, onBack }) {
               zIndex: 20,
             }}
           >
-            {/* Retake / Reset (visible in preview mode) */}
             {phase === 'preview' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{ display: 'flex', gap: 24, alignItems: 'center' }}
               >
-                {/* Shutter button */}
                 <motion.button
                   whileTap={{ scale: 0.92 }}
                   onPointerDown={startCountdown}
-                  disabled={!cameraReady}
+                  disabled={!isReady}
                   style={{
                     width: 100,
                     height: 100,
@@ -361,7 +458,7 @@ export default function Camera({ lang, onCapture, onBack }) {
                     WebkitTapHighlightColor: 'transparent',
                     outline: 'none',
                     transition: 'opacity 0.2s',
-                    opacity: cameraReady ? 1 : 0.4,
+                    opacity: isReady ? 1 : 0.4,
                   }}
                 >
                   <div
@@ -376,7 +473,6 @@ export default function Camera({ lang, onCapture, onBack }) {
               </motion.div>
             )}
 
-            {/* Countdown in progress — show cancel */}
             {phase === 'countdown' && (
               <motion.button
                 initial={{ opacity: 0 }}

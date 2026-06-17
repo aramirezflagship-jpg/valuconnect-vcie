@@ -1,0 +1,63 @@
+{
+  "name": "flash-it-backend",
+  "version": "1.0.0",
+  "description": "Flash-it — cloud API backend for AI-powered photo booth kiosks",
+  "main": "src/index.js",
+  "scripts": {
+    "prestart": "node scripts/check-env.js",
+    "start": "node src/index.js",
+    "dev": "node src/index.js",
+    "check-env": "node scripts/check-env.js",
+    "test": "jest --forceExit"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1064.0",
+    "@aws-sdk/s3-request-presigner": "^3.1064.0",
+    "@sendgrid/mail": "^8.1.6",
+    "@supabase/supabase-js": "^2.108.1",
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "gif-encoder-2": "^1.0.5",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
+    "pdfkit": "^0.19.0",
+    "qrcode": "^1.5.3",
+    "sharp": "^0.33.4",
+    "stripe": "^22.2.0",
+    "twilio": "^5.2.3",
+    "uuid": "^10.0.0",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.2.2"
+  },
+  "keywords": [
+    "photo-booth",
+    "ai",
+    "kiosk",
+    "express"
+  ],
+  "license": "UNLICENSED",
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 15000,
+    "rootDir": ".",
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "src/services/localAuth.js",
+      "src/middleware/auth.js",
+      "src/routes/accounts.js",
+      "src/routes/events.js"
+    ]
+  }
+}
