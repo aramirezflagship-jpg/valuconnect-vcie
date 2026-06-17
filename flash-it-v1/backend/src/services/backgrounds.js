@@ -28,6 +28,55 @@ const STORE_PATH = path.resolve(
 /** Canonical, extensible list of occasion categories. */
 const CATEGORIES = ['wedding', 'quinceanera', 'corporate', 'birthday', 'holiday', 'fiesta'];
 
+/** Capture modes a template/background can support. */
+const MODES = ['natural', 'character'];
+
+/**
+ * Normalise a mode string. Anything other than "character" resolves to
+ * "natural" (the safe default — real photo + frame + message).
+ * @param {string} mode
+ * @returns {'natural'|'character'}
+ */
+function normalizeMode(mode) {
+  return String(mode || '').toLowerCase().trim() === 'character' ? 'character' : 'natural';
+}
+
+/**
+ * Normalise a faceSlot definition (character mode). Accepts an object or a JSON
+ * string. Returns a clean { x, y, width, height, shape } object, or null when
+ * not parseable. Coordinates are absolute pixels on the artwork canvas, with
+ * the origin at the TOP-LEFT corner. shape is "oval" or "rect".
+ * @param {object|string} raw
+ * @returns {{x:number,y:number,width:number,height:number,shape:string}|null}
+ */
+function normalizeFaceSlot(raw) {
+  if (!raw) return null;
+  let obj = raw;
+  if (typeof raw === 'string') {
+    try {
+      obj = JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+  if (typeof obj !== 'object' || obj === null) return null;
+
+  const num = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? Math.round(n) : null;
+  };
+
+  const x = num(obj.x);
+  const y = num(obj.y);
+  const width = num(obj.width);
+  const height = num(obj.height);
+  if (x === null || y === null || width === null || height === null) return null;
+  if (width <= 0 || height <= 0) return null;
+
+  const shape = String(obj.shape || 'oval').toLowerCase() === 'rect' ? 'rect' : 'oval';
+  return { x, y, width, height, shape };
+}
+
 let _cache = null;
 
 function _load() {
@@ -100,13 +149,21 @@ function listCategories() {
  */
 function createBackground(data) {
   const store = _load();
-  const id = uuidv4();
+  const id = data.id || uuidv4();
   const record = {
     id,
     category: normalizeCategory(data.category),
+    // mode: "natural" (real photo + frame/overlay + message) or
+    //       "character" (face-in-the-hole: artwork on top, face shows through).
+    mode: normalizeMode(data.mode),
     name: (data.name || 'Background').toString().trim(),
-    url: data.url,
-    thumbnailUrl: data.thumbnailUrl || data.url,
+    // url/thumbnailUrl are the asset:
+    //   natural   → the (optional) transparent-PNG frame/overlay; may be null.
+    //   character → the character+scene artwork PNG (transparent face hole).
+    url: data.url || null,
+    thumbnailUrl: data.thumbnailUrl || data.url || null,
+    // character-only: where the guest face is dropped in (absolute px on artwork).
+    faceSlot: normalizeFaceSlot(data.faceSlot),
     r2Key: data.r2Key || null,
     accountId: data.accountId || null,
     createdAt: new Date().toISOString(),
@@ -121,12 +178,16 @@ function createBackground(data) {
  * @param {string} [category]
  * @returns {object[]}
  */
-function listBackgrounds(category) {
+function listBackgrounds(category, mode) {
   const store = _load();
   let all = Object.values(store.backgrounds);
   if (category) {
     const cat = normalizeCategory(category);
     all = all.filter((b) => b.category === cat);
+  }
+  if (mode) {
+    const m = normalizeMode(mode);
+    all = all.filter((b) => normalizeMode(b.mode) === m);
   }
   return all.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
 }
@@ -144,7 +205,10 @@ function getBackground(id) {
 
 module.exports = {
   CATEGORIES,
+  MODES,
   normalizeCategory,
+  normalizeMode,
+  normalizeFaceSlot,
   listCategories,
   createBackground,
   listBackgrounds,
