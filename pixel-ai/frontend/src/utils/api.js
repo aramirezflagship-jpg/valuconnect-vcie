@@ -287,33 +287,104 @@ export async function getMyEvents(token) {
 // ── Backgrounds (themed art per occasion) ─────────────────────────────────────
 
 /**
- * List themed backgrounds, optionally filtered by category.
+ * List themed backgrounds/templates, optionally filtered by category and mode.
+ *
  * @param {string} [category]  one of wedding, quinceanera, corporate, birthday, holiday, fiesta
- * @returns {Promise<{ backgrounds: Array, count: number }>}
+ * @param {'natural'|'character'} [mode]  template mode filter
+ * @returns {Promise<{ backgrounds: Array<{ id, category, mode, name, url, thumbnailUrl, faceSlot? }>, count: number }>}
  */
-export async function getBackgrounds(category) {
+export async function getBackgrounds(category, mode) {
+  const params = {};
+  if (category) params.category = category;
+  if (mode) params.mode = mode;
   const { data } = await api.get('/api/backgrounds', {
-    params: category ? { category } : undefined,
+    params: Object.keys(params).length ? params : undefined,
   });
   return data;
 }
 
 /**
- * Upload a new themed background.
- * multipart fields: image (file) + category (string) + name (string)
- * @param {File} imageFile
- * @param {string} category
- * @param {string} name
- * @param {string} token
- * @returns {Promise<Object>} background record { id, category, name, url, thumbnailUrl }
+ * Upload a new themed background / template.
+ *
+ * multipart fields: image (file) + category + mode + name [+ faceSlot JSON].
+ *  - natural: transparent frame PNG (image optional)
+ *  - character: artwork PNG with transparent face hole (image required) AND
+ *    faceSlot is REQUIRED — an object { x, y, width, height, shape } in absolute
+ *    pixels on the artwork's own canvas (top-left origin).
+ *
+ * @param {Object}  opts
+ * @param {File}    [opts.image]      artwork / frame PNG
+ * @param {string}  opts.category
+ * @param {'natural'|'character'} opts.mode
+ * @param {string}  opts.name
+ * @param {Object}  [opts.faceSlot]   { x, y, width, height, shape } — required for character
+ * @param {string}  token             Bearer JWT
+ * @returns {Promise<Object>} background record { id, category, mode, name, url, thumbnailUrl, faceSlot? }
  */
-export async function uploadBackground(imageFile, category, name, token) {
+export async function uploadBackground({ image, category, mode, name, faceSlot }, token) {
   const formData = new FormData();
-  formData.append('image', imageFile);
+  if (image) formData.append('image', image);
   formData.append('category', category);
+  if (mode) formData.append('mode', mode);
   formData.append('name', name);
+  if (faceSlot) formData.append('faceSlot', JSON.stringify(faceSlot));
   const { data } = await api.post('/api/backgrounds', formData, {
     headers: { ...authHeaders(token), 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+}
+
+// ── Two-mode capture (natural frame · character face-in-hole) ─────────────────
+
+/**
+ * Capture in NATURAL mode — the full on-the-spot photo, composited with a themed
+ * frame/overlay + 3D event message. Sends the photo as `imageBase64`.
+ *
+ * @param {Object} opts
+ * @param {string} opts.eventId
+ * @param {string} opts.imageBase64     data-URI of the full photo
+ * @param {string} [opts.backgroundId]  chosen natural template id (optional)
+ * @param {string} [opts.message]
+ * @param {string} [opts.category]
+ * @param {string} [opts.guestPhone]    E.164 → SMS
+ * @returns {Promise<{ resultUrl, photoUrl, thumbnailUrl, qrCode, mode, eventId, backgroundId }>}
+ */
+export async function captureNatural({ eventId, imageBase64, backgroundId, message, category, guestPhone }) {
+  const { data } = await api.post('/api/capture', {
+    eventId,
+    mode: 'natural',
+    imageBase64,
+    ...(backgroundId ? { backgroundId } : {}),
+    ...(message ? { message } : {}),
+    ...(category ? { category } : {}),
+    ...(guestPhone ? { guestPhone } : {}),
+  });
+  return data;
+}
+
+/**
+ * Capture in CHARACTER mode — the client-cropped guest face is dropped into a
+ * pre-made character/scene template. Sends the cropped face as `faceImageBase64`.
+ * `backgroundId` MUST reference a `character` template.
+ *
+ * @param {Object} opts
+ * @param {string} opts.eventId
+ * @param {string} opts.faceImageBase64  data-URI of the client-cropped face
+ * @param {string} opts.backgroundId     chosen character template id (required)
+ * @param {string} [opts.message]
+ * @param {string} [opts.category]
+ * @param {string} [opts.guestPhone]     E.164 → SMS
+ * @returns {Promise<{ resultUrl, photoUrl, thumbnailUrl, qrCode, mode, eventId, backgroundId }>}
+ */
+export async function captureCharacter({ eventId, faceImageBase64, backgroundId, message, category, guestPhone }) {
+  const { data } = await api.post('/api/capture', {
+    eventId,
+    mode: 'character',
+    faceImageBase64,
+    backgroundId,
+    ...(message ? { message } : {}),
+    ...(category ? { category } : {}),
+    ...(guestPhone ? { guestPhone } : {}),
   });
   return data;
 }

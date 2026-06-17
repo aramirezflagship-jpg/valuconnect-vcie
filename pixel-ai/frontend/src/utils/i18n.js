@@ -34,6 +34,46 @@ const strings = {
     en: 'Next →',
   },
 
+  /* ── Mode picker (Natural / Character) ───────────────────────────────── */
+  'mode.title': {
+    es: 'Elige tu estilo',
+    en: 'Choose Your Style',
+  },
+  'mode.natural.title': {
+    es: 'Foto Natural',
+    en: 'Natural Photo',
+  },
+  'mode.natural.desc': {
+    es: 'Tu foto real con un marco temático',
+    en: 'Your real photo with a themed frame',
+  },
+  'mode.character.title': {
+    es: 'Personaje',
+    en: 'Character',
+  },
+  'mode.character.desc': {
+    es: 'Tu cara en un personaje divertido',
+    en: 'Your face on a fun character',
+  },
+  'mode.pickTemplate': {
+    es: 'Elige una plantilla',
+    en: 'Pick a template',
+  },
+  'mode.noTemplates': {
+    es: 'No hay plantillas disponibles',
+    en: 'No templates available',
+  },
+
+  /* ── Character face guide ────────────────────────────────────────────── */
+  'face.guide': {
+    es: 'Centra tu cara en el óvalo',
+    en: 'Center your face in the oval',
+  },
+  'face.notFound': {
+    es: 'No detectamos tu cara — usando recorte central',
+    en: "We didn't detect your face — using a centered crop",
+  },
+
   /* ── Camera ──────────────────────────────────────────────────────────── */
   'camera.ready': {
     es: '¡Prepárate!',
