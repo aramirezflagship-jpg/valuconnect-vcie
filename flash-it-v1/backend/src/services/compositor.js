@@ -183,4 +183,76 @@ async function composeStrip(photos, template, options = {}) {
   return doubled;
 }
 
-module.exports = { compose, composeStrip };
+/**
+ * Composite guest photo(s) into a template's slots ON TOP of a themed
+ * background image (R2-hosted JPEG/PNG). This replaces the old AI
+ * background-removal + generation flow: no cutout, no external AI.
+ *
+ * The background image is resized to the template's print canvas (cover), then
+ * each guest photo is resized to its slot and composited over it. Optional
+ * logo + event-name text are drawn exactly like compose().
+ *
+ * @param {Buffer[]} photos             - Guest photo buffers, in slot order
+ * @param {Buffer}   backgroundBuffer   - Themed background image buffer
+ * @param {object}   template           - Template object from templates.js
+ * @param {object}   [options]          - Same options as compose()
+ * @returns {Promise<Buffer>} PNG buffer
+ */
+async function composeOnBackground(photos, backgroundBuffer, template, options = {}) {
+  const { eventLogoBuffer, eventName, textColor } = options;
+  const { printWidth: width, printHeight: height } = template;
+
+  console.log(`[compositor] composeOnBackground template="${template.id}" size=${width}x${height} photos=${photos.length}`);
+
+  // ── 1. Themed background as the base canvas ───────────────────────────────
+  const base = await sharp(backgroundBuffer)
+    .resize(width, height, { fit: 'cover', position: 'centre' })
+    .toBuffer();
+
+  const compositeInputs = [];
+
+  // ── 2. Resize each guest photo to fit its slot ────────────────────────────
+  for (let i = 0; i < template.photoSlots.length; i++) {
+    const slot = template.photoSlots[i];
+    const photo = photos[i];
+    if (!photo) continue;
+
+    const resized = await sharp(photo)
+      .resize(slot.width, slot.height, { fit: 'cover', position: 'centre' })
+      .toBuffer();
+
+    compositeInputs.push({ input: resized, left: slot.x, top: slot.y });
+  }
+
+  // ── 3. Optional logo overlay ──────────────────────────────────────────────
+  if (eventLogoBuffer && template.logoSlot) {
+    const ls = template.logoSlot;
+    try {
+      const resizedLogo = await sharp(eventLogoBuffer)
+        .resize(ls.width, ls.height, { fit: 'inside', withoutEnlargement: true })
+        .toBuffer();
+      compositeInputs.push({ input: resizedLogo, left: ls.x, top: ls.y });
+    } catch (logoErr) {
+      console.warn('[compositor] logo overlay failed, skipping:', logoErr.message);
+    }
+  }
+
+  // ── 4. Optional event-name text ───────────────────────────────────────────
+  if (eventName && template.textSlot) {
+    const textSlotWithColor = textColor
+      ? { ...template.textSlot, color: textColor }
+      : template.textSlot;
+    const svgBuf = _buildTextSvg(eventName, textSlotWithColor, width, height);
+    compositeInputs.push({ input: svgBuf, top: 0, left: 0 });
+  }
+
+  const result = await sharp(base)
+    .composite(compositeInputs)
+    .png()
+    .toBuffer();
+
+  console.log(`[compositor] composeOnBackground done, output=${result.length} bytes`);
+  return result;
+}
+
+module.exports = { compose, composeStrip, composeOnBackground };

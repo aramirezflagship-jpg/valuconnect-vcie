@@ -21,6 +21,7 @@ const surveysRouter = require('./routes/surveys');
 const printRouter = require('./routes/print');
 const stripsRouter    = require('./routes/strips');
 const templatesRouter = require('./routes/templates');
+const backgroundsRouter = require('./routes/backgrounds');
 const videosRouter    = require('./routes/videos');
 const contactRouter   = require('./routes/contact');
 
@@ -92,6 +93,7 @@ app.use('/api/surveys', surveysRouter);
 app.use('/api/print', printRouter);
 app.use('/api/strips',    stripsRouter);
 app.use('/api/templates', templatesRouter);
+app.use('/api/backgrounds', backgroundsRouter);
 app.use('/api/videos',    videosRouter);
 app.use('/api/contact',   contactRouter);
 

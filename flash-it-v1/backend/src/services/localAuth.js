@@ -111,6 +111,92 @@ function register(email, password, name) {
   return { user: safeUser, token };
 }
 
+// ── Password reset ────────────────────────────────────────────────────────────
+// Tokens are single-use and short-lived. We persist ONLY the SHA-256 hash of
+// the token (never the token itself) alongside the account id + expiry, in the
+// same JSON store under a `resetTokens` array.
+//
+// NOTE: on Render the filesystem is ephemeral, so pending reset tokens are
+// cleared on every redeploy. That is acceptable (tokens expire in 15 min); a
+// durable store would require Supabase.
+
+const RESET_TTL_MS = 15 * 60 * 1000; // 15 minutes
+
+function _hashToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+/**
+ * Update an account's password by user id. Returns the safe user or null.
+ * @param {string} id
+ * @param {string} newPassword
+ */
+function updateUserPassword(id, newPassword) {
+  const store = readStore();
+  const idx = store.users.findIndex((u) => u.id === id);
+  if (idx === -1) return null;
+  store.users[idx].passwordHash = hashPassword(newPassword);
+  writeStore(store);
+  const { passwordHash: _, ...safeUser } = store.users[idx];
+  return safeUser;
+}
+
+/**
+ * Create a single-use reset token for an email if the account exists.
+ * Stores only the token hash. Returns the raw token (caller emails it), or
+ * null when no such account exists. Never throws on a missing user.
+ * @param {string} email
+ * @returns {{ token: string, user: object }|null}
+ */
+function createPasswordResetToken(email) {
+  const user = getUserByEmail(email);
+  if (!user) return null;
+
+  const token = crypto.randomBytes(32).toString('hex');
+  const store = readStore();
+  if (!Array.isArray(store.resetTokens)) store.resetTokens = [];
+
+  // Invalidate any prior tokens for this user.
+  store.resetTokens = store.resetTokens.filter((t) => t.userId !== user.id);
+  store.resetTokens.push({
+    userId: user.id,
+    tokenHash: _hashToken(token),
+    expiresAt: Date.now() + RESET_TTL_MS,
+    used: false,
+  });
+  writeStore(store);
+
+  return { token, user };
+}
+
+/**
+ * Consume a reset token and set a new password. Verifies the token exists, is
+ * unexpired, unused, and matches. Single-use: the token is invalidated.
+ * @param {string} token
+ * @param {string} newPassword
+ * @returns {boolean} true on success, false if token invalid/expired
+ */
+function consumePasswordResetToken(token, newPassword) {
+  if (!token) return false;
+  const store = readStore();
+  if (!Array.isArray(store.resetTokens)) return false;
+
+  const tokenHash = _hashToken(token);
+  const rec = store.resetTokens.find((t) => t.tokenHash === tokenHash);
+  if (!rec || rec.used || rec.expiresAt < Date.now()) return false;
+
+  const idx = store.users.findIndex((u) => u.id === rec.userId);
+  if (idx === -1) return false;
+
+  store.users[idx].passwordHash = hashPassword(newPassword);
+  // Invalidate this token (and prune expired ones while we're here).
+  store.resetTokens = store.resetTokens.filter(
+    (t) => t.tokenHash !== tokenHash && t.expiresAt >= Date.now()
+  );
+  writeStore(store);
+  return true;
+}
+
 // ── Seed demo accounts (idempotent) ──────────────────────────────────────────
 
 function seedDemoAccounts() {
@@ -154,6 +240,9 @@ module.exports = {
   verifyToken,
   login,
   register,
+  updateUserPassword,
+  createPasswordResetToken,
+  consumePasswordResetToken,
   seedDemoAccounts,
 };
 

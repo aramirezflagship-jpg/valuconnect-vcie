@@ -4,8 +4,27 @@ const express = require('express');
 const { requireAuth, adminAuth } = require('../middleware/auth');
 const db = require('../services/db');
 const localAuth = require('../services/localAuth');
+const email = require('../services/email');
 
 const router = express.Router();
+
+// ── Simple in-memory rate limiter (per key) ───────────────────────────────────
+// Best-effort only; resets on redeploy. Used to throttle forgot-password by
+// email + IP so the endpoint can't be used to spam inboxes or enumerate users.
+const _rateBuckets = new Map();
+
+function _rateLimited(key, max, windowMs) {
+  const now = Date.now();
+  const bucket = _rateBuckets.get(key) || [];
+  const fresh = bucket.filter((ts) => now - ts < windowMs);
+  if (fresh.length >= max) {
+    _rateBuckets.set(key, fresh);
+    return true;
+  }
+  fresh.push(now);
+  _rateBuckets.set(key, fresh);
+  return false;
+}
 
 // Supabase clients (only used when Supabase is configured)
 let supabaseAnon = null;
@@ -185,6 +204,102 @@ router.get('/all', adminAuth, async (req, res, next) => {
     }
     const safe = (store.users || []).map(({ passwordHash, ...u }) => u);
     return res.json(safe);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── POST /api/accounts/forgot-password ────────────────────────────────────────
+// Always returns 200 (no user enumeration). If the account exists, emails a
+// single-use, 15-minute reset link. Never leaks the token in the response.
+
+router.post('/forgot-password', async (req, res, next) => {
+  try {
+    const email_ = (req.body && req.body.email ? String(req.body.email) : '').trim().toLowerCase();
+    const ip = req.headers['x-forwarded-for'] || req.ip || 'unknown';
+
+    // Rate-limit: 5 per email / 15 min and 20 per IP / 15 min.
+    const windowMs = 15 * 60 * 1000;
+    if (email_ && _rateLimited(`fp:email:${email_}`, 5, windowMs)) {
+      return res.status(200).json({ ok: true });
+    }
+    if (_rateLimited(`fp:ip:${ip}`, 20, windowMs)) {
+      return res.status(200).json({ ok: true });
+    }
+
+    if (!email_) {
+      // Don't reveal anything; still 200.
+      return res.status(200).json({ ok: true });
+    }
+
+    const frontendBase = (process.env.FRONTEND_URL || 'https://valuconnect-vcie.vercel.app')
+      .split(',')[0]
+      .trim()
+      .replace(/\/$/, '');
+
+    // Supabase mode: delegate to Supabase's own reset email if configured.
+    if (useSupabase && supabaseAnon) {
+      try {
+        await supabaseAnon.auth.resetPasswordForEmail(email_, {
+          redirectTo: `${frontendBase}/reset-password`,
+        });
+      } catch (e) {
+        console.warn('[forgot-password] supabase reset error (suppressed):', e.message);
+      }
+      return res.status(200).json({ ok: true });
+    }
+
+    // Local mode: generate a single-use token, store only its hash, email it.
+    const result = localAuth.createPasswordResetToken(email_);
+    if (result) {
+      const resetUrl = `${frontendBase}/reset-password?token=${result.token}`;
+      try {
+        const sent = await email.sendPasswordResetEmail(result.user.email, resetUrl);
+        if (sent && sent.skipped) {
+          // SENDGRID_API_KEY missing — log a warning but DO NOT leak the token.
+          console.warn(`[forgot-password] email not sent (SendGrid unconfigured) for ${email_}`);
+        }
+      } catch (mailErr) {
+        console.error('[forgot-password] email send failed:', mailErr.message);
+      }
+    } else {
+      console.log(`[forgot-password] no account for ${email_} (responding 200 anyway)`);
+    }
+
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── POST /api/accounts/reset-password ─────────────────────────────────────────
+// Verifies the token (exists, unexpired, unused, hash match), enforces password
+// rules, updates the password, and invalidates the token. Never reveals whether
+// the email existed.
+
+router.post('/reset-password', async (req, res, next) => {
+  try {
+    const { token, newPassword } = req.body || {};
+
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({ error: 'Reset token is required.' });
+    }
+    if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    }
+
+    // Supabase mode handles its own token via the access_token flow client-side;
+    // this endpoint serves the local-JWT mode.
+    if (useSupabase) {
+      return res.status(400).json({ error: 'Use the reset link to set a new password.' });
+    }
+
+    const ok = localAuth.consumePasswordResetToken(token, newPassword);
+    if (!ok) {
+      return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
+    }
+
+    return res.status(200).json({ ok: true });
   } catch (err) {
     next(err);
   }

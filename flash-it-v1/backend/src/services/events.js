@@ -86,6 +86,16 @@ async function listEvents() {
 }
 
 /**
+ * List events owned by a specific account.
+ * @param {string} accountId
+ * @returns {object[]}
+ */
+async function listEventsByAccount(accountId) {
+  const store = _load();
+  return Object.values(store.events).filter((e) => e.account_id === accountId);
+}
+
+/**
  * Create a new event.
  *
  * @param {object} data - Event fields
@@ -104,8 +114,11 @@ async function listEvents() {
  * @param {string} [data.status]          - 'active'|'ended'|'expired'
  * @returns {object} The created event
  */
-async function createEvent(data) {
+async function createEvent(data, accountId) {
   const store = _load();
+
+  // Allow caller to pass accountId positionally (matches db.createEvent signature).
+  if (accountId && !data.account_id) data = { ...data, account_id: accountId };
 
   const id = _generateEventId(data.name);
   const pin = _generatePin();
@@ -121,8 +134,15 @@ async function createEvent(data) {
     brandColor: data.brandColor || '#8b5cf6',
     eventName: data.name.trim(),
     themes: data.themes || _defaultThemes(),
+    // Themed-background selection (Workstream 2). backgroundIds = catalogue ids
+    // a host enabled for this event; defaultBackgroundId = fallback at capture.
+    backgroundIds: data.backgroundIds || data.themeIds || [],
+    defaultBackgroundId: data.defaultBackgroundId || null,
     deliveryChannels: data.deliveryChannels || ['sms'],
     isActive: true,
+    // Ownership + demo flag (Workstream 1: host self-serve creation).
+    account_id: data.account_id || null,
+    is_demo: data.is_demo === true,
     // ── Plan limits ────────────────────────────────────────────────────────
     plan_tier: data.plan_tier || null,
     max_guests: data.max_guests !== undefined ? data.max_guests : null,
@@ -325,6 +345,7 @@ async function decrementSmsCredits(eventId) {
 module.exports = {
   getEvent,
   listEvents,
+  listEventsByAccount,
   createEvent,
   updateEvent,
   logPhoto,

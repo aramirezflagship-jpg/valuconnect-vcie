@@ -6,9 +6,10 @@ const { v4: uuidv4 } = require('uuid');
 const QRCode = require('qrcode');
 
 const sharp = require('sharp');
-const { removeBackground } = require('../services/removebg');
-const { transformWithTheme } = require('../services/ai-transform');
 const { applyBranding } = require('../services/branding');
+const { composeOnBackground } = require('../services/compositor');
+const templatesSvc = require('../services/templates');
+const backgroundsSvc = require('../services/backgrounds');
 const { uploadPhoto } = require('../services/storage');
 const { sendSMS, sendWhatsApp } = require('../services/delivery');
 const { getEvent, logPhoto, incrementGuestCount, decrementSmsCredits } = require('../services/db');
@@ -33,14 +34,19 @@ const upload = multer({
  *   - imageBase64  {string} — alternative: base64-encoded image (used when
  *                             sending JSON from some iPad frameworks)
  *   - eventId      {string} — which event this photo belongs to
- *   - themeId      {string} — which theme to apply (must be in event.themes)
+ *   - backgroundId {string} — which themed background to composite onto
+ *                             (alias: themeId). Falls back to the event's
+ *                             defaultBackgroundId, then a solid-color canvas.
+ *   - templateId   {string} — optional layout template (default "single")
  *   - guestPhone   {string} — E.164 phone number; if supplied, triggers delivery
  *
  * Returns: { photoUrl, thumbnailUrl, qrCode, printJobId, eventId }
  */
 router.post('/', upload.single('image'), async (req, res, next) => {
   try {
-    const { eventId, themeId, guestPhone } = req.body;
+    const { eventId, guestPhone } = req.body;
+    const backgroundId = req.body.backgroundId || req.body.themeId || null;
+    const templateId = req.body.templateId || null;
 
     // ── Validate required fields ──────────────────────────────────────────────
     if (!eventId) {
@@ -83,27 +89,52 @@ router.post('/', upload.single('image'), async (req, res, next) => {
       eventConfig.sms_credits_limit != null &&
       eventConfig.sms_credits_used >= eventConfig.sms_credits_limit;
 
-    // ── Resolve theme ─────────────────────────────────────────────────────────
-    const themes = eventConfig.themes || [];
-    const theme = themes.find((t) => t.id === themeId) || themes[0] || _defaultTheme();
-    if (!theme) {
-      return res.status(400).json({ error: 'No themes configured for this event.' });
-    }
+    // ── Resolve themed background ─────────────────────────────────────────────
+    // No AI: the guest photo is composited into a template slot ON TOP of a
+    // pre-made themed background image. Resolution order:
+    //   request backgroundId/themeId → event.defaultBackgroundId → solid color.
+    const resolvedBgId =
+      backgroundId || eventConfig.defaultBackgroundId || (eventConfig.backgroundIds || [])[0] || null;
+    const bgRecord = resolvedBgId ? backgroundsSvc.getBackground(resolvedBgId) : null;
 
-    console.log(`[capture] event=${eventId} theme=${theme.id} phone=${guestPhone || 'none'}`);
+    // ── Resolve layout template (defaults to single-photo 4×6) ────────────────
+    const template =
+      (templateId && templatesSvc.getTemplate(templateId)) ||
+      templatesSvc.getTemplate('single') ||
+      _defaultTemplate();
 
-    // ── Pipeline ──────────────────────────────────────────────────────────────
-    // Demo events skip AI processing — upload the raw photo directly.
+    console.log(
+      `[capture] event=${eventId} background=${bgRecord ? bgRecord.id : 'none'} template=${template.id} phone=${guestPhone || 'none'}`
+    );
+
+    // ── Pipeline (NO external AI) ─────────────────────────────────────────────
+    // Demo events skip compositing — upload the raw photo directly.
     const isDemo = !!eventConfig.is_demo;
 
-    // 1. Background removal
-    const cutoutBuffer = isDemo ? imageBuffer : await removeBackground(imageBuffer);
+    let composedBuffer;
+    if (isDemo) {
+      composedBuffer = imageBuffer;
+    } else if (bgRecord && bgRecord.url) {
+      // Fetch the themed background image and composite the guest photo over it.
+      try {
+        const { default: fetch } = require('node-fetch');
+        const bgRes = await fetch(bgRecord.url);
+        const bgBuffer = Buffer.from(await bgRes.arrayBuffer());
+        composedBuffer = await composeOnBackground([imageBuffer], bgBuffer, template, {
+          eventName: eventConfig.eventName || eventConfig.name,
+        });
+      } catch (bgErr) {
+        console.error('[capture] background fetch/composite failed, using raw photo:', bgErr.message);
+        composedBuffer = imageBuffer;
+      }
+    } else {
+      // No themed background selected — render the photo onto the template's
+      // solid-color canvas so output is still a clean, framed image.
+      composedBuffer = await _composeOnSolid([imageBuffer], template, eventConfig);
+    }
 
-    // 2. AI background + composite
-    const transformedBuffer = isDemo ? cutoutBuffer : await transformWithTheme(cutoutBuffer, theme, eventConfig);
-
-    // 3. Branding overlay (logo, frame, event name, 4×6 @ 300 DPI)
-    const brandedBuffer = isDemo ? transformedBuffer : await applyBranding(transformedBuffer, eventConfig);
+    // Branding overlay (logo, frame, event name, 4×6 @ 300 DPI)
+    const brandedBuffer = isDemo ? composedBuffer : await applyBranding(composedBuffer, eventConfig);
 
     // 3b. Event overlay compositing (if configured)
     let finalBuffer = brandedBuffer;
@@ -137,7 +168,8 @@ router.post('/', upload.single('image'), async (req, res, next) => {
     const photoRecord = {
       id: printJobId,
       eventId,
-      themeId: theme.id,
+      backgroundId: bgRecord ? bgRecord.id : null,
+      templateId: template.id,
       photoUrl,
       thumbnailUrl,
       publicId,
@@ -177,7 +209,8 @@ router.post('/', upload.single('image'), async (req, res, next) => {
       qrCode,
       printJobId,
       eventId,
-      themeId: theme.id,
+      backgroundId: bgRecord ? bgRecord.id : null,
+      templateId: template.id,
       delivery: deliveryResult,
     });
   } catch (err) {
@@ -210,15 +243,31 @@ async function _deliver(phone, photoUrl, eventName, channels) {
   return results;
 }
 
-/** Minimal theme used when an event has no themes configured. */
-function _defaultTheme() {
+/** Minimal single-photo 4×6 template used when no template store entry exists. */
+function _defaultTemplate() {
   return {
-    id: 'default',
-    name: 'Classic Studio',
-    prompt: 'elegant photography studio backdrop, soft bokeh, professional lighting',
-    negativePrompt: 'people, text, watermark',
-    style: 'photorealistic',
+    id: 'single',
+    name: 'Classic Single',
+    type: 'single',
+    printWidth: 1200,
+    printHeight: 1800,
+    photoCount: 1,
+    photoSlots: [{ index: 0, x: 60, y: 60, width: 1080, height: 1530 }],
+    background: '#0d0d1a',
   };
+}
+
+/**
+ * Compose guest photo(s) onto the template's solid-color canvas when no themed
+ * background image is selected. Keeps output framed + print-sized without AI.
+ * @private
+ */
+async function _composeOnSolid(photos, template, eventConfig) {
+  const { compose } = require('../services/compositor');
+  return compose(photos, template, {
+    eventName: eventConfig.eventName || eventConfig.name,
+    backgroundColor: template.background || eventConfig.brandColor || '#0d0d1a',
+  });
 }
 
 module.exports = router;

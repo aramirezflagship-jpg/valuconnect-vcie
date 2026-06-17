@@ -2,7 +2,7 @@
 
 const express = require('express');
 const multer = require('multer');
-const { adminAuth, optionalAuth } = require('../middleware/auth');
+const { adminAuth, requireAuth, optionalAuth } = require('../middleware/auth');
 const {
   getEvent,
   createEvent,
@@ -24,6 +24,72 @@ const overlayUpload = multer({
     cb(Object.assign(new Error('Only PNG files are accepted for overlays.'), { status: 400 }));
   },
 });
+
+// ── Host self-serve: event creation + listing ─────────────────────────────────
+// These MUST be declared before the generic GET /:eventId handler so the
+// literal "mine" path is matched first.
+
+/**
+ * GET /api/events/mine  (host JWT)
+ * List events owned by the logged-in host.
+ */
+router.get('/mine', requireAuth, async (req, res, next) => {
+  try {
+    let events = [];
+    if (process.env.SUPABASE_URL) {
+      const supabase = require('../services/supabase');
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .eq('account_id', req.userId)
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        events = data || [];
+      }
+    } else {
+      events = await jsonStore.listEventsByAccount(req.userId);
+    }
+    return res.json({ events, count: events.length });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/events/mine  (host JWT)  — alias of POST /api/events for hosts.
+ * Stamps account_id = req.userId and is_demo = false.
+ *
+ * Body: { name, themeIds?/backgroundIds?, defaultBackgroundId?, date?, deliveryChannels? }
+ * Returns the created event { id, code/event_code, ... }.
+ */
+router.post('/mine', requireAuth, async (req, res, next) => {
+  return _createHostEvent(req, res, next);
+});
+
+async function _createHostEvent(req, res, next) {
+  try {
+    const { name } = req.body;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({ error: 'Event name is required.' });
+    }
+
+    const payload = {
+      ...req.body,
+      account_id: req.userId,
+      is_demo: false,
+      // Accept either backgroundIds or themeIds from the client.
+      backgroundIds: req.body.backgroundIds || req.body.themeIds || [],
+    };
+
+    const event = await createEvent(payload, req.userId);
+    // Expose a stable `code` alias for the frontend regardless of store shape.
+    const code = event.event_code || event.eventCode || event.code || event.id;
+    return res.status(201).json({ ...event, code });
+  } catch (err) {
+    next(err);
+  }
+}
 
 // ── Public: gallery (host shares link to guests) ──────────────────────────────
 // NOTE: this route is mounted at BOTH /api/gallery/:eventId (via the
@@ -110,23 +176,36 @@ router.get('/', adminAuth, async (_req, res, next) => {
 });
 
 /**
- * POST /api/events  (admin)
- * Create a new event.
+ * POST /api/events
+ * Create a new event. Accepts EITHER the admin secret header (admin create,
+ * no owner stamp) OR a host JWT (self-serve create: stamps account_id +
+ * is_demo=false). This stops logged-in hosts from getting a 401.
  *
- * Body: { name, date, venue, logoUrl, framePath, brandColor, themes, deliveryChannels }
+ * Body: { name, date, venue, logoUrl, framePath, brandColor, themes,
+ *         themeIds?/backgroundIds?, defaultBackgroundId?, deliveryChannels }
  */
-router.post('/', adminAuth, async (req, res, next) => {
-  try {
-    const { name } = req.body;
-    if (!name || typeof name !== 'string' || !name.trim()) {
-      return res.status(400).json({ error: 'Event name is required.' });
-    }
+router.post('/', async (req, res, next) => {
+  const adminSecret = process.env.ADMIN_SECRET || 'flash-it-admin-2026';
 
-    const event = await createEvent(req.body, req.userId || null);
-    return res.status(201).json(event);
-  } catch (err) {
-    next(err);
+  // Admin path: x-admin-secret header (unchanged behaviour).
+  if (req.headers['x-admin-secret']) {
+    if (req.headers['x-admin-secret'] !== adminSecret) {
+      return res.status(403).json({ error: 'Invalid admin secret.' });
+    }
+    try {
+      const { name } = req.body;
+      if (!name || typeof name !== 'string' || !name.trim()) {
+        return res.status(400).json({ error: 'Event name is required.' });
+      }
+      const event = await createEvent(req.body, req.userId || null);
+      return res.status(201).json(event);
+    } catch (err) {
+      return next(err);
+    }
   }
+
+  // Host path: require a valid JWT, then create as the host.
+  return requireAuth(req, res, () => _createHostEvent(req, res, next));
 });
 
 /**
