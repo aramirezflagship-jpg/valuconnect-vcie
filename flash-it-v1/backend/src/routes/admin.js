@@ -2,7 +2,9 @@
 
 const express = require('express');
 const { adminAuth } = require('../middleware/auth');
-const { listEvents, getEventPhotos } = require('../services/events');
+// Use the db abstraction so admin views work in BOTH stores (jsonStore when
+// SUPABASE_* is unset, Supabase when configured) with identical record shapes.
+const { listEvents, getEventPhotos, updatePhotoPrintStatus } = require('../services/db');
 
 const router = express.Router();
 
@@ -107,8 +109,7 @@ router.patch('/print-queue/:jobId', async (req, res, next) => {
       });
     }
 
-    // Find the photo across all events and update it
-    const { updatePhotoPrintStatus } = require('../services/events');
+    // Find the photo and update it (db abstraction: jsonStore or Supabase).
     const updated = await updatePhotoPrintStatus(jobId, printStatus);
 
     if (!updated) {
