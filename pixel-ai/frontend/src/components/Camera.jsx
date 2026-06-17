@@ -30,6 +30,7 @@ export default function Camera({
   onModeChange,
   photoCount = 1,
   frameIndex = 0,
+  faceGuide = false,
 }) {
   const canvasRef = useRef(null);
   const propsCanvasRef = useRef(null);
@@ -247,18 +248,38 @@ export default function Camera({
             }}
           />
 
-          {/* Grid overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage:
-                'linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), ' +
-                'linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)',
-              backgroundSize: '33.33% 33.33%',
-              pointerEvents: 'none',
-            }}
-          />
+          {/* Grid overlay — hidden in face-guide (character) mode */}
+          {!faceGuide && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage:
+                  'linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), ' +
+                  'linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)',
+                backgroundSize: '33.33% 33.33%',
+                pointerEvents: 'none',
+              }}
+            />
+          )}
+
+          {/* Face-alignment oval guide — Character mode only */}
+          {faceGuide && phase !== 'flash' && (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 16, pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <div
+                style={{
+                  width: 'min(58vw, 42vh)',
+                  height: 'min(76vw, 56vh)',
+                  borderRadius: '50%',
+                  border: '4px dashed rgba(255,255,255,0.85)',
+                  boxShadow: '0 0 0 9999px rgba(0,0,0,0.35)',
+                }}
+              />
+              <div style={{ marginTop: 18, background: 'rgba(0,0,0,0.55)', borderRadius: 16, padding: '8px 20px', color: '#fff', fontSize: '1rem', fontWeight: 600, backdropFilter: 'blur(8px)' }}>
+                {t('face.guide', lang)}
+              </div>
+            </div>
+          )}
 
           {/* Top bar: Back + status + mode selector */}
           <div

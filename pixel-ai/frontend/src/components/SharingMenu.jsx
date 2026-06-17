@@ -4,7 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 // Detect mobile once at module load time
 const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
-export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDone }) {
+export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDone, qrCode }) {
   const [selected, setSelected] = useState(null); // 'qr' | 'sms' | 'email' | 'instagram' | 'facebook'
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
@@ -124,7 +124,11 @@ export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDo
       <div style={styles.root}>
         <h2 style={styles.title}>Scan to Download</h2>
         <div style={{ background: '#fff', padding: 16, borderRadius: 16, marginBottom: '1.5rem' }}>
-          <QRCodeSVG value={mediaUrl} size={240} />
+          {qrCode ? (
+            <img src={qrCode} alt="QR code" width={240} height={240} style={{ display: 'block' }} />
+          ) : (
+            <QRCodeSVG value={mediaUrl} size={240} />
+          )}
         </div>
         <button
           style={styles.primaryBtn}

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Welcome from './components/Welcome.jsx';
 import ThemePicker from './components/ThemePicker.jsx';
 import BackgroundPicker from './components/BackgroundPicker.jsx';
+import ModePicker from './components/ModePicker.jsx';
 import Camera from './components/Camera.jsx';
 import Processing from './components/Processing.jsx';
 import Preview from './components/Preview.jsx';
@@ -12,7 +13,8 @@ import GifCapture from './components/GifCapture.jsx';
 import LayoutPicker from './components/LayoutPicker.jsx';
 import StripPreview from './components/StripPreview.jsx';
 import VideoCapture from './components/VideoCapture.jsx';
-import { getEventConfig, uploadCapture, pollJobStatus } from './utils/api.js';
+import { getEventConfig, uploadCapture, pollJobStatus, captureNatural, captureCharacter } from './utils/api.js';
+import { detectAndCropFace, blobToImage, blobToDataURL, loadFaceModels } from './utils/face.js';
 import useNetworkStatus from './hooks/useNetworkStatus.js';
 import useOfflineQueue from './hooks/useOfflineQueue.js';
 import { useIdleTimer } from './hooks/useIdleTimer.js';
@@ -59,6 +61,11 @@ export default function PhotoBooth({ eventCodeOverride }) {
   const [resultUrl, setResultUrl] = useState(null);
   const [gifUrl, setGifUrl] = useState(null);
   const [processingError, setProcessingError] = useState(null);
+
+  // ── Two-mode (Natural / Character) flow ────────────────────────────────────
+  const [flowMode, setFlowMode] = useState(null);          // 'natural' | 'character' | null (legacy)
+  const [selectedTemplate, setSelectedTemplate] = useState(null); // chosen background/template record
+  const [qrCode, setQrCode] = useState(null);              // backend-provided QR data-URI
 
   // ── New state for kiosk features ──────────────────────────────────────────
   const [captureMode, setCaptureMode] = useState('photo'); // 'photo' | 'gif' | 'video'
@@ -131,6 +138,9 @@ export default function PhotoBooth({ eventCodeOverride }) {
     setCapturedFrames([]);
     setSelectedLayout(null);
     setCaptureMode('photo');
+    setFlowMode(null);
+    setSelectedTemplate(null);
+    setQrCode(null);
     jobIdRef.current = null;
   }, []);
 
@@ -175,6 +185,16 @@ export default function PhotoBooth({ eventCodeOverride }) {
     [availableLayouts]
   );
 
+  // ─── Handle Natural/Character mode + template selection from ModePicker ────
+  const handleModeSelect = useCallback(({ mode, template }) => {
+    setFlowMode(mode);
+    setSelectedTemplate(template);
+    setSelectedTheme(template); // keep legacy theme state in sync for fallbacks
+    // Warm up face-api models early for character mode so the crop is instant.
+    if (mode === 'character') loadFaceModels();
+    setScreen('camera');
+  }, []);
+
   // ─── Handle mode change from CaptureSelector ─────────────────────────────
   const handleModeChange = useCallback(
     (newMode) => {
@@ -187,6 +207,51 @@ export default function PhotoBooth({ eventCodeOverride }) {
       // 'photo' stays on 'camera'
     },
     []
+  );
+
+  // ─── Two-mode capture (Natural frame · Character face-in-hole) ─────────────
+  const handleTwoModeCapture = useCallback(
+    async (blob) => {
+      setCapturedBlob(blob);
+      setProcessingError(null);
+      setQrCode(null);
+      setScreen('processing');
+
+      try {
+        let result;
+        if (flowMode === 'character') {
+          // Detect → expand → crop the guest's face client-side. Never hard-fail:
+          // if detection misses, detectAndCropFace returns a centered crop.
+          const img = await blobToImage(blob);
+          const { faceImageBase64, detected } = await detectAndCropFace(img);
+          if (!detected) console.info('[PhotoBooth] No face detected — sent centered crop.');
+          result = await captureCharacter({
+            eventId: config.eventId,
+            faceImageBase64,
+            backgroundId: selectedTemplate?.id, // required for character
+          });
+        } else {
+          // Natural — send the full photo.
+          const imageBase64 = await blobToDataURL(blob);
+          result = await captureNatural({
+            eventId: config.eventId,
+            imageBase64,
+            backgroundId: selectedTemplate?.id || undefined,
+          });
+        }
+
+        const url = result.photoUrl || result.resultUrl;
+        if (!url) throw new Error('No photo URL in capture response');
+        setResultUrl(url);
+        if (result.qrCode) setQrCode(result.qrCode);
+        setScreen('preview');
+      } catch (err) {
+        console.error('[PhotoBooth] Two-mode capture error:', err);
+        setProcessingError(err?.response?.data?.error || err.message || 'Processing failed');
+        setScreen('preview');
+      }
+    },
+    [flowMode, selectedTemplate, config.eventId]
   );
 
   // ─── Handle photo capture ─────────────────────────────────────────────────
@@ -396,10 +461,14 @@ export default function PhotoBooth({ eventCodeOverride }) {
             exit="exit"
             style={{ position: 'fixed', inset: 0 }}
           >
-            {(config?.backgroundIds?.length || config?.defaultBackgroundId) ? (
-              <BackgroundPicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+            {config?.legacyThemePicker ? (
+              (config?.backgroundIds?.length || config?.defaultBackgroundId) ? (
+                <BackgroundPicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+              ) : (
+                <ThemePicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+              )
             ) : (
-              <ThemePicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+              <ModePicker config={config} lang={lang} onSelect={handleModeSelect} onBack={resetToWelcome} />
             )}
           </motion.div>
         )}
@@ -435,15 +504,18 @@ export default function PhotoBooth({ eventCodeOverride }) {
           >
             <Camera
               lang={lang}
-              onCapture={handleCapture}
-              onBack={() => setScreen(availableLayouts.length > 1 ? 'layout-picker' : 'theme-picker')}
+              onCapture={flowMode ? handleTwoModeCapture : handleCapture}
+              onBack={() => setScreen(
+                flowMode ? 'theme-picker' : (availableLayouts.length > 1 ? 'layout-picker' : 'theme-picker')
+              )}
               captureMode={captureMode}
-              onModeChange={handleModeChange}
-              photoCount={selectedLayout?.photoCount || 1}
+              onModeChange={flowMode ? undefined : handleModeChange}
+              photoCount={flowMode ? 1 : (selectedLayout?.photoCount || 1)}
               frameIndex={capturedFrames.length}
+              faceGuide={flowMode === 'character'}
             />
-            {/* GIF Mode button (legacy quick-switch) — only shown when not in strip mode */}
-            {(!selectedLayout || selectedLayout.photoCount === 1) && (
+            {/* GIF Mode button (legacy quick-switch) — hidden in two-mode flow & strip mode */}
+            {!flowMode && (!selectedLayout || selectedLayout.photoCount === 1) && (
               <button
                 onClick={() => handleModeChange('gif')}
                 style={{
@@ -531,6 +603,7 @@ export default function PhotoBooth({ eventCodeOverride }) {
             <SharingMenu
               photoUrl={resultUrl}
               gifUrl={gifUrl}
+              qrCode={qrCode}
               eventName={config.name}
               eventId={config.eventId}
               onDone={() => {
