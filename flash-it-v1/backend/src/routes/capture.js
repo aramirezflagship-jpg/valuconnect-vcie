@@ -102,7 +102,7 @@ router.post('/', upload, async (req, res, next) => {
     // (drives the 3D message font), and—for character—a faceSlot + artwork.
     const resolvedBgId =
       backgroundId || eventConfig.defaultBackgroundId || (eventConfig.backgroundIds || [])[0] || null;
-    const bgRecord = resolvedBgId ? backgroundsSvc.getBackground(resolvedBgId) : null;
+    const bgRecord = resolvedBgId ? await backgroundsSvc.getBackground(resolvedBgId) : null;
 
     // Effective mode: explicit request wins; else the record's mode; else natural.
     const effectiveMode = req.body.mode ? mode : backgroundsSvc.normalizeMode(bgRecord && bgRecord.mode);

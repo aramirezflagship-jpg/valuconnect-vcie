@@ -20,6 +20,13 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
+const supabase = require('./supabase'); // service-role client (null when unconfigured)
+
+// Use Supabase when the project is configured for it. Reads need the URL +
+// (anon or service) key; writes go through the service-role client. We gate on
+// the same signal db.js uses so both stores switch together.
+const useSupabase = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+
 const STORE_PATH = path.resolve(
   process.env.BACKGROUNDS_STORE_PATH ||
   path.join(__dirname, '../../../config/backgrounds.json')
@@ -136,6 +143,26 @@ function listCategories() {
   return [...CATEGORIES];
 }
 
+// ── Supabase row mapping (snake_case column ↔ camelCase record) ───────────────
+// The routes read records in the JSON store's camelCase shape (b.thumbnailUrl,
+// b.faceSlot). Normalise Supabase rows back to that shape so both stores return
+// identical records to callers.
+function _rowToRecord(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    category: normalizeCategory(row.category),
+    mode: normalizeMode(row.mode),
+    name: row.name || 'Background',
+    url: row.url || null,
+    thumbnailUrl: row.thumbnail_url || row.url || null,
+    faceSlot: normalizeFaceSlot(row.face_slot),
+    r2Key: row.r2_key || null,
+    accountId: row.account_id || null,
+    createdAt: row.created_at || null,
+  };
+}
+
 /**
  * Create a background record.
  * @param {object} data
@@ -147,25 +174,66 @@ function listCategories() {
  * @param {string} [data.accountId]  - host who uploaded it (null for admin)
  * @returns {object} created record
  */
-function createBackground(data) {
-  const store = _load();
+async function createBackground(data) {
   const id = data.id || uuidv4();
+  const category = normalizeCategory(data.category);
+  // mode: "natural" (real photo + frame/overlay + message) or
+  //       "character" (face-in-the-hole: artwork on top, face shows through).
+  const mode = normalizeMode(data.mode);
+  const name = (data.name || 'Background').toString().trim();
+  // url/thumbnailUrl are the asset:
+  //   natural   → the (optional) transparent-PNG frame/overlay; may be null.
+  //   character → the character+scene artwork PNG (transparent face hole).
+  const url = data.url || null;
+  const thumbnailUrl = data.thumbnailUrl || data.url || null;
+  // character-only: where the guest face is dropped in (absolute px on artwork).
+  const faceSlot = normalizeFaceSlot(data.faceSlot);
+  const r2Key = data.r2Key || null;
+  const accountId = data.accountId || null;
+
+  if (useSupabase && supabase) {
+    // UPSERT on id so this is idempotent AND backfills the seed rows that
+    // 0002_seed.sql created with url/thumbnail_url = NULL (work item 5).
+    // We only send columns we have values for so a re-seed never NULLs out a
+    // field that was already populated by another caller (use COALESCE-like
+    // behaviour by omitting undefined keys).
+    const row = {
+      id,
+      category,
+      mode,
+      name,
+      url,
+      thumbnail_url: thumbnailUrl,
+      face_slot: faceSlot, // jsonb column accepts the object directly
+      r2_key: r2Key,
+      account_id: accountId,
+    };
+
+    const { data: created, error } = await supabase
+      .from('backgrounds')
+      .upsert(row, { onConflict: 'id' })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[backgrounds] createBackground (supabase) error:', error.message);
+      throw new Error(`Failed to create background: ${error.message}`);
+    }
+    return _rowToRecord(created);
+  }
+
+  // ── jsonStore fallback (unchanged behaviour) ──
+  const store = _load();
   const record = {
     id,
-    category: normalizeCategory(data.category),
-    // mode: "natural" (real photo + frame/overlay + message) or
-    //       "character" (face-in-the-hole: artwork on top, face shows through).
-    mode: normalizeMode(data.mode),
-    name: (data.name || 'Background').toString().trim(),
-    // url/thumbnailUrl are the asset:
-    //   natural   → the (optional) transparent-PNG frame/overlay; may be null.
-    //   character → the character+scene artwork PNG (transparent face hole).
-    url: data.url || null,
-    thumbnailUrl: data.thumbnailUrl || data.url || null,
-    // character-only: where the guest face is dropped in (absolute px on artwork).
-    faceSlot: normalizeFaceSlot(data.faceSlot),
-    r2Key: data.r2Key || null,
-    accountId: data.accountId || null,
+    category,
+    mode,
+    name,
+    url,
+    thumbnailUrl,
+    faceSlot,
+    r2Key,
+    accountId,
     createdAt: new Date().toISOString(),
   };
   store.backgrounds[id] = record;
@@ -178,7 +246,21 @@ function createBackground(data) {
  * @param {string} [category]
  * @returns {object[]}
  */
-function listBackgrounds(category, mode) {
+async function listBackgrounds(category, mode) {
+  if (useSupabase && supabase) {
+    let q = supabase.from('backgrounds').select('*');
+    if (category) q = q.eq('category', normalizeCategory(category));
+    if (mode) q = q.eq('mode', normalizeMode(mode));
+    q = q.order('created_at', { ascending: false });
+
+    const { data, error } = await q;
+    if (error) {
+      console.error('[backgrounds] listBackgrounds (supabase) error:', error.message);
+      return [];
+    }
+    return (data || []).map(_rowToRecord);
+  }
+
   const store = _load();
   let all = Object.values(store.backgrounds);
   if (category) {
@@ -197,8 +279,22 @@ function listBackgrounds(category, mode) {
  * @param {string} id
  * @returns {object|null}
  */
-function getBackground(id) {
+async function getBackground(id) {
   if (!id) return null;
+
+  if (useSupabase && supabase) {
+    const { data, error } = await supabase
+      .from('backgrounds')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) {
+      console.error('[backgrounds] getBackground (supabase) error:', error.message);
+      return null;
+    }
+    return _rowToRecord(data);
+  }
+
   const store = _load();
   return store.backgrounds[id] || null;
 }

@@ -55,10 +55,10 @@ router.get('/categories', (_req, res) => {
 
 // ── GET /api/backgrounds?category=<cat> ───────────────────────────────────────
 
-router.get('/', optionalAuth, (req, res, next) => {
+router.get('/', optionalAuth, async (req, res, next) => {
   try {
     const { category, mode } = req.query;
-    const list = backgrounds.listBackgrounds(category, mode).map((b) => ({
+    const list = (await backgrounds.listBackgrounds(category, mode)).map((b) => ({
       id: b.id,
       category: b.category,
       mode: backgrounds.normalizeMode(b.mode),
@@ -128,7 +128,7 @@ router.post('/', hostOrAdmin, upload.single('image'), async (req, res, next) => 
       thumbnailUrl = await storage.uploadBuffer(thumbBuffer, thumbKey, 'image/png');
     }
 
-    const record = backgrounds.createBackground({
+    const record = await backgrounds.createBackground({
       category,
       mode,
       name,
@@ -173,7 +173,7 @@ router.post('/seed', adminAuth, async (_req, res, next) => {
     const frameUrl = await storage.uploadBuffer(frame.buffer, frameKey, 'image/png');
     const frameThumbUrl = await storage.uploadBuffer(frameThumb, frameThumbKey, 'image/png');
 
-    const naturalRecord = backgrounds.createBackground({
+    const naturalRecord = await backgrounds.createBackground({
       id: SEED_NATURAL_ID,
       category: 'fiesta',
       mode: 'natural',
@@ -191,7 +191,7 @@ router.post('/seed', adminAuth, async (_req, res, next) => {
     const artUrl = await storage.uploadBuffer(art.buffer, artKey, 'image/png');
     const artThumbUrl = await storage.uploadBuffer(artThumb, artThumbKey, 'image/png');
 
-    const characterRecord = backgrounds.createBackground({
+    const characterRecord = await backgrounds.createBackground({
       id: SEED_CHARACTER_ID,
       category: 'fiesta',
       mode: 'character',
