@@ -108,23 +108,9 @@ router.post('/register', async (req, res, next) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters.' });
     }
 
-    // Supabase path
-    if (useSupabase && supabaseAnon && supabaseAdmin) {
-      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: true,
-      });
-      if (authError) return res.status(400).json({ error: authError.message });
-
-      await db.createAccount(authData.user.id, email, name || email.split('@')[0]);
-
-      const { data: signInData, error: signInError } = await supabaseAnon.auth.signInWithPassword({ email, password });
-      if (signInError) return res.status(201).json({ user: authData.user, session: null });
-      return res.status(201).json({ user: signInData.user, session: signInData.session });
-    }
-
-    // Local fallback
+    // Local-JWT identity in BOTH modes. localAuth persists to the Postgres
+    // `accounts` table when SUPABASE_* is set, so Supabase is the database —
+    // not the auth provider (one identity model app-wide).
     const { user, token } = await localAuth.register(email, password, name);
     return res.status(201).json({
       user,
@@ -145,14 +131,7 @@ router.post('/login', async (req, res, next) => {
       return res.status(400).json({ error: 'email and password are required.' });
     }
 
-    // Supabase path
-    if (useSupabase && supabaseAnon) {
-      const { data, error } = await supabaseAnon.auth.signInWithPassword({ email, password });
-      if (error) return res.status(401).json({ error: error.message });
-      return res.json({ user: data.user, session: data.session });
-    }
-
-    // Local fallback
+    // Local-JWT identity in both modes (Postgres `accounts` table in Supabase mode).
     const { user, token } = await localAuth.login(email, password);
     return res.json({
       user,
@@ -237,19 +216,8 @@ router.post('/forgot-password', async (req, res, next) => {
       .trim()
       .replace(/\/$/, '');
 
-    // Supabase mode: delegate to Supabase's own reset email if configured.
-    if (useSupabase && supabaseAnon) {
-      try {
-        await supabaseAnon.auth.resetPasswordForEmail(email_, {
-          redirectTo: `${frontendBase}/reset-password`,
-        });
-      } catch (e) {
-        console.warn('[forgot-password] supabase reset error (suppressed):', e.message);
-      }
-      return res.status(200).json({ ok: true });
-    }
-
-    // Local mode: generate a single-use token, store only its hash, email it.
+    // One identity model: generate a single-use token, store only its hash, and
+    // email it via SendGrid (works in both jsonStore and Supabase modes).
     const result = await localAuth.createPasswordResetToken(email_);
     if (result) {
       const resetUrl = `${frontendBase}/reset-password?token=${result.token}`;
@@ -286,12 +254,6 @@ router.post('/reset-password', async (req, res, next) => {
     }
     if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 8) {
       return res.status(400).json({ error: 'Password must be at least 8 characters.' });
-    }
-
-    // Supabase mode handles its own token via the access_token flow client-side;
-    // this endpoint serves the local-JWT mode.
-    if (useSupabase) {
-      return res.status(400).json({ error: 'Use the reset link to set a new password.' });
     }
 
     const ok = await localAuth.consumePasswordResetToken(token, newPassword);
