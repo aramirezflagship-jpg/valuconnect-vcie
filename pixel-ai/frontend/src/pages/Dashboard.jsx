@@ -11,6 +11,8 @@ import {
   subscribeToPush,
   purchaseAddon,
 } from '../utils/api.js';
+import EventsTab from '../components/dashboard/EventsTab.jsx';
+import BackgroundsTab from '../components/dashboard/BackgroundsTab.jsx';
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
@@ -1211,7 +1213,7 @@ function NotificationBell({ token }) {
 
 // ── Tab switcher ──────────────────────────────────────────────────────────────
 
-const TABS = ['Gallery', 'Payments', 'Add-ons', 'Settings'];
+const TABS = ['Gallery', 'Events', 'Backgrounds', 'Payments', 'Add-ons', 'Settings'];
 
 function TabBar({ activeTab, onChange }) {
   return (
@@ -1507,6 +1509,8 @@ export default function Dashboard() {
             <p style={{ fontSize: '.875rem' }}>Contact support to get your event set up.</p>
           </div>
         )}
+        {activeTab === 'Events' && <EventsTab token={token} />}
+        {activeTab === 'Backgrounds' && <BackgroundsTab token={token} />}
         {activeTab === 'Payments' && <PaymentsTab token={token} />}
         {activeTab === 'Add-ons' && <AddonsTab eventId={null} token={token} />}
         {activeTab === 'Settings' && <SettingsTab user={user} token={token} />}
@@ -1534,6 +1538,8 @@ export default function Dashboard() {
           error={dataError}
         />
       )}
+      {activeTab === 'Events' && <EventsTab token={token} />}
+      {activeTab === 'Backgrounds' && <BackgroundsTab token={token} />}
       {activeTab === 'Payments' && <PaymentsTab token={token} />}
       {activeTab === 'Add-ons' && <AddonsTab eventId={eventId} token={token} />}
       {activeTab === 'Settings' && <SettingsTab user={user} token={token} />}
