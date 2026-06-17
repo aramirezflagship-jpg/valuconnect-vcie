@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Welcome from './components/Welcome.jsx';
 import ThemePicker from './components/ThemePicker.jsx';
+import BackgroundPicker from './components/BackgroundPicker.jsx';
 import Camera from './components/Camera.jsx';
 import Processing from './components/Processing.jsx';
 import Preview from './components/Preview.jsx';
@@ -395,7 +396,11 @@ export default function PhotoBooth({ eventCodeOverride }) {
             exit="exit"
             style={{ position: 'fixed', inset: 0 }}
           >
-            <ThemePicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+            {(config?.backgroundIds?.length || config?.defaultBackgroundId) ? (
+              <BackgroundPicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+            ) : (
+              <ThemePicker config={config} lang={lang} onSelect={goToCamera} onBack={resetToWelcome} />
+            )}
           </motion.div>
         )}
 
