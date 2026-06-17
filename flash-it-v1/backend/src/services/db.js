@@ -44,6 +44,7 @@ function _eventRowToApi(row) {
     venue: row.venue || null,
     logoUrl: row.logo_url || null,
     framePath: row.frame_path || null,
+    overlayUrl: row.overlay_url || null,
     brandColor: row.brand_color || '#8b5cf6',
     category: row.category || null,
     themes: row.themes || [],
@@ -77,6 +78,7 @@ function _eventApiToColumns(data) {
   const map = {
     logoUrl: 'logo_url',
     framePath: 'frame_path',
+    overlayUrl: 'overlay_url',
     brandColor: 'brand_color',
     backgroundIds: 'background_ids',
     defaultBackgroundId: 'default_background_id',
@@ -89,7 +91,7 @@ function _eventApiToColumns(data) {
     eventName: 'name',
   };
   // Keys that are NOT real columns and must be dropped on write.
-  const drop = new Set(['id', 'pin', 'createdAt', 'updatedAt', 'eventName', 'overlayUrl']);
+  const drop = new Set(['id', 'pin', 'createdAt', 'updatedAt', 'eventName']);
 
   const out = {};
   for (const [key, value] of Object.entries(data)) {

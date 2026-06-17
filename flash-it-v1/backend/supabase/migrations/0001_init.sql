@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS events (
   venue                 TEXT,
   logo_url              TEXT,                             -- jsonStore: logoUrl
   frame_path            TEXT,                             -- jsonStore: framePath (URL or local path to overlay PNG)
+  overlay_url           TEXT,                             -- jsonStore: overlayUrl (event text/logo overlay PNG)
   brand_color           TEXT DEFAULT '#8b5cf6',           -- jsonStore: brandColor
   category              TEXT,                             -- occasion category (drives message font); jsonStore: category
   themes                JSONB DEFAULT '[]'::jsonb,        -- array of theme config objects
