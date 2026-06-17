@@ -312,12 +312,12 @@ async function _ensureAccount(customerEmail) {
   // Local auth fallback — create or find in users.json
   if (!supabase) {
     const localAuth = require('../services/localAuth');
-    let existing = localAuth.getUserByEmail(customerEmail);
+    let existing = await localAuth.getUserByEmail(customerEmail);
     if (existing) return existing.id;
     // Create account with a random temp password; customer can reset later
     const { v4: uuidv4 } = require('uuid');
     const tempPw = uuidv4() + uuidv4();
-    const newUser = localAuth.createUser(customerEmail, tempPw, customerEmail.split('@')[0]);
+    const newUser = await localAuth.createUser(customerEmail, tempPw, customerEmail.split('@')[0]);
     console.log(`[payments] Created local account for ${customerEmail} (id: ${newUser.id})`);
     return newUser.id;
   }

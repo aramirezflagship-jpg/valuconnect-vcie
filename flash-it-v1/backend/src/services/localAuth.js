@@ -5,9 +5,34 @@ const path = require('path');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
+const supabase = require('./supabase'); // service-role client (null when unconfigured)
+
 const STORE_PATH = process.env.USERS_STORE_PATH || path.join(__dirname, '../../../config/users.json');
 const JWT_SECRET = process.env.JWT_SECRET || 'flash-it-dev-secret-2026';
 const JWT_EXPIRES = '30d';
+
+// Persist accounts + reset tokens in Postgres when Supabase is configured
+// (service-role key required for writes). Otherwise fall back to the JSON store.
+// Identity model stays LOCAL-JWT: we sign our own JWT and supply our own
+// account ids — barry's `accounts` table is standalone (no auth.users FK), so
+// localAuth ports straight onto Postgres with no behaviour change.
+const useSupabase = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+/**
+ * Map a Supabase `accounts` row → the user record shape the rest of localAuth
+ * and the routes expect ({ id, email, name, passwordHash, role, createdAt }).
+ */
+function _accountRowToUser(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name || (row.email ? row.email.split('@')[0] : null),
+    passwordHash: row.password_hash || null,
+    role: row.role || 'customer',
+    createdAt: row.created_at || null,
+  };
+}
 
 // ── Store helpers ─────────────────────────────────────────────────────────────
 
@@ -41,24 +66,74 @@ function verifyPassword(password, stored) {
 
 // ── User CRUD ─────────────────────────────────────────────────────────────────
 
-function getUserByEmail(email) {
+async function getUserByEmail(email) {
+  const normalized = String(email || '').toLowerCase();
+
+  if (useSupabase && supabase) {
+    // email is UNIQUE in barry's schema — this is how we reconcile the admin,
+    // whose seed id (0002_seed.sql) differs from the local random uuid (item 4).
+    const { data, error } = await supabase
+      .from('accounts')
+      .select('*')
+      .eq('email', normalized)
+      .maybeSingle();
+    if (error) console.error('[localAuth] getUserByEmail (supabase) error:', error.message);
+    return _accountRowToUser(data);
+  }
+
   const { users } = readStore();
-  return users.find((u) => u.email === email.toLowerCase()) || null;
+  return users.find((u) => u.email === normalized) || null;
 }
 
-function getUserById(id) {
+async function getUserById(id) {
+  if (useSupabase && supabase) {
+    const { data, error } = await supabase
+      .from('accounts')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) console.error('[localAuth] getUserById (supabase) error:', error.message);
+    return _accountRowToUser(data);
+  }
+
   const { users } = readStore();
   return users.find((u) => u.id === id) || null;
 }
 
-function createUser(email, password, name, role = 'customer') {
-  const store = readStore();
+async function createUser(email, password, name, role = 'customer') {
   const id = crypto.randomUUID();
+  const normalized = email.toLowerCase();
+  const displayName = name || email.split('@')[0];
+  const passwordHash = hashPassword(password);
+
+  if (useSupabase && supabase) {
+    const row = {
+      id,
+      email: normalized,
+      name: displayName,
+      password_hash: passwordHash,
+      role,
+    };
+    const { data, error } = await supabase
+      .from('accounts')
+      .insert(row)
+      .select()
+      .single();
+    if (error) {
+      // Unique email violation → return the existing account (idempotent-ish).
+      if (error.code === '23505') return getUserByEmail(normalized);
+      console.error('[localAuth] createUser (supabase) error:', error.message);
+      throw new Error(`Failed to create account: ${error.message}`);
+    }
+    return _accountRowToUser(data);
+  }
+
+  const store = readStore();
   const user = {
     id,
-    email: email.toLowerCase(),
-    name: name || email.split('@')[0],
-    passwordHash: hashPassword(password),
+    email: normalized,
+    name: displayName,
+    passwordHash,
     role,
     createdAt: new Date().toISOString(),
   };
@@ -67,7 +142,30 @@ function createUser(email, password, name, role = 'customer') {
   return user;
 }
 
-function updateUser(id, fields) {
+async function updateUser(id, fields) {
+  if (useSupabase && supabase) {
+    // Map the only mutable field the routes send (name); ignore unknown keys.
+    const patch = {};
+    if (fields.name !== undefined) patch.name = fields.name;
+    if (fields.role !== undefined) patch.role = fields.role;
+    if (Object.keys(patch).length === 0) return getUserById(id);
+
+    const { data, error } = await supabase
+      .from('accounts')
+      .update(patch)
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error('[localAuth] updateUser (supabase) error:', error.message);
+      return null;
+    }
+    const user = _accountRowToUser(data);
+    if (!user) return null;
+    const { passwordHash: _ph, ...safe } = user;
+    return safe;
+  }
+
   const store = readStore();
   const idx = store.users.findIndex((u) => u.id === id);
   if (idx === -1) return null;
@@ -92,20 +190,20 @@ function verifyToken(token) {
 
 // ── Auth operations ───────────────────────────────────────────────────────────
 
-function login(email, password) {
-  const user = getUserByEmail(email);
+async function login(email, password) {
+  const user = await getUserByEmail(email);
   if (!user) throw Object.assign(new Error('Invalid email or password'), { status: 401 });
-  if (!verifyPassword(password, user.passwordHash))
+  if (!user.passwordHash || !verifyPassword(password, user.passwordHash))
     throw Object.assign(new Error('Invalid email or password'), { status: 401 });
   const token = signToken(user);
   const { passwordHash: _, ...safeUser } = user;
   return { user: safeUser, token };
 }
 
-function register(email, password, name) {
-  if (getUserByEmail(email))
+async function register(email, password, name) {
+  if (await getUserByEmail(email))
     throw Object.assign(new Error('An account with this email already exists'), { status: 409 });
-  const user = createUser(email, password, name);
+  const user = await createUser(email, password, name);
   const token = signToken(user);
   const { passwordHash: _, ...safeUser } = user;
   return { user: safeUser, token };
@@ -131,7 +229,24 @@ function _hashToken(token) {
  * @param {string} id
  * @param {string} newPassword
  */
-function updateUserPassword(id, newPassword) {
+async function updateUserPassword(id, newPassword) {
+  if (useSupabase && supabase) {
+    const { data, error } = await supabase
+      .from('accounts')
+      .update({ password_hash: hashPassword(newPassword) })
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error('[localAuth] updateUserPassword (supabase) error:', error.message);
+      return null;
+    }
+    const user = _accountRowToUser(data);
+    if (!user) return null;
+    const { passwordHash: _ph, ...safe } = user;
+    return safe;
+  }
+
   const store = readStore();
   const idx = store.users.findIndex((u) => u.id === id);
   if (idx === -1) return null;
@@ -148,11 +263,29 @@ function updateUserPassword(id, newPassword) {
  * @param {string} email
  * @returns {{ token: string, user: object }|null}
  */
-function createPasswordResetToken(email) {
-  const user = getUserByEmail(email);
+async function createPasswordResetToken(email) {
+  const user = await getUserByEmail(email);
   if (!user) return null;
 
   const token = crypto.randomBytes(32).toString('hex');
+  const tokenHash = _hashToken(token);
+
+  if (useSupabase && supabase) {
+    // Invalidate any prior tokens for this user, then insert the new hash.
+    await supabase.from('password_reset_tokens').delete().eq('account_id', user.id);
+    const { error } = await supabase.from('password_reset_tokens').insert({
+      account_id: user.id,
+      token_hash: tokenHash,
+      expires_at: new Date(Date.now() + RESET_TTL_MS).toISOString(),
+      used: false,
+    });
+    if (error) {
+      console.error('[localAuth] createPasswordResetToken (supabase) error:', error.message);
+      return null;
+    }
+    return { token, user };
+  }
+
   const store = readStore();
   if (!Array.isArray(store.resetTokens)) store.resetTokens = [];
 
@@ -160,7 +293,7 @@ function createPasswordResetToken(email) {
   store.resetTokens = store.resetTokens.filter((t) => t.userId !== user.id);
   store.resetTokens.push({
     userId: user.id,
-    tokenHash: _hashToken(token),
+    tokenHash,
     expiresAt: Date.now() + RESET_TTL_MS,
     used: false,
   });
@@ -176,12 +309,40 @@ function createPasswordResetToken(email) {
  * @param {string} newPassword
  * @returns {boolean} true on success, false if token invalid/expired
  */
-function consumePasswordResetToken(token, newPassword) {
+async function consumePasswordResetToken(token, newPassword) {
   if (!token) return false;
+  const tokenHash = _hashToken(token);
+
+  if (useSupabase && supabase) {
+    const { data: rec, error } = await supabase
+      .from('password_reset_tokens')
+      .select('*')
+      .eq('token_hash', tokenHash)
+      .maybeSingle();
+    if (error) {
+      console.error('[localAuth] consumePasswordResetToken (supabase) lookup error:', error.message);
+      return false;
+    }
+    if (!rec || rec.used || new Date(rec.expires_at).getTime() < Date.now()) return false;
+
+    // Set the new password on the owning account.
+    const { error: pwErr } = await supabase
+      .from('accounts')
+      .update({ password_hash: hashPassword(newPassword) })
+      .eq('id', rec.account_id);
+    if (pwErr) {
+      console.error('[localAuth] consumePasswordResetToken (supabase) pw error:', pwErr.message);
+      return false;
+    }
+
+    // Single-use: delete this token (prune is cheap; CASCADE handles account del).
+    await supabase.from('password_reset_tokens').delete().eq('id', rec.id);
+    return true;
+  }
+
   const store = readStore();
   if (!Array.isArray(store.resetTokens)) return false;
 
-  const tokenHash = _hashToken(token);
   const rec = store.resetTokens.find((t) => t.tokenHash === tokenHash);
   if (!rec || rec.used || rec.expiresAt < Date.now()) return false;
 

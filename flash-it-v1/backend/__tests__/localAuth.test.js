@@ -35,24 +35,24 @@ beforeEach(() => {
 // ── hashPassword / verifyPassword (tested via register + login) ───────────────
 
 describe('hashPassword + verifyPassword', () => {
-  test('correct password: login succeeds', () => {
-    localAuth.register('hash-ok@example.com', 'correctpass', 'Hash OK');
-    const result = localAuth.login('hash-ok@example.com', 'correctpass');
+  test('correct password: login succeeds', async () => {
+    await localAuth.register('hash-ok@example.com', 'correctpass', 'Hash OK');
+    const result = await localAuth.login('hash-ok@example.com', 'correctpass');
     expect(result).toHaveProperty('token');
   });
 
-  test('wrong password: login throws', () => {
-    localAuth.register('hash-bad@example.com', 'realpassword', 'Hash Bad');
-    expect(() => localAuth.login('hash-bad@example.com', 'wrongpassword')).toThrow();
+  test('wrong password: login throws', async () => {
+    await localAuth.register('hash-bad@example.com', 'realpassword', 'Hash Bad');
+    await expect(localAuth.login('hash-bad@example.com', 'wrongpassword')).rejects.toThrow();
   });
 });
 
 // ── signToken / verifyToken ───────────────────────────────────────────────────
 
 describe('signToken + verifyToken', () => {
-  test('round-trip: token encodes user fields and decodes back', () => {
-    localAuth.register('token-rt@example.com', 'pass1234', 'Token User');
-    const { user, token } = localAuth.login('token-rt@example.com', 'pass1234');
+  test('round-trip: token encodes user fields and decodes back', async () => {
+    await localAuth.register('token-rt@example.com', 'pass1234', 'Token User');
+    const { user, token } = await localAuth.login('token-rt@example.com', 'pass1234');
 
     const jwt = require('jsonwebtoken');
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -62,9 +62,9 @@ describe('signToken + verifyToken', () => {
     expect(decoded.role).toBe('customer');
   });
 
-  test('tampered token fails jwt.verify', () => {
-    localAuth.register('token-tamper@example.com', 'pass1234', 'Tamper');
-    const { token } = localAuth.login('token-tamper@example.com', 'pass1234');
+  test('tampered token fails jwt.verify', async () => {
+    await localAuth.register('token-tamper@example.com', 'pass1234', 'Tamper');
+    const { token } = await localAuth.login('token-tamper@example.com', 'pass1234');
 
     const parts = token.split('.');
     const last = parts[2];
@@ -79,9 +79,9 @@ describe('signToken + verifyToken', () => {
 // ── login ─────────────────────────────────────────────────────────────────────
 
 describe('login', () => {
-  test('valid credentials return { user, token } without passwordHash', () => {
-    localAuth.register('login-ok@example.com', 'securepass', 'Login OK');
-    const result = localAuth.login('login-ok@example.com', 'securepass');
+  test('valid credentials return { user, token } without passwordHash', async () => {
+    await localAuth.register('login-ok@example.com', 'securepass', 'Login OK');
+    const result = await localAuth.login('login-ok@example.com', 'securepass');
 
     expect(result).toHaveProperty('user');
     expect(result).toHaveProperty('token');
@@ -89,17 +89,17 @@ describe('login', () => {
     expect(result.user.email).toBe('login-ok@example.com');
   });
 
-  test('unknown email throws with status 401', () => {
+  test('unknown email throws with status 401', async () => {
     let err;
-    try { localAuth.login('nobody@example.com', 'pass'); } catch (e) { err = e; }
+    try { await localAuth.login('nobody@example.com', 'pass'); } catch (e) { err = e; }
     expect(err).toBeDefined();
     expect(err.status).toBe(401);
   });
 
-  test('wrong password throws with status 401', () => {
-    localAuth.register('login-bad@example.com', 'rightpass', 'Login Bad');
+  test('wrong password throws with status 401', async () => {
+    await localAuth.register('login-bad@example.com', 'rightpass', 'Login Bad');
     let err;
-    try { localAuth.login('login-bad@example.com', 'wrongpass'); } catch (e) { err = e; }
+    try { await localAuth.login('login-bad@example.com', 'wrongpass'); } catch (e) { err = e; }
     expect(err).toBeDefined();
     expect(err.status).toBe(401);
   });
@@ -108,24 +108,24 @@ describe('login', () => {
 // ── register ──────────────────────────────────────────────────────────────────
 
 describe('register', () => {
-  test('new email creates user and returns { user, token }', () => {
-    const result = localAuth.register('new@example.com', 'pass1234', 'New User');
+  test('new email creates user and returns { user, token }', async () => {
+    const result = await localAuth.register('new@example.com', 'pass1234', 'New User');
     expect(result).toHaveProperty('user');
     expect(result).toHaveProperty('token');
     expect(result.user.email).toBe('new@example.com');
     expect(result.user).not.toHaveProperty('passwordHash');
   });
 
-  test('duplicate email throws with status 409', () => {
-    localAuth.register('dup@example.com', 'pass1234', 'Dup User');
+  test('duplicate email throws with status 409', async () => {
+    await localAuth.register('dup@example.com', 'pass1234', 'Dup User');
     let err;
-    try { localAuth.register('dup@example.com', 'otherpass', 'Dup Again'); } catch (e) { err = e; }
+    try { await localAuth.register('dup@example.com', 'otherpass', 'Dup Again'); } catch (e) { err = e; }
     expect(err).toBeDefined();
     expect(err.status).toBe(409);
   });
 
-  test('email is stored lowercased', () => {
-    const result = localAuth.register('UPPER@EXAMPLE.COM', 'pass1234', 'Upper');
+  test('email is stored lowercased', async () => {
+    const result = await localAuth.register('UPPER@EXAMPLE.COM', 'pass1234', 'Upper');
     expect(result.user.email).toBe('upper@example.com');
   });
 });
@@ -133,10 +133,10 @@ describe('register', () => {
 // ── seedDemoAccounts ──────────────────────────────────────────────────────────
 
 describe('seedDemoAccounts', () => {
-  test('seeds demo and admin accounts', () => {
+  test('seeds demo and admin accounts', async () => {
     localAuth.seedDemoAccounts();
-    expect(localAuth.getUserByEmail('demo@flash-it.app')).not.toBeNull();
-    expect(localAuth.getUserByEmail('admin@flash-it.app')).not.toBeNull();
+    expect(await localAuth.getUserByEmail('demo@flash-it.app')).not.toBeNull();
+    expect(await localAuth.getUserByEmail('admin@flash-it.app')).not.toBeNull();
   });
 
   test('is idempotent — calling twice does not duplicate accounts', () => {

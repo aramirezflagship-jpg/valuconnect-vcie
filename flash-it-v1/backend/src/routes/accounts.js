@@ -89,7 +89,7 @@ router.patch('/me', requireAuth, async (req, res, next) => {
       return res.json(updated);
     }
 
-    const updated = localAuth.updateUser(req.userId, { name: name.trim() });
+    const updated = await localAuth.updateUser(req.userId, { name: name.trim() });
     return res.json(updated);
   } catch (err) {
     next(err);
@@ -125,7 +125,7 @@ router.post('/register', async (req, res, next) => {
     }
 
     // Local fallback
-    const { user, token } = localAuth.register(email, password, name);
+    const { user, token } = await localAuth.register(email, password, name);
     return res.status(201).json({
       user,
       session: { access_token: token },
@@ -153,7 +153,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     // Local fallback
-    const { user, token } = localAuth.login(email, password);
+    const { user, token } = await localAuth.login(email, password);
     return res.json({
       user,
       session: { access_token: token },
@@ -250,7 +250,7 @@ router.post('/forgot-password', async (req, res, next) => {
     }
 
     // Local mode: generate a single-use token, store only its hash, email it.
-    const result = localAuth.createPasswordResetToken(email_);
+    const result = await localAuth.createPasswordResetToken(email_);
     if (result) {
       const resetUrl = `${frontendBase}/reset-password?token=${result.token}`;
       try {
@@ -294,7 +294,7 @@ router.post('/reset-password', async (req, res, next) => {
       return res.status(400).json({ error: 'Use the reset link to set a new password.' });
     }
 
-    const ok = localAuth.consumePasswordResetToken(token, newPassword);
+    const ok = await localAuth.consumePasswordResetToken(token, newPassword);
     if (!ok) {
       return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
     }
