@@ -139,12 +139,22 @@ router.post('/', upload, async (req, res, next) => {
       }
 
       const artworkBuffer = await _fetchBuffer(bgRecord.url);
-      finalBuffer = await composeCharacter(faceBuffer, artworkBuffer, bgRecord.faceSlot, {
-        message,
-        category,
-      });
+      try {
+        finalBuffer = await composeCharacter(faceBuffer, artworkBuffer, bgRecord.faceSlot, {
+          message,
+          category,
+        });
+      } catch (composeErr) {
+        console.error('[capture] character compose failed:', composeErr.message);
+        return res.status(400).json({ error: 'The face image could not be processed. Please retake the photo.' });
+      }
     } else {
       // Natural: full photo + optional frame/overlay + 3D message at top.
+      // Guard: a character template (artwork + faceSlot) is not a valid natural
+      // frame — using it would stretch the body artwork over the guest's photo.
+      if (bgRecord && (bgRecord.mode === 'character' || bgRecord.faceSlot)) {
+        return res.status(400).json({ error: `Template "${bgRecord.id}" is a character template and can't be used in natural mode. Use mode=character, or pick a natural template.` });
+      }
       let imageBuffer;
       if (files.image && files.image[0]) {
         imageBuffer = files.image[0].buffer;
@@ -166,7 +176,12 @@ router.post('/', upload, async (req, res, next) => {
             console.error('[capture] frame fetch failed, skipping frame:', frameErr.message);
           }
         }
-        finalBuffer = await composeNatural(imageBuffer, { frameBuffer, message, category });
+        try {
+          finalBuffer = await composeNatural(imageBuffer, { frameBuffer, message, category });
+        } catch (composeErr) {
+          console.error('[capture] natural compose failed:', composeErr.message);
+          return res.status(400).json({ error: 'The photo could not be processed. Please retake the photo.' });
+        }
       }
     }
 
