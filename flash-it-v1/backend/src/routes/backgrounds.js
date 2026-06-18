@@ -112,12 +112,18 @@ router.post('/', hostOrAdmin, upload.single('image'), async (req, res, next) => 
     if (req.file) {
       // Both the character artwork and the natural frame/overlay carry
       // transparency, so encode as PNG (NOT JPEG) to preserve the alpha channel.
-      const fullBuffer = await sharp(req.file.buffer)
-        .rotate()
-        .png()
-        .toBuffer();
-      const thumbBuffer = await sharp(req.file.buffer)
-        .rotate()
+      let fullBuffer = await sharp(req.file.buffer).rotate().png().toBuffer();
+
+      // Character mode: punch a transparent hole at the faceSlot so the guest's
+      // face shows through. This lets the admin upload AI-generated artwork that
+      // has a SOLID face circle (e.g. a white placeholder) and have it cut out
+      // automatically — no external editor needed.
+      if (mode === 'character' && faceSlot) {
+        const meta = await sharp(fullBuffer).metadata();
+        fullBuffer = await gemini.punchFaceHole(fullBuffer, faceSlot, meta.width, meta.height);
+      }
+
+      const thumbBuffer = await sharp(fullBuffer)
         .resize(400, null, { withoutEnlargement: true })
         .png()
         .toBuffer();
