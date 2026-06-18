@@ -36,21 +36,10 @@ async function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Authorization token required' });
   }
 
-  // Supabase path
-  if (supabase) {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-    if (error || !user) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
-    }
-    req.userId = user.id;
-    req.user = user;
-    return next();
-  }
-
-  // Local JWT fallback
+  // Local-JWT identity in BOTH modes — Supabase is the database, not the auth
+  // provider (consistent with accounts.js). Verify our own signed token; do NOT
+  // route local JWTs through supabase.auth.getUser (which expects Supabase Auth
+  // tokens and would reject every valid login).
   try {
     const decoded = localAuth.verifyToken(token);
     req.userId = decoded.userId;
@@ -64,17 +53,6 @@ async function requireAuth(req, res, next) {
 async function optionalAuth(req, res, next) {
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) return next();
-
-  if (supabase) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser(token);
-    if (user) {
-      req.userId = user.id;
-      req.user = user;
-    }
-    return next();
-  }
 
   try {
     const decoded = localAuth.verifyToken(token);

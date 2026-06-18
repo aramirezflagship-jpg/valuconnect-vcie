@@ -1,6 +1,6 @@
 {
   "name": "flash-it-backend",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Flash-it — cloud API backend for AI-powered photo booth kiosks",
   "main": "src/index.js",
   "scripts": {
