@@ -33,7 +33,7 @@ const STORE_PATH = path.resolve(
 );
 
 /** Canonical, extensible list of occasion categories. */
-const CATEGORIES = ['wedding', 'quinceanera', 'corporate', 'birthday', 'holiday', 'fiesta'];
+const CATEGORIES = ['wedding', 'quinceanera', 'birthday', 'kids-birthday', 'corporate', 'holiday', 'fiesta'];
 
 /** Capture modes a template/background can support. */
 const MODES = ['natural', 'character'];
