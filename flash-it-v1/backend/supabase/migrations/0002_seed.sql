@@ -68,14 +68,14 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO accounts (id, email, name, password_hash, role)
 VALUES
   (
-    'a0000000-demo-4000-8000-000000000001',
+    'a0000000-0000-4000-8000-000000000001',
     'demo@flash-it.app',
     'Demo Customer',
     NULL,
     'customer'
   ),
   (
-    'a0000000-admin-4000-8000-000000000002',
+    'a0000000-0000-4000-8000-000000000002',
     'admin@flash-it.app',
     'Andres (Admin)',
     NULL,
@@ -87,12 +87,12 @@ ON CONFLICT (id) DO NOTHING;
 -- different ids by the running backend (email is UNIQUE). This is a no-op when
 -- the rows above inserted cleanly.
 INSERT INTO accounts (id, email, name, password_hash, role)
-SELECT 'a0000000-demo-4000-8000-000000000001', 'demo@flash-it.app', 'Demo Customer', NULL, 'customer'
+SELECT 'a0000000-0000-4000-8000-000000000001', 'demo@flash-it.app', 'Demo Customer', NULL, 'customer'
 WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE email = 'demo@flash-it.app')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO accounts (id, email, name, password_hash, role)
-SELECT 'a0000000-admin-4000-8000-000000000002', 'admin@flash-it.app', 'Andres (Admin)', NULL, 'admin'
+SELECT 'a0000000-0000-4000-8000-000000000002', 'admin@flash-it.app', 'Andres (Admin)', NULL, 'admin'
 WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE email = 'admin@flash-it.app')
 ON CONFLICT DO NOTHING;
 
