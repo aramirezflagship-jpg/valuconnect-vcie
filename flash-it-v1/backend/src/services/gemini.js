@@ -42,7 +42,9 @@ async function listModels() {
     throw err;
   }
   const fetch = _fetch();
-  const res = await fetch(`${API_BASE}/models?key=${encodeURIComponent(key)}&pageSize=100`);
+  const res = await fetch(`${API_BASE}/models?pageSize=100`, {
+    headers: { 'x-goog-api-key': key },
+  });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const err = new Error(`Gemini models list error: ${data?.error?.message || res.status}`);
@@ -70,7 +72,7 @@ async function generateImage(prompt) {
 
   const model = _model();
   const fetch = _fetch();
-  const url = `${API_BASE}/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+  const url = `${API_BASE}/models/${model}:generateContent`;
   const body = {
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     generationConfig: { responseModalities: ['TEXT', 'IMAGE'] },
@@ -78,7 +80,7 @@ async function generateImage(prompt) {
 
   const res = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
