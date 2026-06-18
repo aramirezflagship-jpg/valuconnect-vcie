@@ -19,6 +19,7 @@ const sharp = require('sharp');
 const { requireAuth, optionalAuth, adminAuth } = require('../middleware/auth');
 const backgrounds = require('../services/backgrounds');
 const storage = require('../services/storage');
+const gemini = require('../services/gemini');
 const { generateCharacterArtwork, generateNaturalFrame } = require('../services/placeholderArt');
 
 const router = express.Router();
@@ -207,6 +208,102 @@ router.post('/seed', adminAuth, async (_req, res, next) => {
         { id: naturalRecord.id, mode: naturalRecord.mode, url: naturalRecord.url },
         { id: characterRecord.id, mode: characterRecord.mode, url: characterRecord.url, faceSlot: characterRecord.faceSlot },
       ],
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── GET /api/backgrounds/_genmodels ───────────────────────────────────────────
+// Admin/host: discover which Gemini models the key can use (to find the right
+// image-generation model id). Debug aid; safe (returns model names only).
+
+router.get('/_genmodels', hostOrAdmin, async (_req, res, next) => {
+  try {
+    if (!gemini.isConfigured()) {
+      return res.status(503).json({ error: 'AI image generation is not configured.' });
+    }
+    const models = await gemini.listModels();
+    const imageModels = models.filter(
+      (m) => /image/i.test(m.name) || (m.methods || []).some((x) => /image/i.test(x))
+    );
+    return res.json({ activeModel: process.env.GEMINI_IMAGE_MODEL || null, imageModels, allCount: models.length, all: models.map((m) => m.name) });
+  } catch (err) {
+    return res.status(err.status || 502).json({ error: err.message, detail: err.detail });
+  }
+});
+
+// ── POST /api/backgrounds/generate ────────────────────────────────────────────
+// Admin/host: generate themed artwork with Gemini and store it as a template.
+// JSON body: { prompt, category, mode ('natural'|'character'), name?, faceSlot? }
+// Character mode requires a faceSlot; the backend punches a transparent hole
+// there so the guest's face shows through. NOT the guest capture path.
+
+router.post('/generate', hostOrAdmin, async (req, res, next) => {
+  try {
+    if (!gemini.isConfigured()) {
+      return res.status(503).json({ error: 'AI image generation is not configured.' });
+    }
+    const prompt = (req.body.prompt || '').toString().trim();
+    if (!prompt) return res.status(400).json({ error: 'A "prompt" is required.' });
+
+    const category = backgrounds.normalizeCategory(req.body.category);
+    const mode = backgrounds.normalizeMode(req.body.mode);
+    const name = (req.body.name || '').toString().trim() || category;
+
+    let faceSlot = null;
+    if (mode === 'character') {
+      faceSlot = backgrounds.normalizeFaceSlot(req.body.faceSlot);
+      if (!faceSlot) {
+        return res.status(400).json({ error: 'Character mode requires a valid "faceSlot" JSON: {x,y,width,height,shape}.' });
+      }
+    }
+
+    // 1. Generate the raw artwork via Gemini.
+    let raw;
+    try {
+      raw = await gemini.generateImage(prompt);
+    } catch (genErr) {
+      return res.status(genErr.status || 502).json({ error: genErr.message, detail: genErr.detail });
+    }
+
+    // 2. Normalize to the 1200×1800 template canvas.
+    let artwork = await sharp(raw).resize(1200, 1800, { fit: 'cover', position: 'centre' }).png().toBuffer();
+
+    // 3. Character mode → punch the transparent face hole at the slot.
+    if (mode === 'character' && faceSlot) {
+      artwork = await gemini.punchFaceHole(artwork, faceSlot, 1200, 1800);
+    }
+
+    // 4. Upload to R2 (full + thumbnail).
+    const baseId = uuidv4().slice(0, 8);
+    const key = `flash-it/backgrounds/${category}/gen-${baseId}.png`;
+    const thumbKey = `flash-it/backgrounds/${category}/thumb_gen-${baseId}.png`;
+    const thumb = await sharp(artwork).resize(400, null, { withoutEnlargement: true }).png().toBuffer();
+    const url = await storage.uploadBuffer(artwork, key, 'image/png');
+    const thumbnailUrl = await storage.uploadBuffer(thumb, thumbKey, 'image/png');
+
+    // 5. Persist the catalogue record.
+    const record = await backgrounds.createBackground({
+      category,
+      mode,
+      name,
+      url,
+      thumbnailUrl,
+      faceSlot,
+      r2Key: key,
+      accountId: req.userId || null,
+    });
+
+    return res.status(201).json({
+      id: record.id,
+      category: record.category,
+      mode: record.mode,
+      name: record.name,
+      url: record.url,
+      thumbnailUrl: record.thumbnailUrl,
+      faceSlot: record.faceSlot || null,
+      prompt,
     });
   } catch (err) {
     next(err);
