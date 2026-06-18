@@ -437,9 +437,12 @@ export default function LaunchScreen() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
-          overflow: 'hidden',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          paddingTop: 'clamp(1rem, 4vh, 3rem)',
+          paddingBottom: 'clamp(1.5rem, 5vh, 3rem)',
         }}
       >
         <FloatingOrbs />
