@@ -182,6 +182,115 @@ const strings = {
     en: 'Auto-restart in',
   },
 
+  /* ── Legal / consent (DRAFT — pending attorney review) ───────────────── */
+  'legal.draftBanner.title': {
+    es: '⚠️ BORRADOR — pendiente de revisión legal',
+    en: '⚠️ DRAFT — pending attorney review',
+  },
+  'legal.draftBanner.body': {
+    es: 'Este documento es un borrador para uso interno. No es asesoría legal ni es vinculante. Un abogado con licencia debe revisarlo y finalizarlo, y resolver los [CAMPOS ENTRE CORCHETES], antes de su uso.',
+    en: 'This document is a draft for internal use. It is not legal advice and is not binding. A licensed attorney must review and finalize it, and resolve the [BRACKETED PLACEHOLDERS], before it is used.',
+  },
+  'legal.back': {
+    es: '← Volver',
+    en: '← Back',
+  },
+  'legal.terms.title': {
+    es: 'Términos de Servicio',
+    en: 'Terms of Service',
+  },
+  'legal.privacy.title': {
+    es: 'Política de Privacidad',
+    en: 'Privacy Policy',
+  },
+  'legal.marketing.title': {
+    es: 'Consentimiento de Marketing (SMS y Correo)',
+    en: 'SMS & Email Marketing Consent',
+  },
+  'legal.photo.title': {
+    es: 'Consentimiento de Foto y Datos Biométricos',
+    en: 'Photo & Biometric Consent',
+  },
+
+  /* ── Footer ──────────────────────────────────────────────────────────── */
+  'footer.terms': {
+    es: 'Términos',
+    en: 'Terms',
+  },
+  'footer.privacy': {
+    es: 'Privacidad',
+    en: 'Privacy',
+  },
+
+  /* ── Signup consent (Register) ───────────────────────────────────────── */
+  'signup.consent.pre': {
+    es: 'Acepto los ',
+    en: 'I agree to the ',
+  },
+  'signup.consent.terms': {
+    es: 'Términos de Servicio',
+    en: 'Terms of Service',
+  },
+  'signup.consent.and': {
+    es: ' y la ',
+    en: ' and ',
+  },
+  'signup.consent.privacy': {
+    es: 'Política de Privacidad',
+    en: 'Privacy Policy',
+  },
+  'signup.consent.required': {
+    es: 'Debes aceptar los Términos y la Política de Privacidad para continuar.',
+    en: 'You must agree to the Terms and Privacy Policy to continue.',
+  },
+
+  /* ── Marketing opt-in checkbox (TCPA — UNCHECKED by default) ──────────── */
+  // Source: legal/sms-email-marketing-consent.md §A. Keep separate, optional,
+  // unchecked. Consent is NOT a condition of receiving your photo.
+  'marketing.optin.sms': {
+    es: '¡Sí, envíenme mensajes! Acepto recibir mensajes de texto promocionales de ValuConnect Solutions / Flash-it ([NOMBRE DEL PROGRAMA]) sobre futuras reservas y ofertas al número que proporcioné, incluidos mensajes enviados por tecnología automatizada. El consentimiento no es condición para ninguna compra. La frecuencia varía (aprox. [X] mensajes/mes). Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda.',
+    en: 'Yes, text me! I agree to receive promotional/marketing text messages from ValuConnect Solutions / Flash-it ([BRAND/PROGRAM NAME]) about future bookings and offers at the number I provided, including messages sent by automated technology. Consent is not a condition of any purchase. Message frequency varies (approx. [X] msgs/month). Msg & data rates may apply. Reply STOP to cancel or HELP for help.',
+  },
+  'marketing.optin.email': {
+    es: 'Sí, envíenme por correo ofertas y novedades de Flash-it / ValuConnect Solutions. Puedo cancelar en cualquier momento con el enlace de cada correo. El consentimiento no es condición para ninguna compra.',
+    en: 'Yes, email me promotional offers and updates from Flash-it / ValuConnect Solutions. I can unsubscribe anytime using the link in any email. Consent is not a condition of any purchase.',
+  },
+  'marketing.optin.linkLabel': {
+    es: 'marketing',
+    en: 'marketing',
+  },
+  'marketing.optin.note': {
+    es: 'Opcional. Recibirás tu foto aunque no marques esta casilla.',
+    en: 'Optional. You’ll get your photo whether or not you check this box.',
+  },
+
+  /* ── Photo / biometric consent gate (kiosk) ──────────────────────────── */
+  // Source: legal/photo-biometric-consent.md — short on-kiosk version.
+  'photoConsent.title': {
+    es: '📸 Antes de tomar tu foto',
+    en: '📸 Before you take your photo',
+  },
+  'photoConsent.body': {
+    es: 'Al continuar, aceptas que se tome tu foto y se procese para crear tu imagen. En modos de personaje, la app detecta y recorta tu rostro solo para crear tu foto. Consulta el Consentimiento de Foto.',
+    en: 'By continuing you agree your photo will be taken and processed to create your image. In character modes, the app detects and crops your face only to create your photo. See the Photo Consent.',
+  },
+  'photoConsent.bodyCharacter': {
+    es: 'Este modo detecta y recorta tu rostro de la foto para colocarlo en el arte. Esto es automático y se usa solo para crear tu foto. Esto puede considerarse procesamiento biométrico bajo algunas leyes estatales.',
+    en: 'This mode detects and crops your face from the photo to place it into the artwork. This is automatic and used only to create your photo. This may be considered biometric processing under some state laws.',
+  },
+  'photoConsent.link': {
+    es: 'Ver Consentimiento de Foto',
+    en: 'See Photo Consent',
+  },
+  'photoConsent.agree': {
+    es: 'Acepto y continúo',
+    en: 'I Agree / Continue',
+  },
+  'photoConsent.decline': {
+    es: 'No acepto',
+    en: 'I Do Not Agree',
+  },
+
   /* ── Errors ──────────────────────────────────────────────────────────── */
   'errors.camera': {
     es: 'No se pudo acceder a la cámara. Verifica los permisos.',

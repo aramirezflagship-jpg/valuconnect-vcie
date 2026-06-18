@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { t } from '../utils/i18n.js';
+import MarketingOptIn from './MarketingOptIn.jsx';
 
 // Detect mobile once at module load time
 const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
-export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDone, qrCode }) {
+export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDone, qrCode, lang = 'en' }) {
   const [selected, setSelected] = useState(null); // 'qr' | 'sms' | 'email' | 'instagram' | 'facebook'
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+  // TCPA/CAN-SPAM: marketing opt-in is SEPARATE, OPTIONAL, and UNCHECKED by
+  // default. Delivering the photo (transactional) does NOT depend on it.
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const mediaUrl = gifUrl || photoUrl;
 
   // ── Social share helpers ──────────────────────────────────────────────────
@@ -65,10 +70,26 @@ export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDo
     }
     setError(''); setSending(true);
     try {
+      // The photo delivery itself is TRANSACTIONAL and is sent regardless of the
+      // marketing opt-in. `marketingConsent` is passed as separate metadata so
+      // the backend can record proof of consent only when the guest opted in.
       const res = await fetch('/api/deliver', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ method: selected, to: input, photoUrl, gifUrl, eventName, eventId }),
+        body: JSON.stringify({
+          method: selected,
+          to: input,
+          photoUrl,
+          gifUrl,
+          eventName,
+          eventId,
+          marketingConsent: marketingOptIn,
+          marketingConsentChannel: marketingOptIn ? selected : null,
+          marketingConsentText: marketingOptIn
+            ? t(selected === 'email' ? 'marketing.optin.email' : 'marketing.optin.sms', lang)
+            : null,
+          marketingConsentAt: marketingOptIn ? new Date().toISOString() : null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -166,12 +187,22 @@ export default function SharingMenu({ photoUrl, gifUrl, eventName, eventId, onDo
           autoFocus
         />
         {error && <p style={styles.error}>{error}</p>}
+
+        {/* TCPA/CAN-SPAM marketing opt-in — separate, optional, UNCHECKED.
+            Does NOT gate the photo delivery below. */}
+        <MarketingOptIn
+          channel={selected}
+          checked={marketingOptIn}
+          onChange={setMarketingOptIn}
+          lang={lang}
+        />
+
         <button style={styles.primaryBtn} onClick={handleSend} disabled={sending}>
           {sending ? 'Sending…' : 'Send My Photo'}
         </button>
         <button
           style={styles.backBtn}
-          onClick={() => { setSelected(null); setInput(''); setError(''); }}
+          onClick={() => { setSelected(null); setInput(''); setError(''); setMarketingOptIn(false); }}
         >
           ← Back
         </button>

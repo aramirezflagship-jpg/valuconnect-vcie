@@ -13,6 +13,10 @@ import VirtualBooth from './pages/VirtualBooth.jsx';
 import PhotoBooth from './PhotoBooth.jsx';
 import LaunchScreen from './components/LaunchScreen.jsx';
 import ServiceRequest from './pages/ServiceRequest.jsx';
+import Terms from './pages/legal/Terms.jsx';
+import Privacy from './pages/legal/Privacy.jsx';
+import MarketingConsent from './pages/legal/MarketingConsent.jsx';
+import PhotoConsent from './pages/legal/PhotoConsent.jsx';
 
 export default function App() {
   return (
@@ -22,6 +26,12 @@ export default function App() {
 
       {/* Full-service request */}
       <Route path="/contact" element={<ServiceRequest />} />
+
+      {/* Legal — DRAFT documents (pending attorney review) */}
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/marketing-consent" element={<MarketingConsent />} />
+      <Route path="/photo-consent" element={<PhotoConsent />} />
 
       {/* Host pages */}
       <Route path="/login" element={<Login />} />

@@ -1,15 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { t } from '../utils/i18n.js';
+import LegalFooter from '../components/LegalFooter.jsx';
 
 export default function Register() {
   const navigate = useNavigate();
   const { user, loading, register } = useAuth();
 
+  const lang =
+    (typeof localStorage !== 'undefined' && localStorage.getItem('flash_it_lang')) === 'es'
+      ? 'es'
+      : 'en';
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false); // required, separate from marketing
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,6 +40,10 @@ export default function Register() {
     }
     if (password.length < 8) {
       setError('Password must be at least 8 characters.');
+      return;
+    }
+    if (!agreedToTerms) {
+      setError(t('signup.consent.required', lang));
       return;
     }
 
@@ -138,11 +150,44 @@ export default function Register() {
             placeholder="Re-enter your password"
           />
 
+          {/* Required Terms + Privacy consent — separate from any marketing opt-in */}
+          <label
+            htmlFor="agree-terms"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '.6rem',
+              fontSize: '.8rem',
+              color: 'var(--text-muted)',
+              lineHeight: 1.5,
+              cursor: 'pointer',
+              marginTop: '.25rem',
+            }}
+          >
+            <input
+              id="agree-terms"
+              type="checkbox"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              style={{ width: 18, height: 18, marginTop: 1, flexShrink: 0, accentColor: 'var(--accent)' }}
+            />
+            <span>
+              {t('signup.consent.pre', lang)}
+              <Link to="/terms" target="_blank" style={{ color: 'var(--accent-light)', fontWeight: 500 }}>
+                {t('signup.consent.terms', lang)}
+              </Link>
+              {t('signup.consent.and', lang)}
+              <Link to="/privacy" target="_blank" style={{ color: 'var(--accent-light)', fontWeight: 500 }}>
+                {t('signup.consent.privacy', lang)}
+              </Link>
+            </span>
+          </label>
+
           {error && <ErrorBanner>{error}</ErrorBanner>}
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || !agreedToTerms}
             className="btn btn-primary"
             style={{
               width: '100%',
@@ -150,6 +195,7 @@ export default function Register() {
               fontSize: '1rem',
               marginTop: '.25rem',
               borderRadius: 12,
+              opacity: agreedToTerms ? 1 : 0.55,
             }}
           >
             {submitting ? 'Creating account…' : 'Create Account'}
@@ -172,6 +218,8 @@ export default function Register() {
             Sign in
           </Link>
         </p>
+
+        <LegalFooter lang={lang} />
       </div>
     </div>
   );

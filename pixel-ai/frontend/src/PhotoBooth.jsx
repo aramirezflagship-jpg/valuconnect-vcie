@@ -13,6 +13,7 @@ import GifCapture from './components/GifCapture.jsx';
 import LayoutPicker from './components/LayoutPicker.jsx';
 import StripPreview from './components/StripPreview.jsx';
 import VideoCapture from './components/VideoCapture.jsx';
+import PhotoConsentGate from './components/PhotoConsentGate.jsx';
 import { getEventConfig, uploadCapture, pollJobStatus, captureNatural, captureCharacter } from './utils/api.js';
 import { detectAndCropFace, blobToImage, blobToDataURL, loadFaceModels } from './utils/face.js';
 import useNetworkStatus from './hooks/useNetworkStatus.js';
@@ -72,6 +73,14 @@ export default function PhotoBooth({ eventCodeOverride }) {
   const [selectedLayout, setSelectedLayout] = useState(null); // template object from LayoutPicker
   const [capturedFrames, setCapturedFrames] = useState([]); // { blob, resultUrl }[] for strip mode
   const [availableLayouts, setAvailableLayouts] = useState([]); // loaded from /api/templates
+
+  // ── Photo / biometric consent gate ─────────────────────────────────────────
+  // Shown before the camera. `consentGate` holds the pending entry: whether the
+  // upcoming capture uses face detection (character) and the screen to advance
+  // to once the guest taps "I Agree". Per-session: once agreed, we don't nag
+  // again until the booth resets (keeps the flow fast). See legal/photo-biometric-consent.md.
+  const [consentGate, setConsentGate] = useState(null); // { character, next } | null
+  const [photoConsentGiven, setPhotoConsentGiven] = useState(false);
 
   const jobIdRef = useRef(null);
   const attractTimerRef = useRef(null);
@@ -141,8 +150,37 @@ export default function PhotoBooth({ eventCodeOverride }) {
     setFlowMode(null);
     setSelectedTemplate(null);
     setQrCode(null);
+    setConsentGate(null);
+    setPhotoConsentGiven(false); // new guest must re-consent
     jobIdRef.current = null;
   }, []);
+
+  // ─── Photo consent gate helpers ───────────────────────────────────────────
+  // Run `proceed()` immediately if consent is already given this session,
+  // otherwise show the gate first and run it on agree.
+  const requirePhotoConsent = useCallback(
+    (character, proceed) => {
+      if (photoConsentGiven) {
+        proceed();
+        return;
+      }
+      setConsentGate({ character: !!character, next: proceed });
+    },
+    [photoConsentGiven]
+  );
+
+  const handleConsentAgree = useCallback(() => {
+    setPhotoConsentGiven(true);
+    const proceed = consentGate?.next;
+    setConsentGate(null);
+    proceed?.();
+  }, [consentGate]);
+
+  const handleConsentDecline = useCallback(() => {
+    setConsentGate(null);
+    resetState();
+    setScreen(eventCodeOverride ? 'attract' : 'welcome');
+  }, [eventCodeOverride]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetToWelcome = useCallback(() => {
     resetState();
@@ -174,26 +212,32 @@ export default function PhotoBooth({ eventCodeOverride }) {
 
   const goToCamera = useCallback(
     (theme) => {
-      setSelectedTheme(theme);
-      if (availableLayouts.length > 1) {
-        setScreen('layout-picker');
-      } else {
-        setSelectedLayout(availableLayouts[0] || null);
-        setScreen('camera');
-      }
+      // Gate behind photo consent (legacy/natural theme flow — no face detection).
+      requirePhotoConsent(false, () => {
+        setSelectedTheme(theme);
+        if (availableLayouts.length > 1) {
+          setScreen('layout-picker');
+        } else {
+          setSelectedLayout(availableLayouts[0] || null);
+          setScreen('camera');
+        }
+      });
     },
-    [availableLayouts]
+    [availableLayouts, requirePhotoConsent]
   );
 
   // ─── Handle Natural/Character mode + template selection from ModePicker ────
   const handleModeSelect = useCallback(({ mode, template }) => {
-    setFlowMode(mode);
-    setSelectedTemplate(template);
-    setSelectedTheme(template); // keep legacy theme state in sync for fallbacks
-    // Warm up face-api models early for character mode so the crop is instant.
-    if (mode === 'character') loadFaceModels();
-    setScreen('camera');
-  }, []);
+    // Character mode runs face detection/cropping → show the biometric note.
+    requirePhotoConsent(mode === 'character', () => {
+      setFlowMode(mode);
+      setSelectedTemplate(template);
+      setSelectedTheme(template); // keep legacy theme state in sync for fallbacks
+      // Warm up face-api models early for character mode so the crop is instant.
+      if (mode === 'character') loadFaceModels();
+      setScreen('camera');
+    });
+  }, [requirePhotoConsent]);
 
   // ─── Handle mode change from CaptureSelector ─────────────────────────────
   const handleModeChange = useCallback(
@@ -438,6 +482,16 @@ export default function PhotoBooth({ eventCodeOverride }) {
         </div>
       )}
 
+      {/* Photo / biometric consent gate — overlays before the camera */}
+      {consentGate && (
+        <PhotoConsentGate
+          lang={lang}
+          character={consentGate.character}
+          onAgree={handleConsentAgree}
+          onDecline={handleConsentDecline}
+        />
+      )}
+
       <AnimatePresence mode="wait">
         {screen === 'welcome' && (
           <motion.div
@@ -606,6 +660,7 @@ export default function PhotoBooth({ eventCodeOverride }) {
               qrCode={qrCode}
               eventName={config.name}
               eventId={config.eventId}
+              lang={lang}
               onDone={() => {
                 scheduleAttractReturn();
                 resetState();

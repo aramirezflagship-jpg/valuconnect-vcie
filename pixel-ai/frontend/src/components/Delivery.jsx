@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { t } from '../utils/i18n.js';
 import { sendDelivery } from '../utils/api.js';
+import MarketingOptIn from './MarketingOptIn.jsx';
 
 const AUTO_RESET_SECONDS = 30;
 
@@ -110,6 +111,8 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
   const [sendError, setSendError] = useState(null);
   const [autoResetSecs, setAutoResetSecs] = useState(AUTO_RESET_SECONDS);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
+  // TCPA: separate, optional, UNCHECKED marketing opt-in. Never gates delivery.
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
 
   const inputRef = useRef(null);
   const timerRef = useRef(null);
@@ -157,7 +160,11 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
     resetCountdown();
 
     try {
-      await sendDelivery(channel, fullPhone, photoUrl, config.eventId);
+      // Photo delivery is transactional; marketing consent is passed separately.
+      await sendDelivery(channel, fullPhone, photoUrl, config.eventId, undefined, undefined, {
+        marketing: marketingOptIn,
+        marketingText: marketingOptIn ? t('marketing.optin.sms', lang) : null,
+      });
       setSentChannel(channel);
     } catch (err) {
       console.error('[Delivery] send error:', err);
@@ -165,7 +172,7 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
     } finally {
       setSending(false);
     }
-  }, [countryCode, phone, photoUrl, config.eventId, lang, resetCountdown]);
+  }, [countryCode, phone, photoUrl, config.eventId, lang, resetCountdown, marketingOptIn]);
 
   const qrValue = photoUrl || 'https://flash-it.app';
   const qrSize = isMobile ? 160 : 280;
@@ -470,6 +477,17 @@ export default function Delivery({ lang, config, photoUrl, onNewPhoto }) {
                   </motion.p>
                 )}
               </AnimatePresence>
+
+              {/* TCPA marketing opt-in — separate, optional, UNCHECKED.
+                  Does NOT gate the transactional photo delivery below. */}
+              <div style={{ width: '100%' }} onPointerDown={(e) => e.stopPropagation()}>
+                <MarketingOptIn
+                  channel="sms"
+                  checked={marketingOptIn}
+                  onChange={(v) => { resetCountdown(); setMarketingOptIn(v); }}
+                  lang={lang}
+                />
+              </div>
 
               {/* ── Send SMS button ── */}
               <div style={{ width: '100%' }}>

@@ -117,13 +117,33 @@ export async function pollJobStatus(statusUrl, { intervalMs = 2000, timeoutMs = 
 
 /**
  * Send the photo link via SMS or WhatsApp.
- * @param {'sms'|'whatsapp'} channel
- * @param {string} phone
+ *
+ * The delivery itself is TRANSACTIONAL (the guest requested their photo) and is
+ * sent regardless of marketing consent. Pass `opts.marketing` (the separate,
+ * optional, opt-in flag) so the backend can record proof of marketing consent —
+ * but it must never gate the photo delivery. See legal/sms-email-marketing-consent.md.
+ *
+ * @param {'sms'|'whatsapp'} method
+ * @param {string} to
  * @param {string} photoUrl
  * @param {string} eventId
+ * @param {string} [eventName]
+ * @param {string} [gifUrl]
+ * @param {{ marketing?: boolean, marketingText?: string }} [opts]
  */
-export async function sendDelivery(method, to, photoUrl, eventId, eventName, gifUrl) {
-  const { data } = await api.post('/api/deliver', { method, to, photoUrl, eventId, eventName, gifUrl });
+export async function sendDelivery(method, to, photoUrl, eventId, eventName, gifUrl, opts = {}) {
+  const { data } = await api.post('/api/deliver', {
+    method,
+    to,
+    photoUrl,
+    eventId,
+    eventName,
+    gifUrl,
+    marketingConsent: !!opts.marketing,
+    marketingConsentChannel: opts.marketing ? method : null,
+    marketingConsentText: opts.marketing ? opts.marketingText || null : null,
+    marketingConsentAt: opts.marketing ? new Date().toISOString() : null,
+  });
   return data;
 }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import LegalFooter from '../components/LegalFooter.jsx';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -153,6 +154,8 @@ export default function Login() {
             Create account
           </Link>
         </p>
+
+        <LegalFooter lang="en" />
       </div>
     </div>
   );
