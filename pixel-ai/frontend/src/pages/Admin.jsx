@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import TemplateDesigner from './TemplateDesigner.jsx';
 import AdminBackgrounds from '../components/admin/AdminBackgrounds.jsx';
+import AdminMetrics from '../components/admin/AdminMetrics.jsx';
+import AdminFullService from '../components/admin/AdminFullService.jsx';
+import AdminCustomers from '../components/admin/AdminCustomers.jsx';
+import { serviceTypeBadge } from '../components/admin/adminStyles.js';
+import { getAdminMetrics } from '../utils/api.js';
 
 const S = {
   page: {
@@ -83,7 +88,7 @@ export default function Admin() {
   const { user, loading, signOut, getToken, isAdmin } = useAuth();
   const [tab, setTab] = useState('overview');
   const [events, setEvents] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [newLeadsCount, setNewLeadsCount] = useState(0);
   const [dataLoading, setDataLoading] = useState(false);
 
   // Guard: only admins
@@ -102,17 +107,18 @@ export default function Admin() {
   const loadData = useCallback(async () => {
     setDataLoading(true);
     try {
-      const [evRes, usersRes] = await Promise.all([
-        fetch('/api/events', { headers: authHeaders() }),
-        fetch('/api/accounts/all', { headers: authHeaders() }),
-      ]);
+      const evRes = await fetch('/api/events', { headers: authHeaders() });
       if (evRes.ok) {
         const body = await evRes.json();
         setEvents(Array.isArray(body) ? body : body.events || []);
       }
-      if (usersRes.ok) {
-        const body = await usersRes.json();
-        setUsers(Array.isArray(body) ? body : []);
+      // New-leads count powers the Full Service tab badge. Best-effort — never
+      // block the rest of the dashboard if the metrics endpoint is unavailable.
+      try {
+        const metrics = await getAdminMetrics();
+        setNewLeadsCount(metrics?.totals?.newServiceRequests || 0);
+      } catch (err) {
+        console.warn('[admin] metrics (lead count) unavailable', err);
       }
     } catch (e) {
       console.error('[admin] loadData error', e);
@@ -126,9 +132,6 @@ export default function Admin() {
   }, [user, isAdmin, loadData]);
 
   if (loading || !user) return null;
-
-  const activeEvents = events.filter((e) => e.status === 'active').length;
-  const totalGuests = events.reduce((sum, e) => sum + (e.guest_count || 0), 0);
 
   return (
     <div style={S.page}>
@@ -156,9 +159,18 @@ export default function Admin() {
 
       {/* Nav tabs */}
       <nav style={S.nav}>
-        {['overview', 'events', 'customers', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
+        {['overview', 'events', 'full-service', 'customers', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
           <button key={t} style={S.tab(tab === t)} onClick={() => setTab(t)}>
-            {{ overview: 'Overview', events: 'Events', customers: 'Customers', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
+            {{ overview: 'Overview', events: 'Events', 'full-service': 'Full Service', customers: 'Customers', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
+            {t === 'full-service' && newLeadsCount > 0 && (
+              <span style={{
+                marginLeft: '.4rem', background: 'rgba(234,179,8,0.18)', color: '#fbbf24',
+                border: '1px solid rgba(234,179,8,0.4)', borderRadius: 999,
+                fontSize: '.62rem', fontWeight: 700, padding: '.05rem .4rem', verticalAlign: 'middle',
+              }}>
+                {newLeadsCount}
+              </span>
+            )}
           </button>
         ))}
       </nav>
@@ -166,17 +178,12 @@ export default function Admin() {
       <div style={S.body}>
         {dataLoading && <p style={{ color: '#64748b', textAlign: 'center', padding: '3rem' }}>Loading…</p>}
 
-        {/* Overview */}
+        {/* Overview — KPI widgets + charts from /api/admin/metrics */}
         {tab === 'overview' && !dataLoading && (
           <>
-            <div style={S.statGrid}>
-              <StatCard label="Total Events" value={events.length} />
-              <StatCard label="Active Events" value={activeEvents} accent="#4ade80" />
-              <StatCard label="Total Customers" value={users.length} />
-              <StatCard label="Total Guests" value={totalGuests} />
-            </div>
+            <AdminMetrics />
 
-            <h3 style={{ fontSize: '.85rem', fontWeight: 700, color: '#94a3b8', marginBottom: '.75rem', letterSpacing: '.04em' }}>
+            <h3 style={{ fontSize: '.85rem', fontWeight: 700, color: '#94a3b8', margin: '1.75rem 0 .75rem', letterSpacing: '.04em' }}>
               RECENT EVENTS
             </h3>
             <div style={S.card}>
@@ -209,54 +216,25 @@ export default function Admin() {
           </>
         )}
 
-        {/* Customers */}
-        {tab === 'customers' && !dataLoading && (
-          <>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '1rem' }}>
-              Customers ({users.length})
-            </h2>
-            <div style={S.card}>
-              <table style={S.table}>
-                <thead>
-                  <tr>
-                    <th style={S.th}>Name</th>
-                    <th style={S.th}>Email</th>
-                    <th style={S.th}>Role</th>
-                    <th style={S.th}>Created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.length === 0 && (
-                    <tr><td colSpan={4} style={{ ...S.td, textAlign: 'center', color: '#475569', padding: '2rem' }}>No customers yet</td></tr>
-                  )}
-                  {users.map((u) => (
-                    <tr key={u.id}>
-                      <td style={S.td}>{u.name || '—'}</td>
-                      <td style={S.td}>{u.email}</td>
-                      <td style={S.td}>
-                        <span style={{
-                          background: u.role === 'admin' ? 'rgba(220,38,38,0.15)' : 'rgba(99,102,241,0.15)',
-                          color: u.role === 'admin' ? '#f87171' : '#a5b4fc',
-                          border: `1px solid ${u.role === 'admin' ? 'rgba(220,38,38,0.3)' : 'rgba(99,102,241,0.3)'}`,
-                          borderRadius: 6, fontSize: '.68rem', fontWeight: 700, padding: '.2rem .45rem',
-                        }}>
-                          {u.role?.toUpperCase() || 'CUSTOMER'}
-                        </span>
-                      </td>
-                      <td style={{ ...S.td, color: '#64748b' }}>
-                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+        {/* Full Service — leads pipeline from /api/admin/service-requests */}
+        {tab === 'full-service' && !dataLoading && (
+          <AdminFullService />
         )}
 
-        {/* Analytics */}
+        {/* Customers — full contact table from /api/admin/customers */}
+        {tab === 'customers' && !dataLoading && (
+          <AdminCustomers />
+        )}
+
+        {/* Analytics — platform charts + per-event delivery breakdown */}
         {tab === 'analytics' && !dataLoading && (
-          <AnalyticsTab events={events} authHeaders={authHeaders} />
+          <>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '1.5rem' }}>Analytics</h2>
+            <AdminMetrics />
+            <div style={{ marginTop: '1.75rem' }}>
+              <AnalyticsTab events={events} authHeaders={authHeaders} />
+            </div>
+          </>
         )}
 
         {/* Create Event */}
@@ -310,6 +288,7 @@ function EventTable({ events, authHeaders }) {
             <th style={S.th}>Event</th>
             <th style={S.th}>Code</th>
             <th style={S.th}>Date</th>
+            <th style={S.th}>Type</th>
             <th style={S.th}>Plan</th>
             <th style={S.th}>Guests</th>
             <th style={S.th}>Status</th>
@@ -319,7 +298,7 @@ function EventTable({ events, authHeaders }) {
         </thead>
         <tbody>
           {events.length === 0 && (
-            <tr><td colSpan={8} style={{ ...S.td, textAlign: 'center', color: '#475569', padding: '2rem' }}>No events yet</td></tr>
+            <tr><td colSpan={9} style={{ ...S.td, textAlign: 'center', color: '#475569', padding: '2rem' }}>No events yet</td></tr>
           )}
           {events.map((ev) => {
             const code = ev.event_code || ev.eventCode || ev.id?.slice(0, 6) || '';
@@ -332,6 +311,21 @@ function EventTable({ events, authHeaders }) {
                 </td>
                 <td style={{ ...S.td, color: '#94a3b8' }}>
                   {ev.date ? new Date(ev.date).toLocaleDateString() : '—'}
+                </td>
+                <td style={S.td}>
+                  {(() => {
+                    const st = ev.serviceType || ev.service_type || 'none';
+                    const c = serviceTypeBadge(st);
+                    return (
+                      <span style={{
+                        background: c.bg, color: c.color, border: `1px solid ${c.border}`,
+                        borderRadius: 6, fontSize: '.68rem', fontWeight: 700, padding: '.2rem .45rem',
+                        letterSpacing: '.03em',
+                      }}>
+                        {c.label}
+                      </span>
+                    );
+                  })()}
                 </td>
                 <td style={{ ...S.td, color: '#94a3b8', fontSize: '.8rem', textTransform: 'capitalize' }}>
                   {ev.plan_tier || ev.planTier || '—'}
@@ -558,7 +552,9 @@ function AnalyticsTab({ events, authHeaders }) {
 
   return (
     <div>
-      <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '1.5rem' }}>Analytics</h2>
+      <h3 style={{ fontSize: '.85rem', fontWeight: 700, color: '#94a3b8', marginBottom: '1rem', letterSpacing: '.04em' }}>
+        PER-EVENT DELIVERY (FIRST EVENT)
+      </h3>
       {loading && <p style={{ color: '#64748b' }}>Loading analytics…</p>}
       {!loading && (
         <>

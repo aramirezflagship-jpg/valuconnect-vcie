@@ -413,6 +413,79 @@ export async function adminDeleteBackground(id) {
   return data;
 }
 
+// ── Admin dashboard: metrics, leads (service requests) & customers ─────────────
+// All admin-only, gated behind the `x-admin-secret` header (reuses
+// adminSecretHeader above). Powers the upgraded admin dashboard — KPI/charts,
+// the Full Service leads table, and the customer contact table.
+
+/**
+ * Admin: aggregate platform metrics for charts/widgets.
+ *
+ * @returns {Promise<{
+ *   totals: { events, photos, customers, serviceRequests, newServiceRequests },
+ *   eventsByServiceType: { managed, solo },
+ *   accountsByServiceType: { managed, solo, none },
+ *   photosByMode: { natural, character, unknown },
+ *   eventsByCategory: Record<string, number>,
+ *   photosByCategory: Record<string, number>,
+ *   eventsTimeseries: Array<{ date: string, count: number }>,
+ *   photosTimeseries: Array<{ date: string, count: number }>,
+ *   marketing: { optInCount: number, optInRate: number }
+ * }>}
+ */
+export async function getAdminMetrics() {
+  const { data } = await api.get('/api/admin/metrics', {
+    headers: adminSecretHeader(),
+  });
+  return data;
+}
+
+/**
+ * Admin: list Full Service leads (service requests).
+ *
+ * @returns {Promise<{
+ *   requests: Array<{ id, name, email, phone, event_type, event_date, message, status, created_at }>,
+ *   count: number
+ * }>}
+ */
+export async function getAdminServiceRequests() {
+  const { data } = await api.get('/api/admin/service-requests', {
+    headers: adminSecretHeader(),
+  });
+  return data;
+}
+
+/**
+ * Admin: update a lead's pipeline status.
+ *
+ * @param {string} id  service request id
+ * @param {'new'|'contacted'|'won'|'lost'} status
+ * @returns {Promise<Object>} the updated request
+ */
+export async function patchServiceRequestStatus(id, status) {
+  const { data } = await api.patch(
+    `/api/admin/service-requests/${encodeURIComponent(id)}`,
+    { status },
+    { headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' } }
+  );
+  return data;
+}
+
+/**
+ * Admin: full customer contact list (host accounts may have no phone).
+ *
+ * @returns {Promise<{
+ *   customers: Array<{ id, name, email, role, serviceType, eventsCount, photosCount, lastActiveAt, createdAt }>,
+ *   count: number
+ * }>}
+ */
+export async function getAdminCustomers() {
+  const { data } = await api.get('/api/admin/customers', {
+    headers: adminSecretHeader(),
+  });
+  return data;
+}
+
 // ── Two-mode capture (natural frame · character face-in-hole) ─────────────────
 
 /**
