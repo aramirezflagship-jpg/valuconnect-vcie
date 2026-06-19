@@ -84,7 +84,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
 //   faceSlot  (string) — JSON: {"x":..,"y":..,"width":..,"height":..,"shape":"oval"|"rect"}
 //                        REQUIRED for "character"; ignored for "natural".
 
-router.post('/', hostOrAdmin, upload.single('image'), async (req, res, next) => {
+router.post('/', adminAuth, upload.single('image'), async (req, res, next) => {
   try {
     const category = backgrounds.normalizeCategory(req.body.category);
     const mode = backgrounds.normalizeMode(req.body.mode);
@@ -224,7 +224,7 @@ router.post('/seed', adminAuth, async (_req, res, next) => {
 // Admin/host: discover which Gemini models the key can use (to find the right
 // image-generation model id). Debug aid; safe (returns model names only).
 
-router.get('/_genmodels', hostOrAdmin, async (_req, res, next) => {
+router.get('/_genmodels', adminAuth, async (_req, res, next) => {
   try {
     if (!gemini.isConfigured()) {
       return res.status(503).json({ error: 'AI image generation is not configured.' });
@@ -245,7 +245,7 @@ router.get('/_genmodels', hostOrAdmin, async (_req, res, next) => {
 // Character mode requires a faceSlot; the backend punches a transparent hole
 // there so the guest's face shows through. NOT the guest capture path.
 
-router.post('/generate', hostOrAdmin, async (req, res, next) => {
+router.post('/generate', adminAuth, async (req, res, next) => {
   try {
     if (!gemini.isConfigured()) {
       return res.status(503).json({ error: 'AI image generation is not configured.' });
