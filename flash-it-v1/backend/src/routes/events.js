@@ -78,6 +78,8 @@ async function _createHostEvent(req, res, next) {
       ...req.body,
       account_id: req.userId,
       is_demo: false,
+      // Self-service product line: the host signs up and runs the booth.
+      serviceType: 'solo',
       // Accept either backgroundIds or themeIds from the client.
       backgroundIds: req.body.backgroundIds || req.body.themeIds || [],
     };
@@ -197,7 +199,13 @@ router.post('/', async (req, res, next) => {
       if (!name || typeof name !== 'string' || !name.trim()) {
         return res.status(400).json({ error: 'Event name is required.' });
       }
-      const event = await createEvent(req.body, req.userId || null);
+      // Admin-created events are the managed (Full Service) product line by
+      // default; allow an explicit serviceType in the body to override.
+      const adminPayload = {
+        ...req.body,
+        serviceType: req.body.serviceType || req.body.service_type || 'managed',
+      };
+      const event = await createEvent(adminPayload, req.userId || null);
       return res.status(201).json(event);
     } catch (err) {
       return next(err);

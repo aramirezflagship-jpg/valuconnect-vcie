@@ -4,7 +4,15 @@ const express = require('express');
 const { adminAuth } = require('../middleware/auth');
 // Use the db abstraction so admin views work in BOTH stores (jsonStore when
 // SUPABASE_* is unset, Supabase when configured) with identical record shapes.
-const { listEvents, getEventPhotos, updatePhotoPrintStatus } = require('../services/db');
+const {
+  listEvents,
+  getEventPhotos,
+  updatePhotoPrintStatus,
+  listServiceRequests,
+  updateServiceRequestStatus,
+  getAdminMetrics,
+  getAdminCustomers,
+} = require('../services/db');
 
 const router = express.Router();
 
@@ -117,6 +125,71 @@ router.patch('/print-queue/:jobId', async (req, res, next) => {
     }
 
     return res.json({ success: true, job: updated });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── Service requests (Full Service leads) ─────────────────────────────────────
+
+/**
+ * GET /api/admin/service-requests
+ * List all Full Service leads, newest first.
+ */
+router.get('/service-requests', async (_req, res, next) => {
+  try {
+    const requests = await listServiceRequests();
+    return res.json({ requests, count: requests.length });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PATCH /api/admin/service-requests/:id
+ * Update a lead's status. Body: { status: 'new'|'contacted'|'won'|'lost' }.
+ */
+router.patch('/service-requests/:id', async (req, res, next) => {
+  try {
+    const { status } = req.body || {};
+    const valid = ['new', 'contacted', 'won', 'lost'];
+    if (!status || !valid.includes(status)) {
+      return res.status(400).json({ error: `status must be one of: ${valid.join(', ')}` });
+    }
+
+    const updated = await updateServiceRequestStatus(req.params.id, status);
+    if (!updated) {
+      return res.status(404).json({ error: `Service request "${req.params.id}" not found.` });
+    }
+    return res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── Dashboard aggregates ──────────────────────────────────────────────────────
+
+/**
+ * GET /api/admin/metrics
+ * Aggregate counts + breakdowns + 30-day timeseries for the dashboard charts.
+ */
+router.get('/metrics', async (_req, res, next) => {
+  try {
+    const metrics = await getAdminMetrics();
+    return res.json(metrics);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /api/admin/customers
+ * Enriched account rows for the admin contact table (sorted by createdAt desc).
+ */
+router.get('/customers', async (_req, res, next) => {
+  try {
+    const customers = await getAdminCustomers();
+    return res.json({ customers, count: customers.length });
   } catch (err) {
     next(err);
   }

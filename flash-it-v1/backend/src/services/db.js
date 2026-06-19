@@ -53,6 +53,8 @@ function _eventRowToApi(row) {
     deliveryChannels: row.delivery_channels || ['sms'],
     isActive: row.is_active !== undefined ? row.is_active : true,
     is_demo: row.is_demo === true,
+    serviceType: row.service_type || 'solo', // 'managed' | 'solo'
+    service_type: row.service_type || 'solo', // snake_case alias for callers reading the column directly
     plan_tier: row.plan_tier || null,
     max_guests: row.max_guests !== undefined ? row.max_guests : null,
     sms_credits_limit: row.sms_credits_limit || 0,
@@ -84,6 +86,7 @@ function _eventApiToColumns(data) {
     defaultBackgroundId: 'default_background_id',
     deliveryChannels: 'delivery_channels',
     isActive: 'is_active',
+    serviceType: 'service_type',
     eventCode: 'event_code',
     code: 'event_code',
     createdAt: 'created_at',
@@ -192,6 +195,9 @@ async function createEvent(data, accountId) {
     is_active: data.isActive !== undefined ? data.isActive
       : (data.is_active !== undefined ? data.is_active : true),
     is_demo: data.is_demo === true,
+    // Product line: 'managed' (Full Service) | 'solo' (self-service). Accept
+    // either camelCase or snake_case; default to 'solo' (matches the column default).
+    service_type: data.serviceType || data.service_type || 'solo',
     plan_tier: data.plan_tier || null,
     max_guests: data.max_guests !== undefined ? data.max_guests : null,
     sms_credits_limit: data.sms_credits_limit !== undefined ? data.sms_credits_limit : 0,
@@ -415,6 +421,335 @@ async function updatePhotoPrintStatus(jobId, printStatus) {
     return null;
   }
   return _photoRowToApi(data);
+}
+
+// ── Service requests (Full Service leads) ─────────────────────────────────────
+// Persists "Request Full Service" form submissions (routes/contact.js). Before
+// the service_requests table existed these went to an ephemeral JSON file; in
+// Supabase mode they now live in Postgres. In jsonStore (no-Supabase) mode the
+// caller keeps using its own file store — these helpers no-op/return [] there so
+// the contact route can fall back without throwing.
+
+/**
+ * Map a service_requests row → camelCase API shape.
+ * @param {object|null} row
+ * @returns {object|null}
+ */
+function _serviceRequestRowToApi(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone || null,
+    eventType: row.event_type || null,
+    eventDate: row.event_date || null,
+    estimatedGuests: row.estimated_guests != null ? row.estimated_guests : null,
+    location: row.location || null,
+    message: row.message || null,
+    lang: row.lang || null,
+    status: row.status || 'new',
+    createdAt: row.created_at || null,
+    updatedAt: row.updated_at || null,
+  };
+}
+
+/**
+ * Insert a Full Service request. Accepts the camelCase shape the contact route
+ * builds (name, email, phone, eventType, eventDate, estimatedGuests, location,
+ * message, lang).
+ * @param {object} data
+ * @returns {object|null} created request (camelCase), or null when not on Supabase
+ */
+async function createServiceRequest(data) {
+  if (!useSupabase) return null;
+
+  const row = {
+    name: data.name,
+    email: data.email,
+    phone: data.phone || null,
+    event_type: data.eventType || data.event_type || null,
+    event_date: data.eventDate || data.event_date || null,
+    estimated_guests:
+      data.estimatedGuests != null ? data.estimatedGuests
+        : (data.estimated_guests != null ? data.estimated_guests : null),
+    location: data.location || null,
+    message: data.message || null,
+    lang: data.lang || null,
+    status: data.status || 'new',
+  };
+
+  const { data: created, error } = await supabase
+    .from('service_requests')
+    .insert(row)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('[db] createServiceRequest error:', error.message);
+    throw new Error(`Failed to create service request: ${error.message}`);
+  }
+  return _serviceRequestRowToApi(created);
+}
+
+/**
+ * List all service requests, newest first.
+ * @returns {object[]}
+ */
+async function listServiceRequests() {
+  if (!useSupabase) return [];
+
+  const { data, error } = await supabase
+    .from('service_requests')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[db] listServiceRequests error:', error.message);
+    return [];
+  }
+  return (data || []).map(_serviceRequestRowToApi);
+}
+
+/**
+ * Update a service request's status.
+ * @param {string} id
+ * @param {string} status  'new'|'contacted'|'won'|'lost'
+ * @returns {object|null} updated request (camelCase), or null if not found
+ */
+async function updateServiceRequestStatus(id, status) {
+  if (!useSupabase) return null;
+
+  const { data, error } = await supabase
+    .from('service_requests')
+    .update({ status })
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    console.error('[db] updateServiceRequestStatus error:', error.message);
+    throw new Error(`Failed to update service request: ${error.message}`);
+  }
+  return _serviceRequestRowToApi(data);
+}
+
+// ── Admin aggregates (metrics + customers) ────────────────────────────────────
+// Computed efficiently with Supabase HEAD counts where possible (count: 'exact',
+// head: true returns only the count, no rows). Larger group-bys pull a slim
+// column projection and reduce in JS — fine at this data volume.
+
+/** Exact row count for a table with an optional eq filter; 0 on error/empty. */
+async function _count(table, filter) {
+  let q = supabase.from(table).select('*', { count: 'exact', head: true });
+  if (filter) q = q.eq(filter.col, filter.val);
+  const { count, error } = await q;
+  if (error) {
+    console.error(`[db] _count(${table}) error:`, error.message);
+    return 0;
+  }
+  return count || 0;
+}
+
+/**
+ * Aggregate metrics for the admin dashboard charts. Returns zeros gracefully
+ * when tables are empty. Supabase-only (returns an all-zero shape otherwise).
+ * @returns {object}
+ */
+async function getAdminMetrics() {
+  const empty = {
+    totals: { events: 0, photos: 0, customers: 0, serviceRequests: 0, newServiceRequests: 0 },
+    eventsByServiceType: { managed: 0, solo: 0 },
+    accountsByServiceType: { managed: 0, solo: 0, none: 0 },
+    photosByMode: { natural: 0, character: 0, unknown: 0 },
+    eventsByCategory: {},
+    photosByCategory: {},
+    eventsTimeseries: [],
+    photosTimeseries: [],
+    marketing: { optInCount: 0, optInRate: 0 },
+  };
+  if (!useSupabase) return empty;
+
+  // ── Totals (HEAD counts — no rows transferred) ──────────────────────────────
+  const [events, photos, customers, serviceRequests, newServiceRequests] = await Promise.all([
+    _count('events'),
+    _count('photos'),
+    _count('accounts'),
+    _count('service_requests'),
+    _count('service_requests', { col: 'status', val: 'new' }),
+  ]);
+
+  // ── Splits + breakdowns (slim projections, reduced in JS) ───────────────────
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const sinceIso = since.toISOString();
+
+  const [evRes, phRes, acRes] = await Promise.all([
+    supabase.from('events').select('id, service_type, category, account_id, created_at'),
+    supabase.from('photos').select('mode, created_at, event_id'),
+    supabase.from('accounts').select('id'),
+  ]);
+
+  const evRows = evRes.data || [];
+  const phRows = phRes.data || [];
+
+  // events by service_type + category
+  const eventsByServiceType = { managed: 0, solo: 0 };
+  const eventsByCategory = {};
+  // map event_id → {service_type, category} so photos can inherit a category
+  const eventMeta = {};
+  for (const e of evRows) {
+    const st = e.service_type === 'managed' ? 'managed' : 'solo';
+    eventsByServiceType[st] += 1;
+    const cat = e.category || 'uncategorized';
+    eventsByCategory[cat] = (eventsByCategory[cat] || 0) + 1;
+    eventMeta[e.id] = { category: cat };
+  }
+
+  // photos by mode + (inherited) category
+  const photosByMode = { natural: 0, character: 0, unknown: 0 };
+  const photosByCategory = {};
+  for (const p of phRows) {
+    const mode = p.mode === 'natural' ? 'natural' : (p.mode === 'character' ? 'character' : 'unknown');
+    photosByMode[mode] += 1;
+    const cat = (eventMeta[p.event_id] && eventMeta[p.event_id].category) || 'uncategorized';
+    photosByCategory[cat] = (photosByCategory[cat] || 0) + 1;
+  }
+
+  // accounts by service_type: derive from the service_type of the account's events.
+  // An account is 'managed' if it owns any managed event, else 'solo' if it owns
+  // any solo event, else 'none' (no events yet).
+  const accountServiceType = {}; // accountId → 'managed' | 'solo'
+  for (const e of evRows) {
+    if (!e.account_id) continue;
+    const st = e.service_type === 'managed' ? 'managed' : 'solo';
+    const prev = accountServiceType[e.account_id];
+    // 'managed' wins over 'solo'
+    if (prev === 'managed') continue;
+    accountServiceType[e.account_id] = st;
+  }
+  const accountsByServiceType = { managed: 0, solo: 0, none: 0 };
+  for (const a of (acRes.data || [])) {
+    const st = accountServiceType[a.id];
+    if (st === 'managed') accountsByServiceType.managed += 1;
+    else if (st === 'solo') accountsByServiceType.solo += 1;
+    else accountsByServiceType.none += 1;
+  }
+
+  // ── Timeseries: last 30 days, dense (zero-filled) ───────────────────────────
+  const eventsTimeseries = _denseDailySeries(evRows.map((e) => e.created_at), sinceIso);
+  const photosTimeseries = _denseDailySeries(phRows.map((p) => p.created_at), sinceIso);
+
+  // ── Marketing opt-in (best-effort; column may not exist) ────────────────────
+  let marketing = { optInCount: 0, optInRate: 0 };
+  try {
+    const optInCount = await _count('accounts', { col: 'marketing_opt_in', val: true });
+    marketing = {
+      optInCount,
+      optInRate: customers > 0 ? +(optInCount / customers).toFixed(4) : 0,
+    };
+  } catch (_) {
+    // marketing_opt_in column not present — leave zeros.
+  }
+
+  return {
+    totals: { events, photos, customers, serviceRequests, newServiceRequests },
+    eventsByServiceType,
+    accountsByServiceType,
+    photosByMode,
+    eventsByCategory,
+    photosByCategory,
+    eventsTimeseries,
+    photosTimeseries,
+    marketing,
+  };
+}
+
+/**
+ * Build a dense day-by-day {date: 'YYYY-MM-DD', count} series for the window
+ * [sinceIso, now], zero-filling days with no rows. Inputs are ISO timestamps.
+ * @param {string[]} timestamps
+ * @param {string} sinceIso
+ * @returns {{date: string, count: number}[]}
+ */
+function _denseDailySeries(timestamps, sinceIso) {
+  const counts = {};
+  for (const ts of timestamps) {
+    if (!ts) continue;
+    const day = ts.slice(0, 10); // 'YYYY-MM-DD'
+    if (day < sinceIso.slice(0, 10)) continue;
+    counts[day] = (counts[day] || 0) + 1;
+  }
+  const series = [];
+  const start = new Date(sinceIso.slice(0, 10) + 'T00:00:00Z');
+  const today = new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00Z');
+  for (let d = new Date(start); d <= today; d.setUTCDate(d.getUTCDate() + 1)) {
+    const day = d.toISOString().slice(0, 10);
+    series.push({ date: day, count: counts[day] || 0 });
+  }
+  return series;
+}
+
+/**
+ * Enriched customer rows for the admin contact table. One row per account with
+ * derived serviceType, event/photo counts, and last-active timestamp. Sorted by
+ * createdAt desc. Supabase-only (returns [] otherwise).
+ * @returns {object[]}
+ */
+async function getAdminCustomers() {
+  if (!useSupabase) return [];
+
+  const [acRes, evRes, phRes] = await Promise.all([
+    supabase.from('accounts').select('id, name, email, role, created_at').order('created_at', { ascending: false }),
+    supabase.from('events').select('id, account_id, service_type, created_at'),
+    supabase.from('photos').select('account_id, event_id, created_at'),
+  ]);
+
+  const accounts = acRes.data || [];
+  const events = evRes.data || [];
+  const photos = phRes.data || [];
+
+  // event_id → account_id (so photos with a null account_id still attribute to
+  // the owning event's account — guest captures have no account session).
+  const eventOwner = {};
+  for (const e of events) eventOwner[e.id] = e.account_id || null;
+
+  // Per-account aggregation.
+  const agg = {}; // accountId → { eventsCount, photosCount, serviceType, lastActiveAt }
+  const ensure = (id) => (agg[id] || (agg[id] = { eventsCount: 0, photosCount: 0, serviceType: null, lastActiveAt: null }));
+  const bumpLast = (a, ts) => { if (ts && (!a.lastActiveAt || ts > a.lastActiveAt)) a.lastActiveAt = ts; };
+
+  for (const e of events) {
+    if (!e.account_id) continue;
+    const a = ensure(e.account_id);
+    a.eventsCount += 1;
+    // 'managed' wins over 'solo' when an account has a mix.
+    const st = e.service_type === 'managed' ? 'managed' : 'solo';
+    if (a.serviceType !== 'managed') a.serviceType = st;
+    bumpLast(a, e.created_at);
+  }
+
+  for (const p of photos) {
+    const ownerId = p.account_id || eventOwner[p.event_id] || null;
+    if (!ownerId) continue;
+    const a = ensure(ownerId);
+    a.photosCount += 1;
+    bumpLast(a, p.created_at);
+  }
+
+  return accounts.map((acc) => {
+    const a = agg[acc.id] || {};
+    return {
+      id: acc.id,
+      name: acc.name || null,
+      email: acc.email,
+      role: acc.role || 'customer',
+      serviceType: a.serviceType || 'none', // 'managed' | 'solo' | 'none' (no events yet)
+      createdAt: acc.created_at || null,
+      eventsCount: a.eventsCount || 0,
+      photosCount: a.photosCount || 0,
+      lastActiveAt: a.lastActiveAt || acc.created_at || null,
+    };
+  });
 }
 
 // ── Accounts ──────────────────────────────────────────────────────────────────
@@ -723,6 +1058,11 @@ module.exports = {
   getAllEvents,
   listEventsByAccount,
   updatePhotoPrintStatus,
+  createServiceRequest,
+  listServiceRequests,
+  updateServiceRequestStatus,
+  getAdminMetrics,
+  getAdminCustomers,
   getAccount,
   createAccount,
   updateAccount,

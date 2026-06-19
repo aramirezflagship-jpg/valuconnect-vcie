@@ -4,8 +4,11 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const db = require('../services/db');
 
 const router = express.Router();
+
+const useSupabase = !!process.env.SUPABASE_URL;
 
 // ── JSON store ────────────────────────────────────────────────────────────────
 
@@ -102,10 +105,23 @@ async function _sendNotificationEmail(request) {
  * Accepts a Full Service Request form submission. No authentication required.
  */
 router.post('/', async (req, res) => {
-  const { name, email, phone, eventType, estimatedGuests, eventDate, location, message } = req.body || {};
+  const body = req.body || {};
+  // The ServiceRequest form (frontend) sends `fullName` + `city`; older callers
+  // sent `name` + `location`. Accept both so no submission silently loses data.
+  const name = body.fullName || body.name;
+  const email = body.email;
+  const location = body.city || body.location || null;
+  const { phone, eventType, estimatedGuests, eventDate, message, lang } = body;
 
   if (!name || !email) {
     return res.status(400).json({ error: 'name and email are required.' });
+  }
+
+  // Coerce estimatedGuests ('100' from the number input) → integer or null.
+  let guests = null;
+  if (estimatedGuests != null && estimatedGuests !== '') {
+    const n = parseInt(estimatedGuests, 10);
+    guests = Number.isFinite(n) ? n : null;
   }
 
   const request = {
@@ -115,20 +131,27 @@ router.post('/', async (req, res) => {
     email,
     phone: phone || null,
     eventType: eventType || null,
-    estimatedGuests: estimatedGuests != null ? estimatedGuests : null,
+    estimatedGuests: guests,
     eventDate: eventDate || null,
-    location: location || null,
+    location,
     message: message || null,
+    lang: lang || null,
     createdAt: new Date().toISOString(),
   };
 
-  // Save to JSON store (non-fatal)
-  try {
-    const store = _load();
-    store.requests.push(request);
-    _flush(store);
-  } catch (err) {
-    console.warn('[contact] Failed to persist service request:', err.message);
+  // Persist (non-fatal): Supabase service_requests table when configured, else
+  // the legacy JSON file store so the demo/local flow keeps working unchanged.
+  if (useSupabase) {
+    try {
+      const saved = await db.createServiceRequest(request);
+      if (saved && saved.id) request.id = saved.id; // surface the DB-generated id
+    } catch (err) {
+      console.error('[contact] Failed to persist service request to Supabase:', err.message);
+      // Fall back to the JSON store so the lead isn't lost.
+      _saveToJsonStore(request);
+    }
+  } else {
+    _saveToJsonStore(request);
   }
 
   // Send email notification (non-fatal)
@@ -141,5 +164,16 @@ router.post('/', async (req, res) => {
     message: "Request received. We'll contact you within 24 hours.",
   });
 });
+
+/** Append a request to the JSON file store (non-fatal). */
+function _saveToJsonStore(request) {
+  try {
+    const store = _load();
+    store.requests.push(request);
+    _flush(store);
+  } catch (err) {
+    console.warn('[contact] Failed to persist service request:', err.message);
+  }
+}
 
 module.exports = router;
