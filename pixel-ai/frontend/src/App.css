@@ -30,8 +30,7 @@
 }
 
 html,
-body,
-#root {
+body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -40,6 +39,20 @@ body,
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* #root is the scroll container: content pages (admin, landing, checkout,
+   legal, dashboard) scroll inside it when taller than the viewport, while
+   kiosk step screens (.screen, position:fixed) stay locked to the viewport. */
+#root {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
 }
 
 /* Kiosk hardening */
