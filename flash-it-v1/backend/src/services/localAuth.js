@@ -8,7 +8,30 @@ const jwt = require('jsonwebtoken');
 const supabase = require('./supabase'); // service-role client (null when unconfigured)
 
 const STORE_PATH = process.env.USERS_STORE_PATH || path.join(__dirname, '../../../config/users.json');
-const JWT_SECRET = process.env.JWT_SECRET || 'flash-it-dev-secret-2026';
+
+// JWT signing secret. Precedence:
+//   1. JWT_SECRET env var — REQUIRED in production. Stable across redeploys (so
+//      sessions survive deploys) and private (so tokens can't be forged).
+//   2. Dev only: a fixed local constant for convenience.
+//   3. Production with NO env var: a random per-boot secret. This is a safety
+//      net, not a desired state — it is unguessable (so tokens can't be forged
+//      from the public repo) but it rotates every deploy, logging everyone out.
+//      A loud warning is emitted so the operator sets a stable JWT_SECRET.
+const IS_PROD = process.env.NODE_ENV === 'production';
+let JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  if (IS_PROD) {
+    JWT_SECRET = crypto.randomBytes(48).toString('hex');
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[localAuth] SECURITY: JWT_SECRET is not set in production. Using a ' +
+      'random per-boot secret — every user is logged out on each redeploy. ' +
+      'Set a stable, private JWT_SECRET env var (Render) to fix this.'
+    );
+  } else {
+    JWT_SECRET = 'flash-it-dev-secret-2026';
+  }
+}
 const JWT_EXPIRES = '30d';
 
 // Persist accounts + reset tokens in Postgres when Supabase is configured

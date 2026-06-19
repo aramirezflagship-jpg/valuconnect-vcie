@@ -54,6 +54,8 @@ const LABELS = {
     eventMgr: 'Go to Event Manager >',
     tutorials: 'View Tutorials',
     needHelp: 'Need More Help?',
+    terms: 'Terms',
+    privacy: 'Privacy',
     enterCode: 'Enter Event Code',
     enterCodePlaceholder: 'e.g. wedding2025',
     goBtn: 'Go →',
@@ -93,6 +95,8 @@ const LABELS = {
     eventMgr: 'Ir al Administrador >',
     tutorials: 'Ver tutoriales',
     needHelp: '¿Necesitas más ayuda?',
+    terms: 'Términos',
+    privacy: 'Privacidad',
     enterCode: 'Código del Evento',
     enterCodePlaceholder: 'ej. boda2025',
     goBtn: 'Ir →',
@@ -834,6 +838,36 @@ export default function LaunchScreen() {
             >
               {L.needHelp}
             </a>
+            <span style={{ color: C.border, fontSize: 16 }}>|</span>
+            <Link
+              to="/terms"
+              style={{
+                color: C.muted,
+                textDecoration: 'none',
+                fontSize: 13,
+                fontWeight: 500,
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = C.sky)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = C.muted)}
+            >
+              {L.terms}
+            </Link>
+            <span style={{ color: C.border, fontSize: 16 }}>|</span>
+            <Link
+              to="/privacy"
+              style={{
+                color: C.muted,
+                textDecoration: 'none',
+                fontSize: 13,
+                fontWeight: 500,
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = C.sky)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = C.muted)}
+            >
+              {L.privacy}
+            </Link>
           </motion.div>
         </motion.div>
       </div>
