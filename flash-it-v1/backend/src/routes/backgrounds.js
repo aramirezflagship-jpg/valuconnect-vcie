@@ -316,4 +316,17 @@ router.post('/generate', adminAuth, async (req, res, next) => {
   }
 });
 
+// ── DELETE /api/backgrounds/:id ───────────────────────────────────────────────
+// Admin-only. Removes a template from the global catalogue.
+
+router.delete('/:id', adminAuth, async (req, res, next) => {
+  try {
+    const removed = await backgrounds.deleteBackground(req.params.id);
+    if (!removed) return res.status(404).json({ error: 'Background not found.' });
+    return res.json({ deleted: true, id: req.params.id });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

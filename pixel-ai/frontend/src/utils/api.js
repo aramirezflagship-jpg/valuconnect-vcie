@@ -401,6 +401,18 @@ export async function adminGenerateBackground({ prompt, category, mode, name, fa
   return data;
 }
 
+/**
+ * Admin: delete a template from the global catalogue.
+ * @param {string} id background id
+ * @returns {Promise<Object>} { deleted: true, id }
+ */
+export async function adminDeleteBackground(id) {
+  const { data } = await api.delete(`/api/backgrounds/${encodeURIComponent(id)}`, {
+    headers: adminSecretHeader(),
+  });
+  return data;
+}
+
 // ── Two-mode capture (natural frame · character face-in-hole) ─────────────────
 
 /**

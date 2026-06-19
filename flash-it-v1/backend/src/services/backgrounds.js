@@ -299,6 +299,35 @@ async function getBackground(id) {
   return store.backgrounds[id] || null;
 }
 
+/**
+ * Delete a background by id from the active store.
+ * (The R2 object is left in place — storage has no delete helper — but it's an
+ * unreferenced orphan, which is harmless.)
+ * @param {string} id
+ * @returns {boolean} true if a record was removed
+ */
+async function deleteBackground(id) {
+  if (!id) return false;
+
+  if (useSupabase && supabase) {
+    const { error, count } = await supabase
+      .from('backgrounds')
+      .delete({ count: 'exact' })
+      .eq('id', id);
+    if (error) {
+      console.error('[backgrounds] deleteBackground (supabase) error:', error.message);
+      throw new Error(`Failed to delete background: ${error.message}`);
+    }
+    return (count || 0) > 0;
+  }
+
+  const store = _load();
+  if (!store.backgrounds[id]) return false;
+  delete store.backgrounds[id];
+  _flush();
+  return true;
+}
+
 module.exports = {
   CATEGORIES,
   MODES,
@@ -309,4 +338,5 @@ module.exports = {
   createBackground,
   listBackgrounds,
   getBackground,
+  deleteBackground,
 };

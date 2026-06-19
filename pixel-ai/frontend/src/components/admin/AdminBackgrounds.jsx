@@ -3,6 +3,7 @@ import {
   getBackgrounds,
   adminUploadBackground,
   adminGenerateBackground,
+  adminDeleteBackground,
 } from '../../utils/api.js';
 import FaceSlotEditor from '../dashboard/FaceSlotEditor.jsx';
 
@@ -347,7 +348,7 @@ function AiGenerate({ category, onGenerated }) {
 
 // ── Catalogue grid ────────────────────────────────────────────────────────────
 
-function CatalogueGrid({ backgrounds, loading }) {
+function CatalogueGrid({ backgrounds, loading, onDelete }) {
   if (loading) return <Spinner />;
   if (!backgrounds.length) {
     return (
@@ -375,6 +376,19 @@ function CatalogueGrid({ backgrounds, loading }) {
             }}>
               {bg.mode === 'character' ? '🦸 Character' : '🖼️ Natural'}
             </span>
+            <button
+              type="button"
+              onClick={() => onDelete(bg)}
+              title="Delete template"
+              style={{
+                position: 'absolute', top: 6, right: 6,
+                background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none',
+                borderRadius: 99, width: 26, height: 26, cursor: 'pointer', lineHeight: 1,
+                fontSize: '.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              ✕
+            </button>
           </div>
           <div style={{ padding: '.55rem .7rem' }}>
             <div style={{ fontSize: '.78rem', color: '#f1f5f9', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -417,6 +431,16 @@ export default function AdminBackgrounds() {
 
   const reload = useCallback(() => load(category, modeFilter), [load, category, modeFilter]);
 
+  const handleDelete = useCallback(async (bg) => {
+    if (!window.confirm(`Delete "${bg.name}"? This can't be undone.`)) return;
+    try {
+      await adminDeleteBackground(bg.id);
+      setBackgrounds((prev) => prev.filter((b) => b.id !== bg.id));
+    } catch (err) {
+      alert(err?.response?.data?.error || err?.message || 'Delete failed.');
+    }
+  }, []);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div>
@@ -454,7 +478,7 @@ export default function AdminBackgrounds() {
           GLOBAL CATALOGUE — {CATEGORIES.find((c) => c.id === category)?.label}
           {modeFilter ? ` · ${modeFilter}` : ''}
         </h3>
-        <CatalogueGrid backgrounds={backgrounds} loading={loading} />
+        <CatalogueGrid backgrounds={backgrounds} loading={loading} onDelete={handleDelete} />
       </div>
     </div>
   );
