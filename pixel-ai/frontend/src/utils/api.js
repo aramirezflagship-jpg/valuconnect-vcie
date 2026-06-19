@@ -354,6 +354,53 @@ export async function uploadBackground({ image, category, mode, name, faceSlot }
   return data;
 }
 
+// ── Admin-only background management (x-admin-secret header) ───────────────────
+// Building the global catalogue is ADMIN-only. These helpers attach the
+// `x-admin-secret` header (NOT a host Bearer token) — the backend gates POST
+// /api/backgrounds, POST /api/backgrounds/generate, and GET /api/backgrounds/_genmodels
+// behind adminAuth. The admin secret is stored in localStorage at login.
+
+function adminSecretHeader() {
+  return { 'x-admin-secret': localStorage.getItem('flash_it_admin_secret') || '' };
+}
+
+/**
+ * Admin: upload a global background/template via multipart form.
+ * Same contract as uploadBackground but authenticated with the admin secret.
+ *
+ * @param {Object} opts { image, category, mode, name, faceSlot }
+ * @returns {Promise<Object>} created background record
+ */
+export async function adminUploadBackground({ image, category, mode, name, faceSlot }) {
+  const formData = new FormData();
+  if (image) formData.append('image', image);
+  formData.append('category', category);
+  if (mode) formData.append('mode', mode);
+  formData.append('name', name);
+  if (faceSlot) formData.append('faceSlot', JSON.stringify(faceSlot));
+  const { data } = await api.post('/api/backgrounds', formData, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+}
+
+/**
+ * Admin: generate a global background/template with Gemini.
+ * JSON body { prompt, category, mode, name?, faceSlot? }. Returns 503 (thrown as
+ * an axios error with response.status === 503) when Gemini billing isn't enabled.
+ *
+ * @param {Object} opts { prompt, category, mode, name?, faceSlot? }
+ * @returns {Promise<Object>} created background record
+ */
+export async function adminGenerateBackground({ prompt, category, mode, name, faceSlot }) {
+  const body = { prompt, category, mode, name };
+  if (faceSlot) body.faceSlot = faceSlot;
+  const { data } = await api.post('/api/backgrounds/generate', body, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' },
+  });
+  return data;
+}
+
 // ── Two-mode capture (natural frame · character face-in-hole) ─────────────────
 
 /**

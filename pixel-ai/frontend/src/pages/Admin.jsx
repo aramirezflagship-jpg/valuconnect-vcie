@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import TemplateDesigner from './TemplateDesigner.jsx';
+import AdminBackgrounds from '../components/admin/AdminBackgrounds.jsx';
 
 const S = {
   page: {
@@ -155,9 +156,9 @@ export default function Admin() {
 
       {/* Nav tabs */}
       <nav style={S.nav}>
-        {['overview', 'events', 'customers', 'analytics', 'create-event', 'templates'].map((t) => (
+        {['overview', 'events', 'customers', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
           <button key={t} style={S.tab(tab === t)} onClick={() => setTab(t)}>
-            {{ overview: 'Overview', events: 'Events', customers: 'Customers', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates' }[t]}
+            {{ overview: 'Overview', events: 'Events', customers: 'Customers', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
           </button>
         ))}
       </nav>
@@ -271,6 +272,9 @@ export default function Admin() {
         {tab === 'templates' && (
           <TemplateDesigner adminHeaders={authHeaders} />
         )}
+
+        {/* Backgrounds — global catalogue builder (admin-only, x-admin-secret) */}
+        {tab === 'backgrounds' && <AdminBackgrounds />}
       </div>
     </div>
   );
