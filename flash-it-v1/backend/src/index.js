@@ -22,6 +22,7 @@ const printRouter = require('./routes/print');
 const stripsRouter    = require('./routes/strips');
 const templatesRouter = require('./routes/templates');
 const backgroundsRouter = require('./routes/backgrounds');
+const framesRouter    = require('./routes/frames');
 const videosRouter    = require('./routes/videos');
 const contactRouter   = require('./routes/contact');
 
@@ -94,6 +95,7 @@ app.use('/api/print', printRouter);
 app.use('/api/strips',    stripsRouter);
 app.use('/api/templates', templatesRouter);
 app.use('/api/backgrounds', backgroundsRouter);
+app.use('/api/frames',    framesRouter);
 app.use('/api/videos',    videosRouter);
 app.use('/api/contact',   contactRouter);
 
@@ -135,6 +137,13 @@ const localAuth = require('./services/localAuth');
 if (!process.env.SUPABASE_URL) {
   localAuth.seedDemoAccounts();
 }
+
+// Ensure the starter NATURAL frame catalogue exists (idempotent upsert). Runs in
+// both stores so a fresh Supabase project / JSON store is never empty.
+const { seedPresetFrames } = require('./services/backgrounds');
+seedPresetFrames()
+  .then((ids) => console.log(`[flash-it] seeded ${ids.length} preset frame(s): ${ids.join(', ')}`))
+  .catch((err) => console.error('[flash-it] seedPresetFrames failed:', err.message));
 
 app.listen(PORT, () => {
   console.log(`[flash-it] Backend running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);

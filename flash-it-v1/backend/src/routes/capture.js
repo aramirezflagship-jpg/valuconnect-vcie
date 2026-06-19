@@ -7,6 +7,7 @@ const QRCode = require('qrcode');
 
 const { composeNatural, composeCharacter } = require('../services/compositor');
 const backgroundsSvc = require('../services/backgrounds');
+const framePresets = require('../services/framePresets');
 const { uploadPhoto } = require('../services/storage');
 const { sendSMS, sendWhatsApp } = require('../services/delivery');
 const { getEvent, logPhoto, incrementGuestCount, decrementSmsCredits } = require('../services/db');
@@ -170,10 +171,21 @@ router.post('/', upload, async (req, res, next) => {
       } else {
         let frameBuffer = null;
         if (bgRecord && bgRecord.url) {
-          try {
-            frameBuffer = await _fetchBuffer(bgRecord.url);
-          } catch (frameErr) {
-            console.error('[capture] frame fetch failed, skipping frame:', frameErr.message);
+          // Preset frames (/api/frames/<cat>.png) render locally — no self-HTTP,
+          // works regardless of public base URL. Other urls (R2 uploads) fetch.
+          const presetCat = framePresets.matchPresetUrl(bgRecord.url);
+          if (presetCat) {
+            try {
+              frameBuffer = await framePresets.renderFrame(presetCat);
+            } catch (frameErr) {
+              console.error('[capture] preset frame render failed, skipping frame:', frameErr.message);
+            }
+          } else {
+            try {
+              frameBuffer = await _fetchBuffer(bgRecord.url);
+            } catch (frameErr) {
+              console.error('[capture] frame fetch failed, skipping frame:', frameErr.message);
+            }
           }
         }
         try {

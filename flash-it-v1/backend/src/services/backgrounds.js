@@ -328,6 +328,47 @@ async function deleteBackground(id) {
   return true;
 }
 
+/**
+ * Seed the starter NATURAL frame catalogue (one record per shipped theme).
+ * Idempotent: uses a deterministic id per theme so re-running upserts (Supabase)
+ * or overwrites by id (jsonStore) rather than duplicating. Also backfills the
+ * legacy `seed-natural-fiesta` row (created url-less by 0002_seed.sql) to point
+ * at the real fiesta frame so its catalogue thumbnail isn't broken.
+ * @returns {Promise<string[]>} ids that were ensured
+ */
+async function seedPresetFrames() {
+  const framePresets = require('./framePresets');
+  const ensured = [];
+
+  const ensure = async (id, slug) => {
+    await createBackground({
+      id,
+      category: slug,
+      mode: 'natural',
+      name: framePresets.LABELS[slug] || slug,
+      url: framePresets.frameUrl(slug),
+      thumbnailUrl: framePresets.frameUrl(slug),
+    });
+    ensured.push(id);
+  };
+
+  for (const slug of framePresets.SLUGS) {
+    try {
+      await ensure(`frame-natural-${slug}`, slug);
+    } catch (err) {
+      console.error(`[backgrounds] seedPresetFrames(${slug}) failed:`, err.message);
+    }
+  }
+  // Backfill the legacy url-less fiesta seed so it renders a real thumbnail.
+  try {
+    await ensure('seed-natural-fiesta', 'fiesta');
+  } catch (err) {
+    console.error('[backgrounds] seedPresetFrames(seed-natural-fiesta) failed:', err.message);
+  }
+
+  return ensured;
+}
+
 module.exports = {
   CATEGORIES,
   MODES,
@@ -339,4 +380,5 @@ module.exports = {
   listBackgrounds,
   getBackground,
   deleteBackground,
+  seedPresetFrames,
 };
