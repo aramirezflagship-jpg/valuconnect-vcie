@@ -1510,7 +1510,7 @@ export default function Dashboard() {
           </div>
         )}
         {activeTab === 'Events' && <EventsTab token={token} />}
-        {activeTab === 'Backgrounds' && <BackgroundsTab token={token} />}
+        {activeTab === 'Backgrounds' && <BackgroundsTab />}
         {activeTab === 'Payments' && <PaymentsTab token={token} />}
         {activeTab === 'Add-ons' && <AddonsTab eventId={null} token={token} />}
         {activeTab === 'Settings' && <SettingsTab user={user} token={token} />}
@@ -1539,7 +1539,7 @@ export default function Dashboard() {
         />
       )}
       {activeTab === 'Events' && <EventsTab token={token} />}
-      {activeTab === 'Backgrounds' && <BackgroundsTab token={token} />}
+      {activeTab === 'Backgrounds' && <BackgroundsTab />}
       {activeTab === 'Payments' && <PaymentsTab token={token} />}
       {activeTab === 'Add-ons' && <AddonsTab eventId={eventId} token={token} />}
       {activeTab === 'Settings' && <SettingsTab user={user} token={token} />}

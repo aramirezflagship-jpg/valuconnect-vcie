@@ -7,6 +7,7 @@ const CATEGORIES = [
   { id: 'quinceanera', label: 'Quinceañera · XV', icon: '🌸' },
   { id: 'corporate', label: 'Corporate · Corporativo', icon: '🏢' },
   { id: 'birthday', label: 'Birthday · Cumpleaños', icon: '🎂' },
+  { id: 'kids-birthday', label: "Kids' Birthday · Infantil", icon: '🧸' },
   { id: 'holiday', label: 'Holiday · Fiesta', icon: '🎄' },
   { id: 'fiesta', label: 'Fiesta · Party', icon: '🎉' },
 ];
