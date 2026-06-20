@@ -49,11 +49,16 @@ function merge(str, ctx) {
 }
 
 function brandWrap(inner) {
-  return `<!DOCTYPE html><html><body style="margin:0;background:#0d0d1a;font-family:system-ui,sans-serif;color:#f1f5f9;">
+  return `<!DOCTYPE html><html><body style="margin:0;background:#eef4fb;font-family:system-ui,sans-serif;color:#1e293b;">
     <div style="max-width:560px;margin:0 auto;padding:1.5rem 1rem;">
-      <div style="text-align:center;margin-bottom:1.25rem;"><span style="font-size:1.8rem;font-weight:800;color:#a855f7;">⚡ Flash-it</span></div>
-      <div style="font-size:1rem;line-height:1.6;color:#e2e8f0;text-align:center;">${inner}</div>
-      <p style="text-align:center;font-size:.72rem;color:#475569;margin-top:1.25rem;">Flash-it by ValuConnect Solutions</p>
+      <div style="position:relative;background:#ffffff;border-radius:14px;padding:2rem 1.5rem;box-shadow:0 4px 24px rgba(37,99,235,0.12);overflow:hidden;">
+        <div style="position:absolute;top:52%;left:50%;transform:translate(-50%,-50%);font-size:300px;line-height:1;color:rgba(37,99,235,0.06);pointer-events:none;z-index:0;">⚡</div>
+        <div style="position:relative;z-index:1;">
+          <div style="text-align:center;margin-bottom:1.25rem;"><span style="font-size:1.8rem;font-weight:800;color:#2563eb;">⚡ Flash-it</span></div>
+          <div style="font-size:1rem;line-height:1.6;color:#334155;text-align:center;">${inner}</div>
+          <p style="text-align:center;font-size:.72rem;color:#94a3b8;margin-top:1.25rem;">Flash-it by ValuConnect Solutions</p>
+        </div>
+      </div>
     </div></body></html>`;
 }
 

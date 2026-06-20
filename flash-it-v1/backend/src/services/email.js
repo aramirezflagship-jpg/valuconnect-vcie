@@ -90,7 +90,7 @@ async function sendPasswordResetEmail(to, resetUrl) {
 }
 
 /**
- * Bilingual, Andres-voice auto-reply sent to a Full Service LEAD the moment
+ * Bilingual, Valu-voice auto-reply sent to a Full Service LEAD the moment
  * they submit the "Request Full Service" form. This is a transactional
  * acknowledgement (the person just gave us their email expecting contact) — it
  * confirms receipt, sets a 24h expectation, and recaps what they sent so it
@@ -119,8 +119,8 @@ async function sendLeadAutoReply(lead) {
     lead.location ? [es ? 'Lugar' : 'Location', lead.location] : null,
   ].filter(Boolean);
   const recapHtml = recap.length
-    ? `<table style="margin:0 auto 1.25rem;border-collapse:collapse;font-size:.9rem;color:#cbd5e1;">${recap
-        .map(([k, v]) => `<tr><td style="padding:.2rem .75rem .2rem 0;color:#94a3b8;">${k}:</td><td style="padding:.2rem 0;font-weight:600;">${v}</td></tr>`)
+    ? `<table style="margin:0 auto 1.25rem;border-collapse:collapse;font-size:.9rem;color:#334155;">${recap
+        .map(([k, v]) => `<tr><td style="padding:.2rem .75rem .2rem 0;color:#64748b;">${k}:</td><td style="padding:.2rem 0;font-weight:600;">${v}</td></tr>`)
         .join('')}</table>`
     : '';
 
@@ -128,32 +128,37 @@ async function sendLeadAutoReply(lead) {
     ? {
         subject: `¡Gracias ${firstName}! Recibí tu solicitud de Flash-it 🎉`,
         h1: `¡Gracias por escribirme, ${firstName}!`,
-        p1: 'Soy Andres, de Flash-it (ValuConnect Solutions). Recibí tu solicitud y la reviso personalmente.',
+        p1: 'Soy Valu, de Flash-it (ValuConnect Solutions). Recibí tu solicitud y la reviso personalmente.',
         p2: 'Te contactaré dentro de las próximas <b>24 horas</b> con los siguientes pasos para tu evento. Si es urgente, simplemente responde a este correo.',
         recapTitle: 'Esto fue lo que me enviaste:',
-        signoff: '¡Hablamos pronto!<br/>— Andres, Flash-it',
+        signoff: '¡Hablamos pronto!<br/>— Valu, Flash-it',
       }
     : {
         subject: `Thanks ${firstName} — I got your Flash-it request 🎉`,
         h1: `Thanks for reaching out, ${firstName}!`,
-        p1: "I'm Andres, from Flash-it (ValuConnect Solutions). Your request came through and I review every one personally.",
+        p1: "I'm Valu, from Flash-it (ValuConnect Solutions). Your request came through and I review every one personally.",
         p2: "I'll get back to you within the next <b>24 hours</b> with the next steps for your event. If it's urgent, just reply to this email.",
         recapTitle: "Here's what you sent me:",
-        signoff: 'Talk soon!<br/>— Andres, Flash-it',
+        signoff: 'Talk soon!<br/>— Valu, Flash-it',
       };
 
   const html = `
-    <!DOCTYPE html><html><body style="margin:0;padding:0;background:#0d0d1a;font-family:system-ui,sans-serif;color:#f1f5f9;">
+    <!DOCTYPE html><html><body style="margin:0;padding:0;background:#eef4fb;font-family:system-ui,'Segoe UI',sans-serif;color:#1e293b;">
     <div style="max-width:560px;margin:0 auto;padding:2rem 1rem;">
-      <div style="text-align:center;margin-bottom:1.5rem;">
-        <span style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">⚡ Flash-it</span>
+      <div style="position:relative;background:#ffffff;border-radius:16px;padding:2.5rem 2rem;box-shadow:0 4px 24px rgba(37,99,235,0.12);overflow:hidden;">
+        <div style="position:absolute;top:52%;left:50%;transform:translate(-50%,-50%);font-size:340px;line-height:1;color:rgba(37,99,235,0.06);pointer-events:none;z-index:0;">⚡</div>
+        <div style="position:relative;z-index:1;">
+          <div style="text-align:center;margin-bottom:1.5rem;">
+            <span style="font-size:2rem;font-weight:800;color:#2563eb;">⚡ Flash-it</span>
+          </div>
+          <h1 style="font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:.75rem;color:#1e293b;">${copy.h1}</h1>
+          <p style="text-align:center;color:#334155;margin-bottom:1rem;line-height:1.6;">${copy.p1}</p>
+          <p style="text-align:center;color:#334155;margin-bottom:1.5rem;line-height:1.6;">${copy.p2}</p>
+          ${recapHtml ? `<p style="text-align:center;color:#64748b;font-size:.85rem;margin-bottom:.4rem;">${copy.recapTitle}</p>${recapHtml}` : ''}
+          <p style="text-align:center;color:#1e293b;margin-top:1rem;line-height:1.6;">${copy.signoff}</p>
+          <p style="text-align:center;font-size:.75rem;color:#94a3b8;margin-top:1.75rem;">Flash-it by ValuConnect Solutions</p>
+        </div>
       </div>
-      <h1 style="font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:.75rem;">${copy.h1}</h1>
-      <p style="text-align:center;color:#cbd5e1;margin-bottom:1rem;line-height:1.6;">${copy.p1}</p>
-      <p style="text-align:center;color:#cbd5e1;margin-bottom:1.5rem;line-height:1.6;">${copy.p2}</p>
-      ${recapHtml ? `<p style="text-align:center;color:#94a3b8;font-size:.85rem;margin-bottom:.4rem;">${copy.recapTitle}</p>${recapHtml}` : ''}
-      <p style="text-align:center;color:#f1f5f9;margin-top:1rem;line-height:1.6;">${copy.signoff}</p>
-      <p style="text-align:center;font-size:.75rem;color:#475569;margin-top:1.5rem;">Flash-it by ValuConnect Solutions</p>
     </div></body></html>
   `;
 
