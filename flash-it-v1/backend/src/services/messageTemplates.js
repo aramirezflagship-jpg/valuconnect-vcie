@@ -94,6 +94,76 @@ const DEFAULTS = [
   },
 ];
 
+// ── Starter templates seeded INTO the database (distinct from code DEFAULTS) ──
+// These are inserted as real, editable/deletable rows in message_templates on
+// boot (idempotent: only if a row with the same key doesn't already exist).
+const STARTERS = [
+  {
+    key: 'booking-confirmation',
+    name: 'Booking — Confirmed',
+    channel: 'email',
+    category: 'transactional',
+    subjectEn: "You're booked, {{firstName}}! Flash-it is confirmed 🎉",
+    subjectEs: '¡Listo, {{firstName}}! Tu Flash-it está confirmado 🎉',
+    bodyEn:
+      '<p>Great news — your Flash-it booth for your {{eventType}} on <b>{{eventDate}}</b> is confirmed!</p>' +
+      "<p>I'll be in touch before the day with setup details. If anything changes, just reply to this email.</p>" +
+      "<p>Can't wait!<br/>— Andres, Flash-it</p>",
+    bodyEs:
+      '<p>¡Buenas noticias! Tu cabina Flash-it para tu {{eventType}} el <b>{{eventDate}}</b> está confirmada.</p>' +
+      '<p>Te contactaré antes del día con los detalles de instalación. Si algo cambia, solo responde a este correo.</p>' +
+      '<p>¡Con muchas ganas!<br/>— Andres, Flash-it</p>',
+  },
+  {
+    key: 'event-reminder',
+    name: 'Event — Reminder',
+    channel: 'email',
+    category: 'lifecycle',
+    subjectEn: 'Your Flash-it event is almost here, {{firstName}}! 📸',
+    subjectEs: '¡Tu evento Flash-it ya casi llega, {{firstName}}! 📸',
+    bodyEn:
+      '<p>Just a friendly reminder that your {{eventType}} is coming up on <b>{{eventDate}}</b>, and Flash-it will be there to capture the fun.</p>' +
+      '<p>If you have any last-minute questions about location ({{location}}) or setup, reply anytime.</p>' +
+      '<p>See you soon!<br/>— Andres, Flash-it</p>',
+    bodyEs:
+      '<p>Solo un recordatorio amistoso de que tu {{eventType}} se acerca el <b>{{eventDate}}</b>, y Flash-it estará ahí para capturar la diversión.</p>' +
+      '<p>Si tienes preguntas de última hora sobre el lugar ({{location}}) o la instalación, respóndeme cuando quieras.</p>' +
+      '<p>¡Nos vemos pronto!<br/>— Andres, Flash-it</p>',
+  },
+  {
+    key: 'referral-ask',
+    name: 'Marketing — Refer a friend',
+    channel: 'email',
+    category: 'marketing',
+    subjectEn: 'Know someone planning a party, {{firstName}}? 🎉',
+    subjectEs: '¿Conoces a alguien planeando una fiesta, {{firstName}}? 🎉',
+    bodyEn:
+      "<p>If you enjoyed Flash-it at your {{eventType}}, I'd be so grateful if you'd share us with friends or family planning their own celebration.</p>" +
+      "<p>Send them my way and you'll both get <b>{{offer}}</b> on your next booking. Just reply with their name and I'll take care of the rest.</p>" +
+      '<p>Thank you!<br/>— Andres, Flash-it</p>',
+    bodyEs:
+      '<p>Si disfrutaste Flash-it en tu {{eventType}}, te agradecería muchísimo que nos recomendaras a amigos o familiares que estén planeando su propia celebración.</p>' +
+      '<p>Mándalos conmigo y ambos recibirán <b>{{offer}}</b> en su próxima reserva. Solo responde con su nombre y yo me encargo del resto.</p>' +
+      '<p>¡Gracias!<br/>— Andres, Flash-it</p>',
+  },
+  {
+    key: 'quince-season-promo',
+    name: 'Marketing — Quinceañera season',
+    channel: 'email',
+    category: 'marketing',
+    subjectEn: 'Quinceañera season is here, {{firstName}} 👑',
+    subjectEs: '¡Llegó la temporada de quinceañeras, {{firstName}}! 👑',
+    bodyEn:
+      '<p>Quinceañera season is one of my favorite times of the year. If you or someone you love is planning a special celebration, Flash-it makes the memories unforgettable — themed backgrounds, instant photos, the works.</p>' +
+      "<p>Book this season and enjoy <b>{{offer}}</b>. Reply and let's make it magical.</p>" +
+      '<p>— Andres, Flash-it</p>',
+    bodyEs:
+      '<p>La temporada de quinceañeras es una de mis épocas favoritas del año. Si tú o alguien que quieres está planeando una celebración especial, Flash-it hace los recuerdos inolvidables — fondos temáticos, fotos al instante, todo.</p>' +
+      '<p>Reserva esta temporada y disfruta <b>{{offer}}</b>. Responde y hagámoslo mágico.</p>' +
+      '<p>— Andres, Flash-it</p>',
+  },
+];
+
 // ── Placeholder merge ─────────────────────────────────────────────────────────
 /**
  * Replace {{placeholders}} from ctx. Unknown placeholders render empty.
@@ -324,10 +394,46 @@ async function deleteTemplate(id) {
   return (count || 0) > 0;
 }
 
+/**
+ * Seed the STARTERS into the database as real, editable rows. Idempotent:
+ * skips any key that already exists. No-op (returns []) when Supabase is
+ * unconfigured or the table doesn't exist yet (migration 0004 not applied).
+ * @returns {Promise<string[]>} keys inserted this run
+ */
+async function seedStarterTemplates() {
+  if (!(useSupabase && supabase)) return null; // can't use the DB at all
+  const seeded = [];
+  for (const t of STARTERS) {
+    try {
+      const { data: existing, error: selErr } = await supabase
+        .from('message_templates')
+        .select('id')
+        .eq('key', t.key)
+        .maybeSingle();
+      if (selErr) throw selErr;
+      if (existing) continue; // already present — leave admin edits untouched
+      const { error: insErr } = await supabase.from('message_templates').insert(_recordToRow({ id: uuidv4(), active: true, ...t }));
+      if (insErr) throw insErr;
+      seeded.push(t.key);
+    } catch (err) {
+      // Table missing (migration 0004 not applied) → signal "retry later" (null)
+      // so a lazy caller tries again once the table exists.
+      if (/does not exist|message_templates|schema cache/i.test(err.message)) {
+        console.warn('[messageTemplates] seedStarterTemplates deferred — message_templates table not found (apply 0004).');
+        return null;
+      }
+      console.warn(`[messageTemplates] seedStarterTemplates: '${t.key}' skipped — ${err.message}`);
+    }
+  }
+  return seeded; // array (possibly empty) once the table exists
+}
+
 module.exports = {
   CHANNELS,
   CATEGORIES,
   DEFAULTS,
+  STARTERS,
+  seedStarterTemplates,
   merge,
   wrapEmail,
   contextFor,

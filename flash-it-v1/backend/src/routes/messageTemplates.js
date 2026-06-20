@@ -23,8 +23,18 @@ const { sendText } = require('../services/delivery');
 const router = express.Router();
 router.use(adminAuth);
 
+// Lazily seed the starter templates the first time the table is reachable, so
+// they appear as soon as migration 0004 is applied (no redeploy needed). Retries
+// on each list until it succeeds (seedStarterTemplates returns null while the
+// table is missing), then stops.
+let _seedDone = false;
+
 router.get('/', async (_req, res, next) => {
   try {
+    if (!_seedDone) {
+      const r = await mt.seedStarterTemplates();
+      if (r !== null) _seedDone = true; // table existed (seeded or already present)
+    }
     const templates = await mt.listTemplates();
     res.json({ templates, count: templates.length });
   } catch (err) { next(err); }

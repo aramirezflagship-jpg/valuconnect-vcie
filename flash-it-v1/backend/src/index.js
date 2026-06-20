@@ -147,6 +147,13 @@ seedPresetFrames()
   .then((ids) => console.log(`[flash-it] seeded ${ids.length} preset frame(s): ${ids.join(', ')}`))
   .catch((err) => console.error('[flash-it] seedPresetFrames failed:', err.message));
 
+// Seed starter customer-message templates into the DB (needs migration 0004;
+// no-op until then). These are real, editable rows beyond the code defaults.
+const { seedStarterTemplates } = require('./services/messageTemplates');
+seedStarterTemplates()
+  .then((keys) => keys && keys.length && console.log(`[flash-it] seeded ${keys.length} message template(s): ${keys.join(', ')}`))
+  .catch((err) => console.error('[flash-it] seedStarterTemplates failed:', err.message));
+
 app.listen(PORT, () => {
   console.log(`[flash-it] Backend running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
 });
