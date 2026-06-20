@@ -6,6 +6,7 @@ import AdminBackgrounds from '../components/admin/AdminBackgrounds.jsx';
 import AdminMetrics from '../components/admin/AdminMetrics.jsx';
 import AdminFullService from '../components/admin/AdminFullService.jsx';
 import AdminCustomers from '../components/admin/AdminCustomers.jsx';
+import AdminMessageTemplates from '../components/admin/AdminMessageTemplates.jsx';
 import { serviceTypeBadge } from '../components/admin/adminStyles.js';
 import { getAdminMetrics } from '../utils/api.js';
 
@@ -159,9 +160,9 @@ export default function Admin() {
 
       {/* Nav tabs */}
       <nav style={S.nav}>
-        {['overview', 'events', 'full-service', 'customers', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
+        {['overview', 'events', 'full-service', 'customers', 'messages', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
           <button key={t} style={S.tab(tab === t)} onClick={() => setTab(t)}>
-            {{ overview: 'Overview', events: 'Events', 'full-service': 'Full Service', customers: 'Customers', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
+            {{ overview: 'Overview', events: 'Events', 'full-service': 'Full Service', customers: 'Customers', messages: 'Messages', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
             {t === 'full-service' && newLeadsCount > 0 && (
               <span style={{
                 marginLeft: '.4rem', background: 'rgba(234,179,8,0.18)', color: '#fbbf24',
@@ -225,6 +226,9 @@ export default function Admin() {
         {tab === 'customers' && !dataLoading && (
           <AdminCustomers />
         )}
+
+        {/* Messages — bilingual email/SMS templates (self-contained CRM) */}
+        {tab === 'messages' && <AdminMessageTemplates />}
 
         {/* Analytics — platform charts + per-event delivery breakdown */}
         {tab === 'analytics' && !dataLoading && (

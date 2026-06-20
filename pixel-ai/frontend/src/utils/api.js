@@ -486,6 +486,62 @@ export async function getAdminCustomers() {
   return data;
 }
 
+// ── Admin: customer message templates (self-contained CRM messaging) ──────────
+// Bilingual email/SMS templates the admin manages and sends. Built-in defaults
+// always exist; edits persist as overrides. All gated by x-admin-secret.
+
+const MT_BASE = '/api/admin/message-templates';
+
+/** List templates (built-in defaults + admin overrides/customs). */
+export async function getMessageTemplates() {
+  const { data } = await api.get(MT_BASE, { headers: adminSecretHeader() });
+  return data; // { templates, count }
+}
+
+/** Create a custom template. */
+export async function createMessageTemplate(payload) {
+  const { data } = await api.post(MT_BASE, payload, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' },
+  });
+  return data;
+}
+
+/** Update a template (editing a built-in default promotes it to an override). */
+export async function updateMessageTemplate(id, patch) {
+  const { data } = await api.patch(`${MT_BASE}/${encodeURIComponent(id)}`, patch, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' },
+  });
+  return data;
+}
+
+/** Delete a custom template (defaults can't be deleted). */
+export async function deleteMessageTemplate(id) {
+  const { data } = await api.delete(`${MT_BASE}/${encodeURIComponent(id)}`, {
+    headers: adminSecretHeader(),
+  });
+  return data;
+}
+
+/** Preview a template merged with sample contact data + language. */
+export async function previewMessageTemplate(id, { lang = 'en', contact = {}, extra = {} } = {}) {
+  const { data } = await api.post(
+    `${MT_BASE}/${encodeURIComponent(id)}/preview`,
+    { lang, contact, extra },
+    { headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' } }
+  );
+  return data; // { channel, subject?, html?, text?, lang }
+}
+
+/** Send a template to a recipient (email address or phone). */
+export async function sendMessageTemplate(id, { to, lang = 'en', contact = {}, extra = {} }) {
+  const { data } = await api.post(
+    `${MT_BASE}/${encodeURIComponent(id)}/send`,
+    { to, lang, contact, extra },
+    { headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' } }
+  );
+  return data; // { channel, to, sent, notConfigured, message }
+}
+
 // ── Two-mode capture (natural frame · character face-in-hole) ─────────────────
 
 /**
