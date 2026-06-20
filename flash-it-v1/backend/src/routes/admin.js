@@ -1,6 +1,8 @@
 'use strict';
 
 const express = require('express');
+const crypto = require('crypto');
+const localAuth = require('../services/localAuth');
 const { adminAuth } = require('../middleware/auth');
 // Use the db abstraction so admin views work in BOTH stores (jsonStore when
 // SUPABASE_* is unset, Supabase when configured) with identical record shapes.
@@ -203,6 +205,70 @@ router.get('/launch-status', async (_req, res, next) => {
   try {
     const { getLaunchStatus } = require('../services/launchStatus');
     return res.json(await getLaunchStatus());
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── Customer account management (admin) ───────────────────────────────────────
+const _safeUser = (u) => (u ? { id: u.id, email: u.email, name: u.name, role: u.role } : null);
+
+/**
+ * POST /api/admin/customers
+ * Create a customer account. Body: { email, name?, password?, role? }. When no
+ * password is given a temporary one is generated and returned for the admin to
+ * share (the customer can change it via Forgot password).
+ */
+router.post('/customers', async (req, res, next) => {
+  try {
+    const { email, name, password, role } = req.body || {};
+    if (!email) return res.status(400).json({ error: 'email is required.' });
+    const normalized = String(email).toLowerCase().trim();
+    const existing = await localAuth.getUserByEmail(normalized);
+    if (existing) return res.status(409).json({ error: 'An account with that email already exists.' });
+
+    const provided = password && String(password).length >= 6;
+    const pw = provided ? password : crypto.randomBytes(9).toString('base64url');
+    const user = await localAuth.createUser(normalized, pw, name || normalized.split('@')[0], role === 'admin' ? 'admin' : 'customer');
+    return res.status(201).json({ user: _safeUser(user), tempPassword: provided ? undefined : pw });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PATCH /api/admin/customers/:id
+ * Update a customer's name and/or role. Body: { name?, role? }.
+ */
+router.patch('/customers/:id', async (req, res, next) => {
+  try {
+    const { name, role } = req.body || {};
+    const fields = {};
+    if (name !== undefined) fields.name = name;
+    if (role !== undefined) fields.role = role === 'admin' ? 'admin' : 'customer';
+    if (Object.keys(fields).length === 0) return res.status(400).json({ error: 'Nothing to update (send name and/or role).' });
+
+    const updated = await localAuth.updateUser(req.params.id, fields);
+    if (!updated) return res.status(404).json({ error: 'Customer not found.' });
+    return res.json({ user: _safeUser(updated) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/admin/customers/:id/reset-password
+ * Set a customer's password. Body: { password? } — if omitted, a temporary
+ * password is generated and returned so the admin can share it.
+ */
+router.post('/customers/:id/reset-password', async (req, res, next) => {
+  try {
+    const { password } = req.body || {};
+    const provided = password && String(password).length >= 6;
+    const pw = provided ? password : crypto.randomBytes(9).toString('base64url');
+    const updated = await localAuth.updateUserPassword(req.params.id, pw);
+    if (!updated) return res.status(404).json({ error: 'Customer not found.' });
+    return res.json({ success: true, tempPassword: provided ? undefined : pw });
   } catch (err) {
     next(err);
   }

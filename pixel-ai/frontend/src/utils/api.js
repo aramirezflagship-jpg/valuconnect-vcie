@@ -494,6 +494,32 @@ export async function getLaunchStatus() {
   return data;
 }
 
+/** Admin: create a customer account. Returns { user, tempPassword? }. */
+export async function adminCreateCustomer(payload) {
+  const { data } = await api.post('/api/admin/customers', payload, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' },
+  });
+  return data;
+}
+
+/** Admin: update a customer's name/role. */
+export async function adminUpdateCustomer(id, patch) {
+  const { data } = await api.patch(`/api/admin/customers/${encodeURIComponent(id)}`, patch, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' },
+  });
+  return data;
+}
+
+/** Admin: reset a customer's password (returns { tempPassword } if generated). */
+export async function adminResetCustomerPassword(id, password) {
+  const { data } = await api.post(
+    `/api/admin/customers/${encodeURIComponent(id)}/reset-password`,
+    password ? { password } : {},
+    { headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' } }
+  );
+  return data;
+}
+
 // ── Admin: customer message templates (self-contained CRM messaging) ──────────
 // Bilingual email/SMS templates the admin manages and sends. Built-in defaults
 // always exist; edits persist as overrides. All gated by x-admin-secret.
