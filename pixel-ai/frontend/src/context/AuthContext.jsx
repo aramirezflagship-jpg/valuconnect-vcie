@@ -11,13 +11,40 @@ const LOCAL_USER_KEY = 'flash_it_user';
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 async function apiPost(path, body) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  if (!res.ok) throw Object.assign(new Error(data.error || 'Request failed'), { status: res.status });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    // Network failure / CORS / DNS — fetch itself rejected.
+    throw new Error('Could not reach the server. Check your connection and try again.');
+  }
+
+  // Read as text first so an empty or non-JSON body never throws a cryptic
+  // "Unexpected end of JSON input" (happens during a backend redeploy / cold
+  // start, when the server briefly returns an empty 502/503).
+  const text = await res.text();
+  let data = null;
+  if (text) {
+    try { data = JSON.parse(text); } catch { /* non-JSON body */ }
+  }
+
+  if (!res.ok) {
+    const msg =
+      (data && data.error) ||
+      (res.status >= 500
+        ? 'The server is starting up or temporarily unavailable. Please try again in a moment.'
+        : `Request failed (${res.status}).`);
+    throw Object.assign(new Error(msg), { status: res.status });
+  }
+
+  if (!data) {
+    // 2xx but empty/non-JSON — treat as a transient hiccup, prompt a retry.
+    throw new Error('The server returned an unexpected response. Please try again in a moment.');
+  }
   return data;
 }
 
