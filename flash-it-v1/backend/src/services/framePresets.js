@@ -35,7 +35,7 @@ const ALIASES = {
 };
 
 /** The categories we ship a real frame for. */
-const SLUGS = ['fiesta', 'wedding', 'quinceanera', 'birthday', 'kids-birthday'];
+const SLUGS = ['fiesta', 'wedding', 'quinceanera', 'birthday', 'kids-birthday', 'corporate', 'holiday'];
 
 /** Human labels (EN) for the seeded catalogue records. */
 const LABELS = {
@@ -44,6 +44,8 @@ const LABELS = {
   quinceanera: 'Quinceañera Frame',
   birthday: 'Birthday Frame',
   'kids-birthday': 'Kids Birthday Frame',
+  corporate: 'Corporate Frame',
+  holiday: 'Holiday Frame',
 };
 
 function _norm(category) {
@@ -255,12 +257,70 @@ function _svgKids() {
   </svg>`;
 }
 
+/** Mirror a top-left corner group to all four corners. */
+function _fourCorners(inner) {
+  return (
+    `<g>${inner}</g>` +
+    `<g transform="translate(${W},0) scale(-1,1)">${inner}</g>` +
+    `<g transform="translate(0,${H}) scale(1,-1)">${inner}</g>` +
+    `<g transform="translate(${W},${H}) scale(-1,-1)">${inner}</g>`
+  );
+}
+
+/** A simple 6-spoke snowflake at (cx,cy). */
+function _snowflake(cx, cy, r, color, width = 4) {
+  let spokes = '';
+  for (let i = 0; i < 6; i++) {
+    const a = (i * 60 * Math.PI) / 180;
+    const x2 = cx + r * Math.cos(a);
+    const y2 = cy + r * Math.sin(a);
+    spokes += `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
+    // little side ticks
+    const mx = cx + r * 0.6 * Math.cos(a);
+    const my = cy + r * 0.6 * Math.sin(a);
+    spokes += `<line x1="${mx.toFixed(1)}" y1="${my.toFixed(1)}" x2="${(mx + r * 0.22 * Math.cos(a + 0.9)).toFixed(1)}" y2="${(my + r * 0.22 * Math.sin(a + 0.9)).toFixed(1)}" stroke="${color}" stroke-width="${width * 0.7}" stroke-linecap="round"/>`;
+    spokes += `<line x1="${mx.toFixed(1)}" y1="${my.toFixed(1)}" x2="${(mx + r * 0.22 * Math.cos(a - 0.9)).toFixed(1)}" y2="${(my + r * 0.22 * Math.sin(a - 0.9)).toFixed(1)}" stroke="${color}" stroke-width="${width * 0.7}" stroke-linecap="round"/>`;
+  }
+  return `<g opacity="0.9">${spokes}</g>`;
+}
+
+function _svgCorporate() {
+  // Clean, professional: thin silver double border + minimal corner brackets.
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs>
+      <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#dfe6ef"/><stop offset="50%" stop-color="#9fb0c4"/><stop offset="100%" stop-color="#5d7a9a"/>
+      </linearGradient>
+    </defs>
+    ${_border('url(#cg)', '#c7d0db', { outerW: 14, innerW: 3, rx: 16, gap: 16, opacity: 0.95 })}
+    ${_fourCorners(`<path d="M 80 200 L 80 80 L 200 80" stroke="#c7d0db" stroke-width="7" fill="none" stroke-linecap="square"/><rect x="92" y="92" width="14" height="14" fill="#9fb0c4"/>`)}
+  </svg>`;
+}
+
+function _svgHoliday() {
+  // Festive gold border with red/green/gold stars + snowflakes in the corners.
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs>
+      <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#e6b800"/><stop offset="50%" stop-color="#b3122b"/><stop offset="100%" stop-color="#0f7a3d"/>
+      </linearGradient>
+    </defs>
+    ${_border('url(#hg)', '#f3e6c8', { outerW: 30, innerW: 5 })}
+    ${_fourCorners(_snowflake(150, 150, 60, '#f3e6c8', 5) + _star(250, 120, 18, '#e6b800') + _star(120, 250, 16, '#b3122b'))}
+    ${_star(W / 2, 120, 22, '#e6b800')}
+    ${_star(W / 2 - 90, 140, 13, '#0f7a3d')}
+    ${_star(W / 2 + 90, 140, 13, '#b3122b')}
+  </svg>`;
+}
+
 const _BUILDERS = {
   fiesta: _svgFiesta,
   wedding: _svgWedding,
   quinceanera: _svgQuince,
   birthday: _svgBirthday,
   'kids-birthday': _svgKids,
+  corporate: _svgCorporate,
+  holiday: _svgHoliday,
 };
 
 const _cache = new Map();
