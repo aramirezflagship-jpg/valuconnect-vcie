@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../services/db');
+const { sendLeadAutoReply } = require('../services/email');
 
 const router = express.Router();
 
@@ -154,9 +155,15 @@ router.post('/', async (req, res) => {
     _saveToJsonStore(request);
   }
 
-  // Send email notification (non-fatal)
+  // Notify Andres internally (non-fatal)
   _sendNotificationEmail(request).catch((err) => {
     console.warn('[contact] Unexpected email error:', err.message);
+  });
+
+  // Auto-reply to the LEAD — bilingual, Andres-voice acknowledgement so no one
+  // who reaches out hears nothing back (non-fatal, transactional).
+  sendLeadAutoReply(request).catch((err) => {
+    console.warn('[contact] Lead auto-reply failed:', err.message);
   });
 
   return res.status(201).json({
