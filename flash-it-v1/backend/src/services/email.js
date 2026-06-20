@@ -161,4 +161,21 @@ async function sendLeadAutoReply(lead) {
   return { sent: true };
 }
 
-module.exports = { sendPhotoEmail, sendPasswordResetEmail, sendLeadAutoReply };
+/**
+ * Send a generic email (used by the admin message-template sender). Caller
+ * supplies the full subject + HTML (already brand-wrapped if desired).
+ * @param {{to:string, subject:string, html:string, replyTo?:string}} msg
+ * @returns {Promise<{sent:boolean}|{skipped:boolean}>}
+ */
+async function sendEmail({ to, subject, html, replyTo }) {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.warn('[email] SENDGRID_API_KEY not set — skipping sendEmail');
+    return { skipped: true };
+  }
+  if (!to) return { skipped: true };
+  const from = process.env.SENDGRID_FROM_EMAIL || 'photos@flash-it.app';
+  await sgMail.send({ to, from, replyTo: replyTo || process.env.LEAD_REPLY_TO || 'info@vcsolutions.us', subject: subject || '', html: html || '' });
+  return { sent: true };
+}
+
+module.exports = { sendPhotoEmail, sendPasswordResetEmail, sendLeadAutoReply, sendEmail };

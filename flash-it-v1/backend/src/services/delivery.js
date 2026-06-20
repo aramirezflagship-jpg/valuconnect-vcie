@@ -112,4 +112,26 @@ function _whatsappBody(photoUrl, eventName) {
   );
 }
 
-module.exports = { sendSMS, sendWhatsApp };
+/**
+ * Send an arbitrary SMS text (used by the admin message-template sender).
+ * NOTE: live promotional SMS requires A2P 10DLC registration on the Twilio
+ * number. Gated on Twilio config; returns {success:false} when unconfigured.
+ * @param {string} phone
+ * @param {string} body
+ * @returns {Promise<{success:boolean, messageId:string|null, channel:'sms', error?:string}>}
+ */
+async function sendText(phone, body) {
+  const client = _getClient();
+  const from = process.env.TWILIO_PHONE_NUMBER;
+  if (!client || !from) {
+    console.warn('[delivery] Twilio not configured — text not sent');
+    return { success: false, messageId: null, channel: 'sms', error: 'Twilio not configured' };
+  }
+  if (!phone) return { success: false, messageId: null, channel: 'sms', error: 'No phone number' };
+  const to = _toE164(phone);
+  const message = await client.messages.create({ from, to, body: String(body || '') });
+  console.log(`[delivery] text sent to ${to} — SID: ${message.sid}`);
+  return { success: true, messageId: message.sid, channel: 'sms' };
+}
+
+module.exports = { sendSMS, sendWhatsApp, sendText };

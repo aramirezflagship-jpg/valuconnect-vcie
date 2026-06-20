@@ -5,7 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../services/db');
-const { sendLeadAutoReply } = require('../services/email');
+const { sendEmail, sendLeadAutoReply } = require('../services/email');
+const mt = require('../services/messageTemplates');
 
 const router = express.Router();
 
@@ -160,11 +161,22 @@ router.post('/', async (req, res) => {
     console.warn('[contact] Unexpected email error:', err.message);
   });
 
-  // Auto-reply to the LEAD — bilingual, Andres-voice acknowledgement so no one
-  // who reaches out hears nothing back (non-fatal, transactional).
-  sendLeadAutoReply(request).catch((err) => {
-    console.warn('[contact] Lead auto-reply failed:', err.message);
-  });
+  // Auto-reply to the LEAD using the admin-editable 'lead-welcome' template, so
+  // editing it in /admin changes this message. Falls back to the built-in copy
+  // if the template can't be resolved (non-fatal, transactional).
+  (async () => {
+    try {
+      const tpl = await mt.getByKey('lead-welcome');
+      if (tpl) {
+        const out = mt.render(tpl, { lang: request.lang || 'en', context: mt.contextFor(request) });
+        await sendEmail({ to: request.email, subject: out.subject, html: out.html });
+      } else {
+        await sendLeadAutoReply(request);
+      }
+    } catch (err) {
+      console.warn('[contact] Lead auto-reply failed:', err.message);
+    }
+  })();
 
   return res.status(201).json({
     id: request.id,

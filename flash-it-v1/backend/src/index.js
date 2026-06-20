@@ -22,6 +22,7 @@ const printRouter = require('./routes/print');
 const stripsRouter    = require('./routes/strips');
 const templatesRouter = require('./routes/templates');
 const backgroundsRouter = require('./routes/backgrounds');
+const messageTemplatesRouter = require('./routes/messageTemplates');
 const framesRouter    = require('./routes/frames');
 const videosRouter    = require('./routes/videos');
 const contactRouter   = require('./routes/contact');
@@ -83,6 +84,7 @@ app.get('/gallery', (_req, res) => {
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/capture', captureRouter);
 app.use('/api/events', eventsRouter);
+app.use('/api/admin/message-templates', messageTemplatesRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/push', pushRouter);
