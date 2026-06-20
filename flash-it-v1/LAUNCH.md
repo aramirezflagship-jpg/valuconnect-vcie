@@ -59,10 +59,15 @@ Full Service = you run the booth; you can **invoice** (no Stripe needed yet).
 ---
 
 ## Phase 4 — Solo self-serve launch (public, recurring revenue)
-- ⬜ **[You] Stripe account** + create products/prices for the Solo tiers; provide the
-  keys (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, price IDs).
-- ⬜ **[Me] Wire Stripe Checkout end-to-end** (tiers → checkout → webhook → event
-  creation) and verify with a Stripe test key.
+- ✅ **Stripe is code-complete** — Checkout, webhook (→ event + account + invoice PDF +
+  email), customer portal, and payment history are all built (`routes/payments.js`).
+  Tiers are inline (`price_data`), so **no Stripe product setup needed**. Plans:
+  Starter $39 · Party $79 · Celebration $149 · Brand $299.
+- ⬜ **[You] Add Stripe keys in Render:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`.
+- ⬜ **[You] Add the webhook in Stripe Dashboard** → Developers → Webhooks → endpoint
+  `https://flash-it-backend-akf5.onrender.com/api/payments/webhook`, event
+  `checkout.session.completed` → copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+- ⬜ **[You+Me] Smoke-test** with a Stripe **test** key end-to-end before going live.
 - ⬜ **[You+Me] Custom domain** (e.g. `app.flashit…`) on Vercel + backend URL; update
   `FRONTEND_URL` / `VITE_API_URL` / CORS. Drop the `*.vercel.app` / `*.onrender.com`
   / `@flash-it.app` placeholders.
@@ -72,7 +77,9 @@ Full Service = you run the booth; you can **invoice** (no Stripe needed yet).
 ---
 
 ## Phase 5 — Polish (right after launch)
-- ⬜ **[Me] Error monitoring (Sentry)** + uptime/alerting (gated on `SENTRY_DSN`).
+- ✅ **Error monitoring (Sentry) built** — captures backend 500s. ⬜ **[You] set
+  `SENTRY_DSN`** in Render to turn it on (no-op until then). Optional:
+  `SENTRY_TRACES_SAMPLE_RATE`. ⬜ add uptime/alerting (e.g. a Render/UptimeRobot ping).
 - ⬜ **[You+Me] On-site printing** tested end-to-end (if you offer prints) — print
   queue + print-agent + hardware.
 - ⬜ **[You] Supabase backups** enabled + a data-retention/deletion runbook (ties to

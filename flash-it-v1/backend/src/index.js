@@ -2,6 +2,25 @@
 
 require('dotenv').config();
 
+// ── Error monitoring (Sentry) — gated on SENTRY_DSN, no-op otherwise ──────────
+// Initialised as early as possible. Lazy-required in try/catch so a missing
+// package or bad DSN can never crash the server.
+let Sentry = null;
+if (process.env.SENTRY_DSN) {
+  try {
+    Sentry = require('@sentry/node');
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      environment: process.env.NODE_ENV || 'development',
+      tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE || 0),
+    });
+    console.log('[flash-it] Sentry error tracking enabled');
+  } catch (e) {
+    console.warn('[flash-it] SENTRY_DSN set but Sentry unavailable:', e.message);
+    Sentry = null;
+  }
+}
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -129,6 +148,7 @@ app.use((err, _req, res, _next) => {
 
   if (status >= 500) {
     console.error('[ERROR]', err);
+    if (Sentry) Sentry.captureException(err);
   }
 
   res.status(status).json({ error: message });
