@@ -57,7 +57,7 @@ export default function LegalPage({ doc }) {
           </span>
         </div>
 
-        <h1 style={styles.title}>{t(doc.titleKey, lang)}</h1>
+        <h1 style={styles.title}>{doc.title ? doc.title[lang] : t(doc.titleKey, lang)}</h1>
 
         {doc.meta && <p style={styles.meta}>{doc.meta[lang]}</p>}
 
@@ -92,6 +92,9 @@ export default function LegalPage({ doc }) {
             </Link>
             <Link to="/photo-consent" style={styles.footerLink}>
               {t('legal.photo.title', lang)}
+            </Link>
+            <Link to="/refund" style={styles.footerLink}>
+              {lang === 'es' ? 'Reembolsos' : 'Refunds'}
             </Link>
           </div>
         </div>

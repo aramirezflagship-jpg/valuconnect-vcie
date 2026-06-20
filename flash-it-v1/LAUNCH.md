@@ -7,6 +7,39 @@ Claude can do), or **[External]** (third party — start these EARLY, they're sl
 
 Legend: ✅ done · ⬜ to do
 
+> **Live status:** the **/admin → 🚀 Launch** tab auto-checks config + data every time
+> you open it (no manual upkeep). This file is the plan + the steps behind each item.
+
+---
+
+## 🗓️ 3-Week Launch Plan — target **Saturday, July 11, 2026**
+
+**Week 1 — Jun 20 → Jun 27 · "Unblock the long poles + config"**
+- **Day 1 (today):** start the slow items — submit **A2P 10DLC** (Twilio) and engage the
+  **attorney**; do the 2-minute config: apply migrations `0003` + `0004`, set
+  `JWT_SECRET` in Render. *(see Phase 0 + comms runbook)*
+- Verify a **SendGrid sender**; send yourself a test from /admin → Messages.
+- Fill the **legal `[PLACEHOLDERS]`** + **refund policy** terms (send Claude the values).
+- Claude builds **admin management** (create/edit customer, reset password, edit/cancel
+  event, products editor).
+
+**Week 2 — Jun 28 → Jul 4 · "Payments, content, first dry-run"**
+- Add **Stripe** keys + webhook in Render; smoke-test checkout with a test key.
+- Upload at least one **Character** template per key theme (Natural frames already ship).
+- **iPad dry-run #1**: full guest flow → photo delivered by QR + email.
+- Turn on **Sentry** (`SENTRY_DSN`).
+
+**Week 3 — Jul 5 → Jul 11 · "Approval, final rehearsal, go-live"**
+- **A2P 10DLC** approval expected → set Twilio vars; test SMS delivery.
+- **Final iPad dry-run at a mock event** (camera, face-api, delivery, all modes).
+- Legal finalized (attorney sign-off). Confirm **/admin → Launch** shows 0 blockers.
+- **Go-live: run your first paid Full Service event.** Open Solo self-serve once Stripe is verified.
+
+*Slipping? A2P approval is the most likely cause — it's external. If it's late, launch
+**Full Service with email + QR delivery** on Jul 11 and enable SMS when A2P clears.*
+
+---
+
 ---
 
 ## Phase 0 — 2-minute config (do these first)

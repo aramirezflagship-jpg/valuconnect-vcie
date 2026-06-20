@@ -280,9 +280,70 @@ export const PHOTO = {
   ],
 };
 
+export const REFUND = {
+  title: { en: 'Refund Policy', es: 'Política de Reembolso' },
+  source: 'legal/refund-policy.md',
+  meta: {
+    en: 'Operator: ValuConnect Solutions · Product: Flash-it · Contact: [SUPPORT EMAIL] · Effective Date: [EFFECTIVE DATE]. DRAFT — confirm the bracketed terms and have counsel review before relying on it.',
+    es: 'Operador: ValuConnect Solutions · Producto: Flash-it · Contacto: [CORREO DE SOPORTE] · Fecha de vigencia: [FECHA]. BORRADOR — confirma los términos entre corchetes y consulta a un abogado antes de usarlo.',
+  },
+  sections: [
+    {
+      heading: { en: '1. Overview', es: '1. Generalidades' },
+      body: {
+        en: "We want you to be happy with Flash-it. This policy explains when and how refunds are issued for our two product lines: Solo (self-serve) packages and Full Service (managed) event bookings. By purchasing, you agree to this policy together with our Terms of Service.",
+        es: 'Queremos que estés contento(a) con Flash-it. Esta política explica cuándo y cómo se emiten reembolsos para nuestras dos líneas: paquetes Solo (autoservicio) y reservas de Servicio Completo (gestionado). Al comprar, aceptas esta política junto con nuestros Términos.',
+      },
+    },
+    {
+      heading: { en: '2. Solo / Self-Serve packages', es: '2. Paquetes Solo / Autoservicio' },
+      body: {
+        en: "Solo packages are digital event credits activated on purchase. You may request a full refund within [REFUND WINDOW, e.g. 14 days] of purchase as long as the event has not been activated and no photos have been captured. Once an event has been used (photos captured) the package is considered consumed and is non-refundable, except where required by law.",
+        es: 'Los paquetes Solo son créditos digitales que se activan al comprar. Puedes pedir un reembolso completo dentro de [VENTANA, p. ej. 14 días] de la compra siempre que el evento no se haya activado y no se hayan capturado fotos. Una vez usado el evento (fotos capturadas), el paquete se considera consumido y no es reembolsable, salvo que la ley exija lo contrario.',
+      },
+    },
+    {
+      heading: { en: '3. Full Service (managed) bookings', es: '3. Reservas de Servicio Completo' },
+      body: {
+        en: "Full Service bookings may require a deposit of [DEPOSIT %] to reserve your date. Deposits are refundable if you cancel at least [CANCELLATION NOTICE, e.g. 14 days] before the event; cancellations inside that window forfeit the deposit because the date was held for you. The remaining balance is refundable up to [BALANCE WINDOW] before the event. If we ever fail to deliver the service we committed to, you receive a full refund of amounts paid for that event.",
+        es: 'Las reservas de Servicio Completo pueden requerir un depósito de [DEPÓSITO %] para apartar tu fecha. Los depósitos son reembolsables si cancelas al menos [AVISO, p. ej. 14 días] antes del evento; las cancelaciones dentro de ese plazo pierden el depósito porque la fecha se reservó para ti. El saldo restante es reembolsable hasta [VENTANA] antes del evento. Si no entregamos el servicio acordado, recibes el reembolso completo de lo pagado por ese evento.',
+      },
+    },
+    {
+      heading: { en: '4. How to request a refund', es: '4. Cómo solicitar un reembolso' },
+      body: {
+        en: 'Email [SUPPORT EMAIL] with your name, the email used to purchase, and your order/event details. We respond within [RESPONSE TIME, e.g. 2 business days].',
+        es: 'Escribe a [CORREO DE SOPORTE] con tu nombre, el correo usado para comprar y los detalles de tu orden/evento. Respondemos dentro de [TIEMPO, p. ej. 2 días hábiles].',
+      },
+    },
+    {
+      heading: { en: '5. Non-refundable items', es: '5. No reembolsable' },
+      body: {
+        en: 'Used/consumed events, custom design work already delivered, and any third-party fees (e.g. SMS charges already incurred) are non-refundable.',
+        es: 'Eventos usados/consumidos, trabajo de diseño personalizado ya entregado y tarifas de terceros (p. ej. mensajes SMS ya enviados) no son reembolsables.',
+      },
+    },
+    {
+      heading: { en: '6. How refunds are issued', es: '6. Cómo se emiten' },
+      body: {
+        en: 'Approved refunds are returned to the original payment method via Stripe, typically within [PROCESSING TIME, e.g. 5–10 business days] depending on your bank.',
+        es: 'Los reembolsos aprobados se devuelven al método de pago original vía Stripe, normalmente dentro de [TIEMPO, p. ej. 5–10 días hábiles] según tu banco.',
+      },
+    },
+    {
+      heading: { en: '7. Disputes', es: '7. Disputas' },
+      body: {
+        en: 'Please contact us first at [SUPPORT EMAIL] before opening a card dispute — we can almost always resolve it faster directly. This policy does not limit any rights you have under applicable consumer-protection law.',
+        es: 'Por favor contáctanos primero en [CORREO DE SOPORTE] antes de abrir una disputa con tu tarjeta — casi siempre lo resolvemos más rápido directamente. Esta política no limita los derechos que tengas bajo las leyes de protección al consumidor aplicables.',
+      },
+    },
+  ],
+};
+
 export const LEGAL_DOCS = {
   terms: TERMS,
   privacy: PRIVACY,
   marketing: MARKETING,
   photo: PHOTO,
+  refund: REFUND,
 };

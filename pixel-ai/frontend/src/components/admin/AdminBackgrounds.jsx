@@ -406,16 +406,38 @@ function CatalogueGrid({ backgrounds, loading, onDelete }) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
+function HelpBanner({ count }) {
+  return (
+    <div style={{
+      ...S.card,
+      background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.25)',
+      display: 'flex', gap: '.85rem', alignItems: 'flex-start',
+    }}>
+      <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>💡</span>
+      <div style={{ fontSize: '.82rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+        <b style={{ color: '#f1f5f9' }}>How backgrounds work.</b> Your guests pick from this shared
+        catalogue — they never upload. <b style={{ color: '#4ade80' }}>{count} template{count === 1 ? '' : 's'} are already here</b>
+        {' '}(7 themed <b>Natural</b> frames ship by default, so Natural mode works right now — no setup).
+        <br />
+        To add your own: <b>📤 Manual Upload</b> a PNG, or <b>✨ AI Generate</b> one (needs Gemini billing).
+        <b> 🖼️ Natural</b> = a frame/border laid over the photo. <b>🦸 Character</b> = face-in-the-hole
+        artwork (upload art with a solid face circle; we punch the hole).
+      </div>
+    </div>
+  );
+}
+
 export default function AdminBackgrounds() {
-  const [category, setCategory] = useState('wedding');
+  const [filterCategory, setFilterCategory] = useState(''); // '' = ALL categories
   const [modeFilter, setModeFilter] = useState(''); // '' = all, 'natural', 'character'
+  const [createCategory, setCreateCategory] = useState('fiesta'); // where new templates go
   const [backgrounds, setBackgrounds] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async (cat, m) => {
     setLoading(true);
     try {
-      const data = await getBackgrounds(cat, m || undefined);
+      const data = await getBackgrounds(cat || undefined, m || undefined);
       setBackgrounds(Array.isArray(data?.backgrounds) ? data.backgrounds : []);
     } catch (err) {
       console.error('[AdminBackgrounds]', err);
@@ -426,10 +448,10 @@ export default function AdminBackgrounds() {
   }, []);
 
   useEffect(() => {
-    load(category, modeFilter);
-  }, [category, modeFilter, load]);
+    load(filterCategory, modeFilter);
+  }, [filterCategory, modeFilter, load]);
 
-  const reload = useCallback(() => load(category, modeFilter), [load, category, modeFilter]);
+  const reload = useCallback(() => load(filterCategory, modeFilter), [load, filterCategory, modeFilter]);
 
   const handleDelete = useCallback(async (bg) => {
     if (!window.confirm(`Delete "${bg.name}"? This can't be undone.`)) return;
@@ -441,6 +463,10 @@ export default function AdminBackgrounds() {
     }
   }, []);
 
+  const filterLabel = filterCategory
+    ? CATEGORIES.find((c) => c.id === filterCategory)?.label
+    : 'All categories';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div>
@@ -450,34 +476,46 @@ export default function AdminBackgrounds() {
         </p>
       </div>
 
-      {/* Category + mode filters */}
-      <div style={{ ...S.card, display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'flex-end' }}>
-        <div style={{ flex: '1 1 240px' }}>
-          <label style={S.label}>Category</label>
-          <CategorySelect value={category} onChange={setCategory} />
+      <HelpBanner count={backgrounds.length} />
+
+      {/* STEP 1 — Add a template (manual upload + AI generate), with its own category */}
+      <div style={{ ...S.card }}>
+        <h3 style={{ ...S.subTitle, marginTop: 0 }}>STEP 1 · ADD A TEMPLATE</h3>
+        <div style={{ marginBottom: '1rem', maxWidth: 320 }}>
+          <label style={S.label}>Category for the new template</label>
+          <CategorySelect value={createCategory} onChange={setCreateCategory} />
         </div>
-        <div style={{ flex: '1 1 200px' }}>
-          <label style={S.label}>Mode</label>
-          <select style={S.input} value={modeFilter} onChange={(e) => setModeFilter(e.target.value)}>
-            <option value="">All modes</option>
-            <option value="natural">Natural only</option>
-            <option value="character">Character only</option>
-          </select>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem', alignItems: 'start' }}>
+          <ManualUpload category={createCategory} onUploaded={reload} />
+          <AiGenerate category={createCategory} onGenerated={reload} />
         </div>
       </div>
 
-      {/* Create — manual upload + AI generate side by side */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', alignItems: 'start' }}>
-        <ManualUpload category={category} onUploaded={reload} />
-        <AiGenerate category={category} onGenerated={reload} />
-      </div>
-
-      {/* Catalogue */}
-      <div>
-        <h3 style={{ ...S.subTitle }}>
-          GLOBAL CATALOGUE — {CATEGORIES.find((c) => c.id === category)?.label}
-          {modeFilter ? ` · ${modeFilter}` : ''}
-        </h3>
+      {/* STEP 2 — Browse the catalogue (filter by category/mode; defaults to ALL) */}
+      <div style={{ ...S.card }}>
+        <h3 style={{ ...S.subTitle, marginTop: 0 }}>STEP 2 · BROWSE THE CATALOGUE</h3>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'flex-end', marginBottom: '1.25rem' }}>
+          <div style={{ flex: '1 1 240px' }}>
+            <label style={S.label}>Show category</label>
+            <select style={S.input} value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+              <option value="">🗂️ All categories</option>
+              {CATEGORIES.map((c) => (
+                <option key={c.id} value={c.id}>{c.icon} {c.label}</option>
+              ))}
+            </select>
+          </div>
+          <div style={{ flex: '1 1 200px' }}>
+            <label style={S.label}>Mode</label>
+            <select style={S.input} value={modeFilter} onChange={(e) => setModeFilter(e.target.value)}>
+              <option value="">All modes</option>
+              <option value="natural">Natural only</option>
+              <option value="character">Character only</option>
+            </select>
+          </div>
+        </div>
+        <h4 style={{ fontSize: '.72rem', fontWeight: 700, color: '#64748b', letterSpacing: '.04em', margin: '0 0 .75rem' }}>
+          {filterLabel?.toUpperCase()}{modeFilter ? ` · ${modeFilter.toUpperCase()}` : ''} · {backgrounds.length} TEMPLATE{backgrounds.length === 1 ? '' : 'S'}
+        </h4>
         <CatalogueGrid backgrounds={backgrounds} loading={loading} onDelete={handleDelete} />
       </div>
     </div>

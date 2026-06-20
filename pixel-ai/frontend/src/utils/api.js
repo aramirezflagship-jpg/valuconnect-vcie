@@ -486,6 +486,14 @@ export async function getAdminCustomers() {
   return data;
 }
 
+/** Admin: auto-detected launch-readiness (config + data + checklist). */
+export async function getLaunchStatus() {
+  const { data } = await api.get('/api/admin/launch-status', {
+    headers: adminSecretHeader(),
+  });
+  return data;
+}
+
 // ── Admin: customer message templates (self-contained CRM messaging) ──────────
 // Bilingual email/SMS templates the admin manages and sends. Built-in defaults
 // always exist; edits persist as overrides. All gated by x-admin-secret.

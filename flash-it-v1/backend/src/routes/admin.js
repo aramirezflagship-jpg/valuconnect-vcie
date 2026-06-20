@@ -196,6 +196,19 @@ router.get('/customers', async (_req, res, next) => {
 });
 
 /**
+ * GET /api/admin/launch-status
+ * Auto-detected launch-readiness (config + data) for the admin Launch panel.
+ */
+router.get('/launch-status', async (_req, res, next) => {
+  try {
+    const { getLaunchStatus } = require('../services/launchStatus');
+    return res.json(await getLaunchStatus());
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * Estimate processing cost in USD for N photos.
  * Based on approximate public pricing as of mid-2024:
  *   - Remove.bg:  $0.10 / image (HD)

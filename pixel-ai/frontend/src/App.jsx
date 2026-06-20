@@ -17,6 +17,7 @@ import Terms from './pages/legal/Terms.jsx';
 import Privacy from './pages/legal/Privacy.jsx';
 import MarketingConsent from './pages/legal/MarketingConsent.jsx';
 import PhotoConsent from './pages/legal/PhotoConsent.jsx';
+import Refund from './pages/legal/Refund.jsx';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/marketing-consent" element={<MarketingConsent />} />
       <Route path="/photo-consent" element={<PhotoConsent />} />
+      <Route path="/refund" element={<Refund />} />
 
       {/* Host pages */}
       <Route path="/login" element={<Login />} />
