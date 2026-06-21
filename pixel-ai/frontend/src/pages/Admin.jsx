@@ -8,6 +8,7 @@ import AdminFullService from '../components/admin/AdminFullService.jsx';
 import AdminCustomers from '../components/admin/AdminCustomers.jsx';
 import AdminMessageTemplates from '../components/admin/AdminMessageTemplates.jsx';
 import AdminLaunch from '../components/admin/AdminLaunch.jsx';
+import AdminProducts from '../components/admin/AdminProducts.jsx';
 import { serviceTypeBadge } from '../components/admin/adminStyles.js';
 import { getAdminMetrics } from '../utils/api.js';
 
@@ -161,9 +162,9 @@ export default function Admin() {
 
       {/* Nav tabs */}
       <nav style={S.nav}>
-        {['overview', 'launch', 'events', 'full-service', 'customers', 'messages', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
+        {['overview', 'launch', 'events', 'full-service', 'customers', 'messages', 'products', 'analytics', 'create-event', 'templates', 'backgrounds'].map((t) => (
           <button key={t} style={S.tab(tab === t)} onClick={() => setTab(t)}>
-            {{ overview: 'Overview', launch: '🚀 Launch', events: 'Events', 'full-service': 'Full Service', customers: 'Customers', messages: 'Messages', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
+            {{ overview: 'Overview', launch: '🚀 Launch', events: 'Events', 'full-service': 'Full Service', customers: 'Customers', messages: 'Messages', products: 'Products', analytics: 'Analytics', 'create-event': '+ New Event', templates: 'Templates', backgrounds: 'Backgrounds' }[t]}
             {t === 'full-service' && newLeadsCount > 0 && (
               <span style={{
                 marginLeft: '.4rem', background: 'rgba(234,179,8,0.18)', color: '#fbbf24',
@@ -233,6 +234,9 @@ export default function Admin() {
 
         {/* Messages — bilingual email/SMS templates (self-contained CRM) */}
         {tab === 'messages' && <AdminMessageTemplates />}
+
+        {/* Products — Solo plan catalogue (read-only view) */}
+        {tab === 'products' && <AdminProducts />}
 
         {/* Analytics — platform charts + per-event delivery breakdown */}
         {tab === 'analytics' && !dataLoading && (

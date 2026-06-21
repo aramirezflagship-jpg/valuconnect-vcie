@@ -210,6 +210,25 @@ router.get('/launch-status', async (_req, res, next) => {
   }
 });
 
+/**
+ * GET /api/admin/products
+ * The Solo plan catalogue (read-only view of services/plans.js). Editing
+ * prices/limits will persist once a `plans` table is added (future migration).
+ */
+router.get('/products', (_req, res) => {
+  const { PLANS } = require('../services/plans');
+  const products = Object.entries(PLANS).map(([key, p]) => ({
+    key,
+    label: p.label,
+    price: p.price,
+    maxGuests: p.max_guests,
+    smsCredits: p.sms_credits_limit,
+    expiresDays: p.expires_days,
+    themes: p.themes === null ? 'all' : (p.themes || []).length,
+  }));
+  return res.json({ products, editable: false });
+});
+
 // ── Customer account management (admin) ───────────────────────────────────────
 const _safeUser = (u) => (u ? { id: u.id, email: u.email, name: u.name, role: u.role } : null);
 

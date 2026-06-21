@@ -494,6 +494,12 @@ export async function getLaunchStatus() {
   return data;
 }
 
+/** Admin: the Solo plan catalogue (read-only for now). */
+export async function getAdminProducts() {
+  const { data } = await api.get('/api/admin/products', { headers: adminSecretHeader() });
+  return data;
+}
+
 /** Admin: create a customer account. Returns { user, tempPassword? }. */
 export async function adminCreateCustomer(payload) {
   const { data } = await api.post('/api/admin/customers', payload, {
