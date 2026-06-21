@@ -17,6 +17,10 @@ export default function LegalFooter({ lang = 'en' }) {
       <Link to="/privacy" style={styles.link}>
         {t('footer.privacy', lang)}
       </Link>
+      <span style={styles.dot}>·</span>
+      <Link to="/refund" style={styles.link}>
+        {lang === 'es' ? 'Reembolsos' : 'Refunds'}
+      </Link>
     </footer>
   );
 }

@@ -38,7 +38,8 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 }
 
 // ── Plan catalogue (single source of truth in services/plans.js) ──────────────
-const { PLANS } = require('../services/plans');
+// Merged code defaults + admin overrides; reads are synchronous off the cache.
+const plans = require('../services/plans');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -355,9 +356,9 @@ router.post('/checkout', async (req, res, next) => {
 
     const { plan, customerEmail, eventName, eventDate } = req.body;
 
-    if (!plan || !PLANS[plan]) {
+    if (!plan || !plans.isValidPlan(plan)) {
       return res.status(400).json({
-        error: `Invalid plan. Must be one of: ${Object.keys(PLANS).join(', ')}.`,
+        error: `Invalid plan. Must be one of: ${plans.planKeys().join(', ')}.`,
       });
     }
     if (!customerEmail) {
@@ -367,7 +368,7 @@ router.post('/checkout', async (req, res, next) => {
       return res.status(400).json({ error: 'eventName is required.' });
     }
 
-    const planConfig = PLANS[plan];
+    const planConfig = plans.getPlan(plan);
     const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3001').split(',')[0].trim();
 
     const session = await stripe.checkout.sessions.create({
@@ -444,12 +445,12 @@ router.post(
       const session = event.data.object;
       const { plan, customerEmail, eventName, eventDate } = session.metadata || {};
 
-      if (!plan || !PLANS[plan]) {
+      if (!plan || !plans.isValidPlan(plan)) {
         console.error('[payments/webhook] Unknown plan in session metadata:', plan);
         return res.sendStatus(200);
       }
 
-      const planConfig = PLANS[plan];
+      const planConfig = plans.getPlan(plan);
 
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + planConfig.expires_days);

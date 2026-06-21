@@ -212,12 +212,14 @@ router.get('/launch-status', async (_req, res, next) => {
 
 /**
  * GET /api/admin/products
- * The Solo plan catalogue (read-only view of services/plans.js). Editing
- * prices/limits will persist once a `plans` table is added (future migration).
+ * The Solo plan catalogue (code defaults + admin overrides). `editable` is true
+ * once Supabase is configured; persisting an edit also needs the plans table
+ * (migration 0005) — the PATCH route reports that clearly if it's missing.
  */
 router.get('/products', (_req, res) => {
-  const { PLANS } = require('../services/plans');
-  const products = Object.entries(PLANS).map(([key, p]) => ({
+  const plans = require('../services/plans');
+  const all = plans.getAllPlans();
+  const products = Object.entries(all).map(([key, p]) => ({
     key,
     label: p.label,
     price: p.price,
@@ -226,7 +228,43 @@ router.get('/products', (_req, res) => {
     expiresDays: p.expires_days,
     themes: p.themes === null ? 'all' : (p.themes || []).length,
   }));
-  return res.json({ products, editable: false });
+  return res.json({ products, editable: plans.overridesEnabled() });
+});
+
+/**
+ * PATCH /api/admin/products/:key
+ * Override a plan's price/limits/label. Body may include price, maxGuests,
+ * smsCredits, expiresDays, label. Persists to the plans table (409 if 0005
+ * hasn't been applied).
+ */
+router.patch('/products/:key', async (req, res, next) => {
+  try {
+    const plans = require('../services/plans');
+    const b = req.body || {};
+    const patch = {};
+    if (b.price !== undefined) patch.price = b.price;
+    if (b.maxGuests !== undefined) patch.max_guests = b.maxGuests;
+    if (b.smsCredits !== undefined) patch.sms_credits_limit = b.smsCredits;
+    if (b.expiresDays !== undefined) patch.expires_days = b.expiresDays;
+    if (b.label !== undefined) patch.label = b.label;
+    if (Object.keys(patch).length === 0) return res.status(400).json({ error: 'Nothing to update.' });
+
+    const updated = await plans.setOverride(req.params.key, patch);
+    return res.json({
+      product: {
+        key: req.params.key,
+        label: updated.label,
+        price: updated.price,
+        maxGuests: updated.max_guests,
+        smsCredits: updated.sms_credits_limit,
+        expiresDays: updated.expires_days,
+      },
+    });
+  } catch (err) {
+    if (err.status === 404) return res.status(404).json({ error: err.message });
+    if (err.status === 409) return res.status(409).json({ error: err.message });
+    next(err);
+  }
 });
 
 // ── Customer account management (admin) ───────────────────────────────────────

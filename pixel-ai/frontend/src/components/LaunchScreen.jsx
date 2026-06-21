@@ -56,6 +56,7 @@ const LABELS = {
     needHelp: 'Need More Help?',
     terms: 'Terms',
     privacy: 'Privacy',
+    refunds: 'Refunds',
     enterCode: 'Enter Event Code',
     enterCodePlaceholder: 'e.g. wedding2025',
     goBtn: 'Go →',
@@ -97,6 +98,7 @@ const LABELS = {
     needHelp: '¿Necesitas más ayuda?',
     terms: 'Términos',
     privacy: 'Privacidad',
+    refunds: 'Reembolsos',
     enterCode: 'Código del Evento',
     enterCodePlaceholder: 'ej. boda2025',
     goBtn: 'Ir →',
@@ -867,6 +869,21 @@ export default function LaunchScreen() {
               onMouseLeave={(e) => (e.currentTarget.style.color = C.muted)}
             >
               {L.privacy}
+            </Link>
+            <span style={{ color: C.border, fontSize: 16 }}>|</span>
+            <Link
+              to="/refund"
+              style={{
+                color: C.muted,
+                textDecoration: 'none',
+                fontSize: 13,
+                fontWeight: 500,
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = C.sky)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = C.muted)}
+            >
+              {L.refunds}
             </Link>
           </motion.div>
         </motion.div>

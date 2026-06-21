@@ -494,9 +494,17 @@ export async function getLaunchStatus() {
   return data;
 }
 
-/** Admin: the Solo plan catalogue (read-only for now). */
+/** Admin: the Solo plan catalogue (code defaults + overrides). */
 export async function getAdminProducts() {
   const { data } = await api.get('/api/admin/products', { headers: adminSecretHeader() });
+  return data;
+}
+
+/** Admin: override a plan's price/limits/label. */
+export async function patchAdminProduct(key, patch) {
+  const { data } = await api.patch(`/api/admin/products/${encodeURIComponent(key)}`, patch, {
+    headers: { ...adminSecretHeader(), 'Content-Type': 'application/json' },
+  });
   return data;
 }
 

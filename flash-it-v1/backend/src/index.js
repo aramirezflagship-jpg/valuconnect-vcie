@@ -174,6 +174,9 @@ seedStarterTemplates()
   .then((keys) => keys && keys.length && console.log(`[flash-it] seeded ${keys.length} message template(s): ${keys.join(', ')}`))
   .catch((err) => console.error('[flash-it] seedStarterTemplates failed:', err.message));
 
+// Warm the plan-override cache (no-op until migration 0005 adds the plans table).
+require('./services/plans').refreshOverrides().catch(() => {});
+
 app.listen(PORT, () => {
   console.log(`[flash-it] Backend running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
 });
