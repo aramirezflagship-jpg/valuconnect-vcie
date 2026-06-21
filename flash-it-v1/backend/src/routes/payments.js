@@ -265,7 +265,7 @@ async function _sendConfirmationEmail({ customerEmail, eventName, eventCode, pla
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <div class="step-text">Snap a photo — our AI removes the background, applies your chosen theme, and delivers the result by SMS in seconds.</div>
+          <div class="step-text">Snap a photo — we apply your chosen themed frame and deliver it by text, email, or QR in seconds.</div>
         </div>
       </div>
       <p style="color:#6b7280;font-size:13px;">Your invoice is attached to this email. If you have any questions, reply here or email <a href="mailto:support@flash-it.app">support@flash-it.app</a>.</p>

@@ -189,7 +189,7 @@ export default function Admin() {
               RECENT EVENTS
             </h3>
             <div style={S.card}>
-              <EventTable events={events.slice(0, 8)} authHeaders={authHeaders} />
+              <EventTable events={events.slice(0, 8)} authHeaders={authHeaders} onChanged={loadData} />
             </div>
           </>
         )}
@@ -213,7 +213,7 @@ export default function Admin() {
               </button>
             </div>
             <div style={S.card}>
-              <EventTable events={events} authHeaders={authHeaders} />
+              <EventTable events={events} authHeaders={authHeaders} onChanged={loadData} />
             </div>
           </>
         )}
@@ -277,8 +277,37 @@ function StatCard({ label, value, accent = '#f1f5f9' }) {
   );
 }
 
-function EventTable({ events, authHeaders }) {
+function EventTable({ events, authHeaders, onChanged }) {
   const [copiedId, setCopiedId] = useState(null);
+
+  async function patchEvent(id, body) {
+    const res = await fetch(`/api/events/${id}`, { method: 'PATCH', headers: authHeaders(), body: JSON.stringify(body) });
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error || `Update failed (${res.status})`);
+    }
+    return res.json();
+  }
+  async function editName(ev) {
+    const name = window.prompt('Event name:', ev.name || ev.eventName || '');
+    if (name === null) return;
+    try { await patchEvent(ev.id, { name: name.trim() }); onChanged && onChanged(); }
+    catch (e) { alert(e.message); }
+  }
+  async function toggleCancel(ev) {
+    const cancel = ev.status !== 'cancelled';
+    if (!window.confirm(cancel ? `Cancel "${ev.name || ev.eventName}"? Guests can't capture while it's cancelled.` : `Re-activate "${ev.name || ev.eventName}"?`)) return;
+    try { await patchEvent(ev.id, { status: cancel ? 'cancelled' : 'active' }); onChanged && onChanged(); }
+    catch (e) { alert(e.message); }
+  }
+  async function extend(ev) {
+    const d = window.prompt('Extend until (YYYY-MM-DD):', '');
+    if (!d) return;
+    const ts = Date.parse(`${d}T23:59:59`);
+    if (Number.isNaN(ts)) { alert('Please enter a valid date like 2026-08-15.'); return; }
+    try { await patchEvent(ev.id, { expires_at: new Date(ts).toISOString() }); onChanged && onChanged(); }
+    catch (e) { alert(e.message); }
+  }
 
   function copyVirtualBoothUrl(code, evId) {
     const url = `${window.location.origin}/v/${code}`;
@@ -388,6 +417,10 @@ function EventTable({ events, authHeaders }) {
                 </td>
                 <td style={{ ...S.td, whiteSpace: 'nowrap' }}>
                   <div style={{ display: 'flex', gap: '.4rem', alignItems: 'center' }}>
+                    {/* Manage: edit name · extend · cancel/activate */}
+                    <button onClick={() => editName(ev)} title="Edit name" style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 6, padding: '.25rem .45rem', fontSize: '.8rem', cursor: 'pointer', lineHeight: 1 }}>✏️</button>
+                    <button onClick={() => extend(ev)} title="Extend expiry" style={{ background: 'rgba(234,179,8,0.12)', color: '#fbbf24', border: '1px solid rgba(234,179,8,0.25)', borderRadius: 6, padding: '.25rem .45rem', fontSize: '.8rem', cursor: 'pointer', lineHeight: 1 }}>🗓️</button>
+                    <button onClick={() => toggleCancel(ev)} title={ev.status === 'cancelled' ? 'Re-activate' : 'Cancel'} style={{ background: ev.status === 'cancelled' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)', color: ev.status === 'cancelled' ? '#4ade80' : '#f87171', border: `1px solid ${ev.status === 'cancelled' ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`, borderRadius: 6, padding: '.25rem .45rem', fontSize: '.8rem', cursor: 'pointer', lineHeight: 1 }}>{ev.status === 'cancelled' ? '▶' : '✕'}</button>
                     {/* Export Guests CSV */}
                     {ev.id && (
                       <a
