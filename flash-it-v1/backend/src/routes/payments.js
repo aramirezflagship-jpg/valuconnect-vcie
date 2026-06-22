@@ -369,11 +369,19 @@ router.post('/checkout', async (req, res, next) => {
     }
 
     const planConfig = plans.getPlan(plan);
+
+    // Full Service (managed) packages are booked by request + invoice, not via
+    // self-serve checkout. Guard against selling them online by accident.
+    if (planConfig.serviceType === 'managed') {
+      return res.status(400).json({ error: 'Full Service plans are booked by request, not self-serve checkout. Please use the Request Full Service form.' });
+    }
+
     const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3001').split(',')[0].trim();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
+      allow_promotion_codes: true, // customers can enter discount/promo codes (create them in Stripe)
       customer_email: customerEmail,
       line_items: [
         {

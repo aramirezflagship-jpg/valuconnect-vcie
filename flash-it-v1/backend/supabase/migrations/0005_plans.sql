@@ -14,8 +14,7 @@
 -- ============================================================================
 
 CREATE TABLE IF NOT EXISTS plans (
-  key                TEXT PRIMARY KEY            -- 'starter'|'party'|'celebration'|'brand'
-    CHECK (key IN ('starter', 'party', 'celebration', 'brand')),
+  key                TEXT PRIMARY KEY,           -- matches a plan key in services/plans.js (solo or managed)
   price              INTEGER,                    -- USD whole dollars
   max_guests         INTEGER,
   sms_credits_limit  INTEGER,

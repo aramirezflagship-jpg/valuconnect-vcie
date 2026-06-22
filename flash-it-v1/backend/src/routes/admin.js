@@ -222,6 +222,7 @@ router.get('/products', (_req, res) => {
   const products = Object.entries(all).map(([key, p]) => ({
     key,
     label: p.label,
+    serviceType: p.serviceType || 'solo',
     price: p.price,
     maxGuests: p.max_guests,
     smsCredits: p.sms_credits_limit,

@@ -106,19 +106,47 @@ export default function AdminProducts() {
   if (error) return <p style={{ color: '#f87171', fontSize: '.85rem' }}>{error}</p>;
   if (!products) return <p style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>Loading products…</p>;
 
+  const solo = products.filter((p) => (p.serviceType || 'solo') === 'solo');
+  const managed = products.filter((p) => p.serviceType === 'managed');
+
+  const Section = ({ title, subtitle, list }) =>
+    list.length === 0 ? null : (
+      <div style={{ marginBottom: '1.75rem' }}>
+        <h3 style={{ fontSize: '.85rem', fontWeight: 700, color: '#cbd5e1', margin: '0 0 .15rem' }}>{title}</h3>
+        <p style={{ fontSize: '.72rem', color: '#64748b', margin: '0 0 .8rem' }}>{subtitle}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+          {list.map((p) => <ProductCard key={p.key} p={p} editable={editable} onSaved={onSaved} />)}
+        </div>
+      </div>
+    );
+
   return (
     <div>
       <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', margin: '0 0 .25rem' }}>Products & Pricing</h2>
-      <p style={{ fontSize: '.78rem', color: '#64748b', margin: '0 0 1rem' }}>
-        The self-serve (Solo) plans your customers buy at checkout — these values are what Stripe charges live.
-        {editable
-          ? ' Edit a tier and Save; changes take effect immediately.'
-          : ' Editing turns on once Supabase is connected + migration 0005 is applied (until then these are the code defaults).'}
+      <p style={{ fontSize: '.78rem', color: '#64748b', margin: '0 0 1.25rem' }}>
+        The packages your customers pay for. {editable
+          ? 'Edit any tier and Save — changes take effect immediately (Stripe charges these for Solo).'
+          : 'Editing turns on once Supabase is connected + migration 0005 is applied (until then these are the code defaults).'}
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-        {products.map((p) => (
-          <ProductCard key={p.key} p={p} editable={editable} onSaved={onSaved} />
-        ))}
+
+      <Section
+        title="Solo · self-serve"
+        subtitle="Bought online via Stripe checkout. These exact prices are charged."
+        list={solo}
+      />
+      <Section
+        title="Full Service · managed"
+        subtitle="You run the booth — booked by request and invoiced (not self-serve checkout). Prices below are starting points; edit to your real pricing."
+        list={managed}
+      />
+
+      {/* Discounts how-to */}
+      <div style={{ background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.25)', borderRadius: 12, padding: '1rem 1.1rem', marginTop: '.5rem' }}>
+        <div style={{ fontSize: '.82rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '.35rem' }}>💸 How to apply discounts</div>
+        <ul style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '.78rem', color: '#94a3b8', lineHeight: 1.7 }}>
+          <li><b>Solo (online):</b> create a <b>promotion code</b> in Stripe → Dashboard → <i>Products → Coupons</i> (set % or $ off, expiry, usage limits). Customers enter it at checkout — the discount box is already enabled.</li>
+          <li><b>Full Service (invoiced):</b> apply the discount directly on the quote/invoice, or just edit the tier price here for a one-off.</li>
+        </ul>
       </div>
     </div>
   );

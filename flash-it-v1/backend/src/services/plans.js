@@ -15,10 +15,18 @@
 const supabase = require('./supabase');
 
 const DEFAULTS = {
-  starter:     { price: 39,  max_guests: 30,   sms_credits_limit: 30,  themes: ['galaxy'],                      expires_days: 7,   label: 'Starter' },
-  party:       { price: 79,  max_guests: 100,  sms_credits_limit: 100, themes: ['galaxy', 'jungle', 'sunset'], expires_days: 30,  label: 'Party' },
-  celebration: { price: 149, max_guests: null, sms_credits_limit: 200, themes: null,                           expires_days: 90,  label: 'Celebration' },
-  brand:       { price: 299, max_guests: null, sms_credits_limit: 500, themes: null,                           expires_days: 365, label: 'Brand' },
+  // ── Solo / self-serve (bought online via Stripe checkout) ──
+  starter:     { serviceType: 'solo', price: 39,  max_guests: 30,   sms_credits_limit: 30,  themes: ['galaxy'],                      expires_days: 7,   label: 'Starter' },
+  party:       { serviceType: 'solo', price: 79,  max_guests: 100,  sms_credits_limit: 100, themes: ['galaxy', 'jungle', 'sunset'], expires_days: 30,  label: 'Party' },
+  celebration: { serviceType: 'solo', price: 149, max_guests: null, sms_credits_limit: 200, themes: null,                           expires_days: 90,  label: 'Celebration' },
+  brand:       { serviceType: 'solo', price: 299, max_guests: null, sms_credits_limit: 500, themes: null,                           expires_days: 365, label: 'Brand' },
+
+  // ── Full Service / managed (Andres runs the booth; booked by request &
+  //    invoice/quote — NOT self-serve checkout). Prices are starting points;
+  //    edit them to your real pricing in the admin Products tab. ──
+  'fs-essential': { serviceType: 'managed', price: 499,  max_guests: 75,   sms_credits_limit: 75,  themes: null, expires_days: 1, label: 'Full Service — Essential' },
+  'fs-premium':   { serviceType: 'managed', price: 799,  max_guests: 150,  sms_credits_limit: 150, themes: null, expires_days: 1, label: 'Full Service — Premium' },
+  'fs-deluxe':    { serviceType: 'managed', price: 1199, max_guests: null, sms_credits_limit: 300, themes: null, expires_days: 1, label: 'Full Service — Deluxe' },
 };
 
 // Fields the admin may override (themes/structure stay code-controlled).
