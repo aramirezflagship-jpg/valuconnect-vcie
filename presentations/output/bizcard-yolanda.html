@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ValuConnect Business Card — Yolanda Ribeyro</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #94A3B8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── Print sheet ── */
+  .sheet {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 8mm auto;
+    padding: 15mm;
+    box-shadow: 0 4px 30px rgba(0,0,0,.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10mm;
+  }
+
+  .sheet-title {
+    font-size: 8pt;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  /* ── Card row ── */
+  .card-row {
+    display: flex;
+    gap: 8mm;
+    align-items: flex-start;
+  }
+
+  .card-row-label {
+    font-size: 6.5pt;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  .cards-wrap { display: flex; gap: 5mm; }
+
+  /* ── Business card base ── */
+  .card {
+    width: 90mm;
+    height: 55mm;
+    border-radius: 3mm;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0.5px #CBD5E0, 0 4px 16px rgba(0,0,0,.2);
+  }
+
+  /* ═══════════════════════════════
+     FRONT CARD
+  ═══════════════════════════════ */
+  .card-front {
+    background: linear-gradient(135deg, #1B3A5F 0%, #243E6E 55%, #1A3558 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* SVG bg sits behind everything */
+  .front-svg-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .front-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Top identity bar — frosted glass on blue texture */
+  .front-bar {
+    background: rgba(255,255,255,.1);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    padding: 1.8mm 4.5mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .front-brand {
+    font-size: 7pt;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: -.2px;
+    text-transform: uppercase;
+  }
+
+  .front-brand-dim {
+    font-weight: 500;
+    opacity: .55;
+  }
+
+  .front-bilingual-badge {
+    font-size: 5.5pt;
+    font-weight: 700;
+    color: rgba(255,255,255,.7);
+    letter-spacing: 1.2px;
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 0.5px 4px;
+    border-radius: 6px;
+  }
+
+  /* Body: avatar + info side by side */
+  .front-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 3mm 4.5mm;
+    gap: 4mm;
+  }
+
+  /* Initials circle */
+  .front-avatar {
+    width: 14mm;
+    height: 14mm;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,.08);
+  }
+
+  .front-avatar-text {
+    font-size: 7pt;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: -.3px;
+  }
+
+  /* Text info — all left-justified */
+  .front-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .8mm;
+    text-align: left;
+  }
+
+  .front-name {
+    font-size: 13pt;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1.05;
+    letter-spacing: -.4px;
+    text-align: left;
+  }
+
+  .front-title {
+    font-size: 6pt;
+    font-weight: 500;
+    color: rgba(255,255,255,.5);
+    line-height: 1.35;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-top: .5mm;
+    text-align: left;
+  }
+
+  .front-url {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-top: 1.5mm;
+    text-align: left;
+  }
+
+  .front-email {
+    font-size: 6pt;
+    font-weight: 400;
+    color: rgba(255,255,255,.45);
+    margin-top: .5mm;
+    text-align: left;
+  }
+
+  /* Bottom strip */
+  .front-bottom {
+    padding: 1.8mm 4.5mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,0,0,.28);
+    border-top: 1px solid rgba(255,255,255,.07);
+    flex-shrink: 0;
+  }
+
+  .front-pills { display: flex; gap: 2mm; }
+
+  .pill {
+    font-size: 5.5pt;
+    font-weight: 800;
+    padding: 1.5px 6px;
+    border-radius: 10px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+
+  .pill-vc4 {
+    background: rgba(15,118,110,.4);
+    color: #5EEAD4;
+    border: 1px solid rgba(94,234,212,.2);
+  }
+
+  .pill-flash {
+    background: rgba(37,99,235,.2);
+    color: #93C5FD;
+    border: 1px solid rgba(147,197,253,.18);
+  }
+
+  .front-mascot {
+    font-size: 5.5pt;
+    font-weight: 700;
+    color: rgba(255,255,255,.18);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════
+     BACK CARD
+  ═══════════════════════════════ */
+  .card-back {
+    background: #FAFAF8;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #E2E8F0;
+  }
+
+  /* Dark navy header — company name + products underneath */
+  .back-band {
+    background: #0D1B2A;
+    padding: 2.5mm 4.5mm 3mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+
+  .back-band-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5mm;
+    flex: 1;
+  }
+
+  .back-logo {
+    font-size: 8.5pt;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: -.2px;
+  }
+  .back-logo-accent { color: #93C5FD; }
+
+  /* Thin separator between logo row and products */
+  .back-divider {
+    height: 1px;
+    background: rgba(255,255,255,.15);
+    margin: .5mm 0;
+  }
+
+  /* Product pills — sit under the separator */
+  .back-products {
+    display: flex;
+    gap: 2mm;
+  }
+
+  .bp {
+    display: flex;
+    flex-direction: column;
+    gap: .3mm;
+    padding: 1.2mm 2mm;
+    border-radius: 1.5mm;
+  }
+
+  .bp-vc4   { background: rgba(15,118,110,.25); }
+  .bp-flash { background: rgba(37,99,235,.25); }
+
+  .bp-code {
+    font-size: 7pt;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .bp-vc4   .bp-code { color: #5EEAD4; }
+  .bp-flash .bp-code { color: #93C5FD; }
+
+  .bp-name {
+    font-size: 4.5pt;
+    font-weight: 500;
+    color: rgba(255,255,255,.4);
+    line-height: 1.2;
+  }
+
+  .back-tagline-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .5mm;
+    padding-top: .5mm;
+  }
+
+  .back-tag-en {
+    font-size: 5.5pt;
+    font-weight: 600;
+    color: rgba(255,255,255,.55);
+    font-style: italic;
+  }
+
+  .back-tag-es {
+    font-size: 5pt;
+    font-weight: 500;
+    color: rgba(255,255,255,.45);
+    font-style: italic;
+  }
+
+  /* QR code — right-aligned in the white body area */
+  .back-qr-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4mm;
+    padding: 2.5mm 4.5mm;
+  }
+
+  .qr-cta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+  }
+
+  .qr-cta-en {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #0D1B2A;
+    letter-spacing: -.1px;
+  }
+
+  .qr-cta-es {
+    font-size: 5.5pt;
+    font-weight: 500;
+    color: #64748B;
+    font-style: italic;
+  }
+
+  .qr-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5mm;
+    flex-shrink: 0;
+  }
+
+  .qr-wrap {
+    width: 20mm;
+    height: 20mm;
+    border-radius: 2mm;
+    overflow: hidden;
+  }
+
+  .qr-wrap svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .qr-label {
+    font-size: 5pt;
+    font-weight: 700;
+    color: #64748B;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+
+  /* Footer — navy, matches header */
+  .back-footer {
+    padding: 2mm 4.5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0D1B2A;
+    flex-shrink: 0;
+  }
+
+  .back-url {
+    font-size: 7.5pt;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: .2px;
+  }
+
+  .back-bilingual {
+    font-size: 5.5pt;
+    font-weight: 500;
+    color: rgba(255,255,255,.45);
+    font-style: italic;
+  }
+
+  /* ── Cut guide ── */
+  .cut-guide {
+    border: 1px dashed #CBD5E0;
+    border-radius: 3mm;
+    padding: 4mm;
+    margin-top: 2mm;
+  }
+
+  .cut-note {
+    font-size: 6pt;
+    color: #CBD5E0;
+    text-align: center;
+    margin-bottom: 3mm;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: white; }
+    .sheet { margin: 0; box-shadow: none; padding: 12mm; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="sheet-title">
+    ValuConnect Solutions · Business Card · Yolanda Ribeyro · Print &amp; Cut
+  </div>
+
+  <!-- FRONT cards -->
+  <div class="cut-guide">
+    <div class="cut-note">✂ Front of Card — print 2 copies or use as-is</div>
+    <div class="card-row">
+      <div class="card-row-label">Front</div>
+      <div class="cards-wrap">
+        
+    <div class="card card-front">
+
+      <!-- SVG background: grain texture + gold shimmer + V watermark + swoosh -->
+      <svg class="front-svg-bg" viewBox="0 0 270 165" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.72 0.58" numOctaves="4" seed="12" stitchTiles="stitch" result="noise"/>
+            <feColorMatrix type="matrix"
+              values="0 0 0 0 0.1  0 0 0 0 0.18  0 0 0 0 0.38  0 0 0 0.18 0"
+              in="noise" result="blueGrain"/>
+            <feBlend in="SourceGraphic" in2="blueGrain" mode="soft-light"/>
+          </filter>
+          <radialGradient id="goldShimmer" cx="25%" cy="25%" r="65%">
+            <stop offset="0%"   stop-color="#D4AF37" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Grain texture layer -->
+        <rect x="0" y="0" width="270" height="165" fill="transparent" filter="url(#grain)"/>
+        <!-- Very light gold shimmer top-left -->
+        <rect x="0" y="0" width="270" height="165" fill="url(#goldShimmer)"/>
+        <!-- Mascot "V" watermark -->
+        <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
+              fill="rgba(255,255,255,0.05)" text-anchor="middle">V</text>
+        <!-- Diagonal white swoosh — bottom right -->
+        <polygon points="168,165 270,72 270,165" fill="white" opacity="0.05"/>
+        <polygon points="210,165 270,112 270,165" fill="white" opacity="0.07"/>
+        <!-- Dot accents -->
+        <circle cx="237" cy="128" r="2.8" fill="white" opacity="0.07"/>
+        <circle cx="252" cy="114" r="1.8" fill="white" opacity="0.05"/>
+        <circle cx="261" cy="104" r="1.2" fill="white" opacity="0.04"/>
+      </svg>
+
+      <div class="front-inner">
+        <!-- Amber identity bar -->
+        <div class="front-bar">
+          <div class="front-brand">
+            VALU<span class="front-brand-dim">CONNECT</span>
+          </div>
+          <div class="front-bilingual-badge">EN · ES</div>
+        </div>
+
+        <!-- Body: avatar + info -->
+        <div class="front-body">
+          <div class="front-avatar">
+            <span class="front-avatar-text">YR</span>
+          </div>
+          <div class="front-info">
+            <div class="front-name">Yolanda Ribeyro</div>
+            <div class="front-title">Director of Sales & Marketing LATAM</div>
+            <div class="front-url">vcsolutions.us</div>
+            <div class="front-email">yolanda@vcsolutions.us</div>
+          </div>
+        </div>
+
+        <!-- Bottom: product pills + mascot mark -->
+        <div class="front-bottom">
+          <div class="front-pills">
+            <span class="pill pill-vc4">VC4</span>
+            <span class="pill pill-flash">Flash-It</span>
+          </div>
+          <div class="front-mascot">VALU ◆</div>
+        </div>
+      </div>
+
+    </div>
+        
+    <div class="card card-front">
+
+      <!-- SVG background: grain texture + gold shimmer + V watermark + swoosh -->
+      <svg class="front-svg-bg" viewBox="0 0 270 165" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.72 0.58" numOctaves="4" seed="12" stitchTiles="stitch" result="noise"/>
+            <feColorMatrix type="matrix"
+              values="0 0 0 0 0.1  0 0 0 0 0.18  0 0 0 0 0.38  0 0 0 0.18 0"
+              in="noise" result="blueGrain"/>
+            <feBlend in="SourceGraphic" in2="blueGrain" mode="soft-light"/>
+          </filter>
+          <radialGradient id="goldShimmer" cx="25%" cy="25%" r="65%">
+            <stop offset="0%"   stop-color="#D4AF37" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Grain texture layer -->
+        <rect x="0" y="0" width="270" height="165" fill="transparent" filter="url(#grain)"/>
+        <!-- Very light gold shimmer top-left -->
+        <rect x="0" y="0" width="270" height="165" fill="url(#goldShimmer)"/>
+        <!-- Mascot "V" watermark -->
+        <text x="162" y="152" font-size="160" font-family="Inter,Arial,sans-serif" font-weight="900"
+              fill="rgba(255,255,255,0.05)" text-anchor="middle">V</text>
+        <!-- Diagonal white swoosh — bottom right -->
+        <polygon points="168,165 270,72 270,165" fill="white" opacity="0.05"/>
+        <polygon points="210,165 270,112 270,165" fill="white" opacity="0.07"/>
+        <!-- Dot accents -->
+        <circle cx="237" cy="128" r="2.8" fill="white" opacity="0.07"/>
+        <circle cx="252" cy="114" r="1.8" fill="white" opacity="0.05"/>
+        <circle cx="261" cy="104" r="1.2" fill="white" opacity="0.04"/>
+      </svg>
+
+      <div class="front-inner">
+        <!-- Amber identity bar -->
+        <div class="front-bar">
+          <div class="front-brand">
+            VALU<span class="front-brand-dim">CONNECT</span>
+          </div>
+          <div class="front-bilingual-badge">EN · ES</div>
+        </div>
+
+        <!-- Body: avatar + info -->
+        <div class="front-body">
+          <div class="front-avatar">
+            <span class="front-avatar-text">YR</span>
+          </div>
+          <div class="front-info">
+            <div class="front-name">Yolanda Ribeyro</div>
+            <div class="front-title">Director of Sales & Marketing LATAM</div>
+            <div class="front-url">vcsolutions.us</div>
+            <div class="front-email">yolanda@vcsolutions.us</div>
+          </div>
+        </div>
+
+        <!-- Bottom: product pills + mascot mark -->
+        <div class="front-bottom">
+          <div class="front-pills">
+            <span class="pill pill-vc4">VC4</span>
+            <span class="pill pill-flash">Flash-It</span>
+          </div>
+          <div class="front-mascot">VALU ◆</div>
+        </div>
+      </div>
+
+    </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACK cards -->
+  <div class="cut-guide">
+    <div class="cut-note">✂ Back of Card — flip sheet and print on reverse side</div>
+    <div class="card-row">
+      <div class="card-row-label">Back</div>
+      <div class="cards-wrap">
+        
+    <div class="card card-back">
+
+      <!-- Navy header: company name + separator + products -->
+      <div class="back-band">
+        <div class="back-band-left">
+          <div class="back-logo">
+            Valu<span class="back-logo-accent">Connect</span> Solutions
+          </div>
+          <div class="back-divider"></div>
+          <div class="back-products">
+            <div class="bp bp-vc4">
+              <div class="bp-code">VC4</div>
+              <div class="bp-name">Content Intelligence Engine</div>
+            </div>
+            <div class="bp bp-flash">
+              <div class="bp-code">Flash-It</div>
+              <div class="bp-name">AI Photo Booth Platform</div>
+            </div>
+          </div>
+        </div>
+        <div class="back-tagline-col">
+          <div class="back-tag-en">Work Smarter, Not Harder.</div>
+          <div class="back-tag-es">Trabaja Inteligentemente.</div>
+        </div>
+      </div>
+
+      <!-- QR code right-aligned in white body -->
+      <div class="back-qr-area">
+        <div class="qr-cta">
+          <div class="qr-cta-en">Let's connect</div>
+          <div class="qr-cta-es">Escanea y reserva</div>
+        </div>
+        <div class="qr-right">
+          <div class="qr-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#FAFAF8" d="M0 0h35v35H0z"/><path stroke="#0D1B2A" d="M1 1.5h7m2 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m2 0h3m3 0h2m1 0h1m2 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m4 0h5m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m3 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m1 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M1 9.5h1m1 0h5m4 0h1m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h5M1 10.5h1m2 0h1m1 0h1m2 0h2m2 0h2m1 0h5m3 0h1m2 0h2m1 0h2M7 11.5h1m1 0h1m1 0h8m4 0h1m5 0h1m1 0h2M1 12.5h1m1 0h4m1 0h1m1 0h3m1 0h1m2 0h3m7 0h1m1 0h3M1 13.5h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h3m2 0h1m3 0h1M2 14.5h3m3 0h2m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2M1 15.5h4m1 0h2m2 0h5m1 0h3m2 0h2m3 0h2m1 0h1m1 0h2M1 16.5h1m4 0h1m3 0h2m2 0h1m1 0h1m5 0h2m1 0h3m2 0h2M1 17.5h3m2 0h4m4 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h4m1 0h1M3 18.5h2m3 0h2m1 0h4m4 0h6m2 0h2m1 0h3M1 19.5h1m2 0h1m1 0h5m4 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h2M3 20.5h1m1 0h2m4 0h2m1 0h1m1 0h2m4 0h2m4 0h4M4 21.5h2m1 0h1m1 0h5m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1M1 22.5h3m1 0h1m4 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1M1 23.5h1m1 0h1m3 0h3m1 0h4m3 0h1m1 0h1m7 0h2m2 0h1M1 24.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h3m1 0h3M1 25.5h1m3 0h1m1 0h2m1 0h2m1 0h2m3 0h1m1 0h2m3 0h5m1 0h3M9 26.5h1m1 0h1m2 0h2m1 0h5m3 0h1m3 0h1m1 0h3M1 27.5h7m3 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h1m4 0h6m4 0h2m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h3m1 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m4 0h3m2 0h3m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m1 0h8m2 0h1m1 0h1m1 0h1m1 0h2m1 0h2M1 32.5h1m5 0h1m2 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3M1 33.5h7m1 0h1m3 0h2m1 0h1m1 0h1m4 0h3m1 0h2m1 0h3"/></svg>
+</div>
+          <div class="qr-label">Scan to book a meeting</div>
+        </div>
+      </div>
+
+      <!-- Amber footer -->
+      <div class="back-footer">
+        <div class="back-url">vcsolutions.us</div>
+        <div class="back-bilingual">Hablamos tu idioma · We speak your language</div>
+      </div>
+
+    </div>
+        
+    <div class="card card-back">
+
+      <!-- Navy header: company name + separator + products -->
+      <div class="back-band">
+        <div class="back-band-left">
+          <div class="back-logo">
+            Valu<span class="back-logo-accent">Connect</span> Solutions
+          </div>
+          <div class="back-divider"></div>
+          <div class="back-products">
+            <div class="bp bp-vc4">
+              <div class="bp-code">VC4</div>
+              <div class="bp-name">Content Intelligence Engine</div>
+            </div>
+            <div class="bp bp-flash">
+              <div class="bp-code">Flash-It</div>
+              <div class="bp-name">AI Photo Booth Platform</div>
+            </div>
+          </div>
+        </div>
+        <div class="back-tagline-col">
+          <div class="back-tag-en">Work Smarter, Not Harder.</div>
+          <div class="back-tag-es">Trabaja Inteligentemente.</div>
+        </div>
+      </div>
+
+      <!-- QR code right-aligned in white body -->
+      <div class="back-qr-area">
+        <div class="qr-cta">
+          <div class="qr-cta-en">Let's connect</div>
+          <div class="qr-cta-es">Escanea y reserva</div>
+        </div>
+        <div class="qr-right">
+          <div class="qr-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#FAFAF8" d="M0 0h35v35H0z"/><path stroke="#0D1B2A" d="M1 1.5h7m2 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m2 0h3m3 0h2m1 0h1m2 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m4 0h5m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m3 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m1 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h1M1 9.5h1m1 0h5m4 0h1m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h5M1 10.5h1m2 0h1m1 0h1m2 0h2m2 0h2m1 0h5m3 0h1m2 0h2m1 0h2M7 11.5h1m1 0h1m1 0h8m4 0h1m5 0h1m1 0h2M1 12.5h1m1 0h4m1 0h1m1 0h3m1 0h1m2 0h3m7 0h1m1 0h3M1 13.5h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h3m2 0h1m3 0h1M2 14.5h3m3 0h2m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2M1 15.5h4m1 0h2m2 0h5m1 0h3m2 0h2m3 0h2m1 0h1m1 0h2M1 16.5h1m4 0h1m3 0h2m2 0h1m1 0h1m5 0h2m1 0h3m2 0h2M1 17.5h3m2 0h4m4 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h4m1 0h1M3 18.5h2m3 0h2m1 0h4m4 0h6m2 0h2m1 0h3M1 19.5h1m2 0h1m1 0h5m4 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h2M3 20.5h1m1 0h2m4 0h2m1 0h1m1 0h2m4 0h2m4 0h4M4 21.5h2m1 0h1m1 0h5m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1M1 22.5h3m1 0h1m4 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1M1 23.5h1m1 0h1m3 0h3m1 0h4m3 0h1m1 0h1m7 0h2m2 0h1M1 24.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h3m1 0h3M1 25.5h1m3 0h1m1 0h2m1 0h2m1 0h2m3 0h1m1 0h2m3 0h5m1 0h3M9 26.5h1m1 0h1m2 0h2m1 0h5m3 0h1m3 0h1m1 0h3M1 27.5h7m3 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h1m4 0h6m4 0h2m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h3m1 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m4 0h3m2 0h3m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m1 0h8m2 0h1m1 0h1m1 0h1m1 0h2m1 0h2M1 32.5h1m5 0h1m2 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3M1 33.5h7m1 0h1m3 0h2m1 0h1m1 0h1m4 0h3m1 0h2m1 0h3"/></svg>
+</div>
+          <div class="qr-label">Scan to book a meeting</div>
+        </div>
+      </div>
+
+      <!-- Amber footer -->
+      <div class="back-footer">
+        <div class="back-url">vcsolutions.us</div>
+        <div class="back-bilingual">Hablamos tu idioma · We speak your language</div>
+      </div>
+
+    </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print instructions -->
+  <div style="font-size:7pt;color:#94A3B8;line-height:1.6;border-top:1px solid #E2E8F0;padding-top:4mm;">
+    <strong style="color:#64748B;">Print instructions:</strong>
+    Print page 1 → flip sheet → print page 1 again (duplex) → cut along dashed guides.
+    Card size: 90mm × 55mm. Recommended: 350gsm card stock, matte or gloss finish.
+  </div>
+
+</div>
+</body>
+</html>

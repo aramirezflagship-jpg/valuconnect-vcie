@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ValuConnect — Retail & Boutiques Solutions</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0d1f44;
+    --navy-light: #1a3060;
+    --gold: #d4920a;
+    --gold-light: #f0ab12;
+    --teal: #1a9080;
+    --teal-light: #22b09d;
+    --white: #ffffff;
+    --gray-bg: #f4f6fa;
+    --gray-text: #5a6a85;
+  }
+
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    color: var(--navy);
+    background: #e8ebf0;
+    line-height: 1.5;
+  }
+
+  /* ── Slide container ── */
+  .slide {
+    width: 210mm;
+    min-height: 148mm;
+    background: var(--white);
+    margin: 12mm auto;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,.18);
+    page-break-after: always;
+    position: relative;
+  }
+
+  .slide:last-of-type { page-break-after: auto; }
+
+  /* ── Cover slide ── */
+  .slide-cover {
+    background: linear-gradient(145deg, var(--navy) 0%, var(--navy-light) 60%, #1e3a6e 100%);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 14mm 18mm;
+    min-height: 148mm;
+  }
+
+  .slide-cover .eyebrow {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6mm;
+  }
+
+  .slide-cover h1 {
+    font-size: 32pt;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 5mm;
+    max-width: 140mm;
+  }
+
+  .slide-cover h1 span { color: var(--gold); }
+
+  .slide-cover .subtitle {
+    font-size: 12pt;
+    color: rgba(255,255,255,.80);
+    max-width: 130mm;
+    line-height: 1.6;
+    margin-bottom: 9mm;
+  }
+
+  .slide-cover .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10mm;
+  }
+
+  .tag {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .slide-cover .cta-pill {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 9pt;
+    font-weight: 800;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+  }
+
+  .cover-accent {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 50mm;
+    background: linear-gradient(180deg, var(--teal) 0%, var(--teal-light) 100%);
+    opacity: .15;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .cover-dot-grid {
+    position: absolute;
+    right: 6mm; top: 6mm;
+    width: 40mm; height: 40mm;
+    opacity: .12;
+    background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 6mm 6mm;
+  }
+
+  /* ── Section slide ── */
+  .slide-body {
+    display: flex;
+    flex-direction: column;
+    padding: 10mm 14mm 10mm;
+    min-height: 148mm;
+  }
+
+  .slide-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 7mm;
+    padding-bottom: 5mm;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .slide-header .slide-title {
+    font-size: 16pt;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.2;
+    max-width: 130mm;
+  }
+
+  .slide-header .slide-title span { color: var(--teal); }
+
+  .slide-logo {
+    font-size: 9pt;
+    font-weight: 800;
+    color: var(--navy);
+    white-space: nowrap;
+    opacity: .55;
+  }
+
+  .slide-logo span { color: var(--gold); }
+
+  /* ── Cards ── */
+  .card-grid { display: grid; gap: 5mm; flex: 1; }
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--gray-bg);
+    border-radius: 5px;
+    padding: 6mm;
+    border-left: 3px solid var(--teal);
+  }
+
+  .card.gold-accent { border-left-color: var(--gold); }
+  .card.navy-card { background: var(--navy); border-left-color: var(--gold); }
+
+  .card-icon {
+    font-size: 18pt;
+    margin-bottom: 3mm;
+    display: block;
+  }
+
+  .card-label {
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 2mm;
+  }
+
+  .card.navy-card .card-label { color: var(--gold); }
+
+  .card-title {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2mm;
+    line-height: 1.3;
+  }
+
+  .card.navy-card .card-title { color: var(--white); }
+
+  .card-text {
+    font-size: 8.5pt;
+    color: var(--gray-text);
+    line-height: 1.55;
+  }
+
+  .card.navy-card .card-text { color: rgba(255,255,255,.75); }
+
+  /* ── Pain / solution rows ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5mm;
+    flex: 1;
+  }
+
+  .compare-col-header {
+    font-size: 9pt;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4mm;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .col-before { color: #c0392b; }
+  .col-after  { color: var(--teal); }
+
+  .compare-list { list-style: none; }
+
+  .compare-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 9pt;
+    color: var(--navy);
+    line-height: 1.45;
+    margin-bottom: 4mm;
+    background: var(--gray-bg);
+    border-radius: 4px;
+    padding: 4px 7px;
+  }
+
+  .compare-list li .bullet {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    font-weight: 900;
+    margin-top: 1px;
+  }
+
+  .bullet-x { background: #fde8e8; color: #c0392b; }
+  .bullet-check { background: #e0f5f1; color: var(--teal); }
+
+  /* ── Result chips ── */
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5mm;
+    flex: 1;
+  }
+
+  .result-chip {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navyLight) 100%);
+    border-radius: 6px;
+    padding: 7mm;
+    text-align: center;
+    color: var(--white);
+  }
+
+  .result-chip .metric {
+    font-size: 22pt;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 2mm;
+  }
+
+  .result-chip .metric-label {
+    font-size: 8.5pt;
+    color: rgba(255,255,255,.82);
+    line-height: 1.4;
+  }
+
+  /* ── Quote slide ── */
+  .quote-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 12mm 18mm;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navyLight) 100%);
+    min-height: 148mm;
+  }
+
+  .quote-mark {
+    font-size: 48pt;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: .7;
+    margin-bottom: 5mm;
+    opacity: .6;
+  }
+
+  .quote-text {
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.6;
+    max-width: 150mm;
+    margin-bottom: 7mm;
+    font-style: italic;
+  }
+
+  .quote-attr {
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: .5px;
+    margin-bottom: 10mm;
+  }
+
+  .quote-cta-box {
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 8px;
+    padding: 6mm 14mm;
+    text-align: center;
+    max-width: 120mm;
+  }
+
+  .quote-cta-box .cta-heading {
+    font-size: 13pt;
+    font-weight: 900;
+    margin-bottom: 2mm;
+  }
+
+  .quote-cta-box .cta-sub {
+    font-size: 9pt;
+    font-weight: 600;
+    opacity: .8;
+  }
+
+  /* ── Industry grid (overview only) ── */
+  .industry-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4mm;
+    flex: 1;
+  }
+
+  .industry-card {
+    background: var(--gray-bg);
+    border-radius: 5px;
+    padding: 5mm;
+    border-top: 3px solid var(--teal);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .industry-card .ind-icon { font-size: 14pt; margin-bottom: 2mm; }
+
+  .industry-card .ind-name {
+    font-size: 8.5pt;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 2mm;
+    line-height: 1.3;
+  }
+
+  .industry-card .ind-pain {
+    font-size: 7.5pt;
+    color: var(--gray-text);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .industry-card .ind-result {
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: var(--teal);
+    margin-top: 3mm;
+  }
+
+  /* ── Process steps ── */
+  .process-steps {
+    display: flex;
+    gap: 4mm;
+    flex: 1;
+    align-items: stretch;
+  }
+
+  .process-step {
+    flex: 1;
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 6mm;
+    text-align: center;
+    position: relative;
+  }
+
+  .step-num {
+    width: 10mm;
+    height: 10mm;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 10pt;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 4mm;
+  }
+
+  .step-icon { font-size: 16pt; margin-bottom: 3mm; }
+
+  .step-title {
+    font-size: 9pt;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 2mm;
+  }
+
+  .step-text {
+    font-size: 8pt;
+    color: var(--gray-text);
+    line-height: 1.5;
+  }
+
+  .step-arrow {
+    position: absolute;
+    right: -4mm;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 12pt;
+    font-weight: 900;
+    z-index: 2;
+  }
+
+  /* ── Services list ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5mm;
+    flex: 1;
+  }
+
+  .service-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 4mm;
+    background: var(--gray-bg);
+    border-radius: 5px;
+    padding: 5mm;
+  }
+
+  .service-icon {
+    font-size: 16pt;
+    flex-shrink: 0;
+  }
+
+  .service-title {
+    font-size: 9.5pt;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 1.5mm;
+  }
+
+  .service-text {
+    font-size: 8pt;
+    color: var(--gray-text);
+    line-height: 1.5;
+  }
+
+  /* ── Differentiators (2-col) ── */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5mm;
+    flex: 1;
+    align-content: start;
+  }
+
+  .diff-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 5mm;
+    padding: 5mm;
+    background: var(--gray-bg);
+    border-radius: 5px;
+  }
+
+  .diff-icon {
+    font-size: 16pt;
+    flex-shrink: 0;
+  }
+
+  .diff-title {
+    font-size: 9.5pt;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 1.5mm;
+  }
+
+  .diff-text {
+    font-size: 8pt;
+    color: var(--gray-text);
+    line-height: 1.5;
+  }
+
+  /* ── Slide footer bar ── */
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6mm;
+    background: linear-gradient(90deg, var(--navy) 0%, var(--teal) 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 8mm;
+  }
+
+  .slide-footer span {
+    font-size: 6pt;
+    color: rgba(255,255,255,.6);
+    font-weight: 500;
+  }
+
+  /* ── Print media ── */
+  @media print {
+    body { background: white; }
+
+    .slide {
+      margin: 0;
+      box-shadow: none;
+      width: 210mm;
+      min-height: 148mm;
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+    <div class="slide">
+      <div class="slide-cover">
+        <div class="cover-accent"></div>
+        <div class="cover-dot-grid"></div>
+        <div class="eyebrow">🛍️ Retail & Boutiques · Industry Solution</div>
+        <h1>Digital Systems<br>Built for <span>Retail</span><br>Businesses.</h1>
+        <p class="subtitle">
+          Stop managing your business on paper and in your head.
+          ValuConnect builds the digital workflow system that runs in the background,
+          so you can focus on what you do best.
+        </p>
+        <div class="tag-row">
+          <span class="tag">Retail & Boutiques</span>
+          <span class="tag">Bilingual EN/ES</span>
+          <span class="tag">Paper → Digital</span>
+        </div>
+        <div class="cta-pill">Free 30-Minute Workflow Assessment</div>
+      </div>
+      <div class="slide-footer"><span>ValuConnect Solutions · valuconnect.com · Free 30-min Workflow Assessment</span></div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-body" style="padding-bottom: 10mm;">
+        
+    <div class="slide-header">
+      <div class="slide-title">Before vs. After — <span>What Changes</span></div>
+      <span class="slide-logo">Valu<span>Connect</span></span>
+    </div>
+        <div class="compare-grid">
+          <div>
+            <div class="compare-col-header col-before">✕ Before ValuConnect</div>
+            <ul class="compare-list">
+              
+                <li>
+                  <span class="bullet bullet-x">✕</span>
+                  <span>Inventory tracked on paper cards — no real-time visibility</span>
+                </li>
+                <li>
+                  <span class="bullet bullet-x">✕</span>
+                  <span>Supplier orders made by phone with no written record</span>
+                </li>
+                <li>
+                  <span class="bullet bullet-x">✕</span>
+                  <span>Customer receipts stored in binders by month</span>
+                </li>
+                <li>
+                  <span class="bullet bullet-x">✕</span>
+                  <span>No system for tracking returns or exchanges</span>
+                </li>
+            </ul>
+          </div>
+          <div>
+            <div class="compare-col-header col-after">✓ After ValuConnect</div>
+            <ul class="compare-list">
+              
+                <li>
+                  <span class="bullet bullet-check">✓</span>
+                  <span>Digital inventory with low-stock alerts sent automatically</span>
+                </li>
+                <li>
+                  <span class="bullet bullet-check">✓</span>
+                  <span>Automated supplier order emails with digital confirmation trail</span>
+                </li>
+                <li>
+                  <span class="bullet bullet-check">✓</span>
+                  <span>Customer transaction archive — any receipt found in under 10 seconds</span>
+                </li>
+                <li>
+                  <span class="bullet bullet-check">✓</span>
+                  <span>Return and exchange tracking workflow with approval steps</span>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>ValuConnect Solutions · valuconnect.com · Free 30-min Workflow Assessment</span></div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-body" style="padding-bottom: 10mm;">
+        
+    <div class="slide-header">
+      <div class="slide-title">Results You Can <span>Expect</span></div>
+      <span class="slide-logo">Valu<span>Connect</span></span>
+    </div>
+        <div class="result-grid">
+          
+            <div class="result-chip">
+              <div class="metric">✓</div>
+              <div class="metric-label">Stock-outs reduced by 80%</div>
+            </div>
+            <div class="result-chip">
+              <div class="metric">✓</div>
+              <div class="metric-label">Order errors eliminated</div>
+            </div>
+            <div class="result-chip">
+              <div class="metric">✓</div>
+              <div class="metric-label">Customer lookup under 10 seconds</div>
+            </div>
+            <div class="result-chip">
+              <div class="metric">✓</div>
+              <div class="metric-label">Returns processed 3x faster</div>
+            </div>
+        </div>
+        <div style="margin-top: 6mm; display: grid; grid-template-columns: 1fr 1fr; gap: 5mm;">
+          <div style="background: var(--gray-bg); border-radius: 5px; padding: 5mm;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 3mm;">What You Get</div>
+            <div style="font-size: 8pt; color: var(--navy); line-height: 1.5; margin-bottom: 2mm; display: flex; gap: 4px;"><span style="color: var(--teal); font-weight: 900; flex-shrink: 0;">›</span> Digital inventory with low-stock alerts sent automatically</div><div style="font-size: 8pt; color: var(--navy); line-height: 1.5; margin-bottom: 2mm; display: flex; gap: 4px;"><span style="color: var(--teal); font-weight: 900; flex-shrink: 0;">›</span> Automated supplier order emails with digital confirmation trail</div>
+          </div>
+          <div style="background: var(--gray-bg); border-radius: 5px; padding: 5mm;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 3mm;">How We Do It</div>
+            <div style="font-size: 8pt; color: var(--gray-text); line-height: 1.6;">Free 30-min assessment → custom roadmap → implementation → team training → ongoing support. Bilingual (EN/ES), personalized to your business.</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>ValuConnect Solutions · valuconnect.com · Free 30-min Workflow Assessment</span></div>
+    </div>
+
+    <div class="slide">
+      <div class="quote-slide">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">I stopped losing money on items I forgot I had.</div>
+        <div class="quote-attr">Carmen L. — Boutique owner, Los Angeles</div>
+        <div class="quote-cta-box">
+          <div class="cta-heading">Ready to run your retail business on systems — not stress?</div>
+          <div class="cta-sub">Book a free 30-minute workflow assessment with Andres</div>
+          <div style="margin-top: 4mm; font-size: 9pt; font-weight: 800; color: var(--navy);">valuconnect.com/industries/retail</div>
+        </div>
+        <div style="margin-top: 7mm; display: flex; gap: 8mm; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1mm;">Founder</div>
+            <div style="font-size: 9pt; font-weight: 700; color: #fff;">Andres Ramirez</div>
+          </div>
+          <div style="width: 1px; background: rgba(255,255,255,.2);"></div>
+          <div style="text-align: center;">
+            <div style="font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1mm;">Bilingual</div>
+            <div style="font-size: 9pt; font-weight: 700; color: #fff;">English · Español</div>
+          </div>
+          <div style="width: 1px; background: rgba(255,255,255,.2);"></div>
+          <div style="text-align: center;">
+            <div style="font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1mm;">Industry</div>
+            <div style="font-size: 9pt; font-weight: 700; color: #fff;">Retail & Boutiques</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>ValuConnect Solutions · valuconnect.com · Free 30-min Workflow Assessment</span></div>
+    </div>
+</body>
+</html>
