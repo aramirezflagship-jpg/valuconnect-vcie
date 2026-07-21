@@ -235,9 +235,16 @@ export default function PhotoBooth({ eventCodeOverride }) {
       setSelectedTheme(template); // keep legacy theme state in sync for fallbacks
       // Warm up face-api models early for character mode so the crop is instant.
       if (mode === 'character') loadFaceModels();
-      setScreen('camera');
+      // Offer the layout picker (Single 4×6 / Strip 2×6 / Collage 4×6) when more
+      // than one layout is available; otherwise default to the single layout.
+      if (availableLayouts.length > 1) {
+        setScreen('layout-picker');
+      } else {
+        setSelectedLayout(availableLayouts.find((l) => l.id === 'single') || availableLayouts[0] || null);
+        setScreen('camera');
+      }
     });
-  }, [requirePhotoConsent]);
+  }, [requirePhotoConsent, availableLayouts]);
 
   // ─── Handle mode change from CaptureSelector ─────────────────────────────
   const handleModeChange = useCallback(
@@ -256,12 +263,13 @@ export default function PhotoBooth({ eventCodeOverride }) {
   // ─── Two-mode capture (Natural frame · Character face-in-hole) ─────────────
   const handleTwoModeCapture = useCallback(
     async (blob) => {
-      setCapturedBlob(blob);
+      const photoCount = selectedLayout?.photoCount || 1;
       setProcessingError(null);
       setQrCode(null);
       setScreen('processing');
 
       try {
+        // Run this single shot through the two-mode pipeline → one composited photo.
         let result;
         if (flowMode === 'character') {
           // Detect → expand → crop the guest's face client-side. Never hard-fail:
@@ -286,16 +294,51 @@ export default function PhotoBooth({ eventCodeOverride }) {
 
         const url = result.photoUrl || result.resultUrl;
         if (!url) throw new Error('No photo URL in capture response');
-        setResultUrl(url);
-        if (result.qrCode) setQrCode(result.qrCode);
-        setScreen('preview');
+
+        // ── Single-photo layout → straight to preview ──
+        if (photoCount <= 1) {
+          setResultUrl(url);
+          if (result.qrCode) setQrCode(result.qrCode);
+          setScreen('preview');
+          return;
+        }
+
+        // ── Multi-photo layout (strip/collage): collect frames, then compose ──
+        const newFrames = [...capturedFrames, { resultUrl: url }];
+        setCapturedFrames(newFrames);
+
+        if (newFrames.length < photoCount) {
+          // Need more shots — back to the camera (it shows "Photo N of X").
+          setScreen('camera');
+          return;
+        }
+
+        // All frames collected → compose the strip/collage from the composited photos.
+        const token = localStorage.getItem('flash_it_token') || '';
+        const stripRes = await fetch('/api/strips/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            eventId: config.eventId,
+            photoUrls: newFrames.map((f) => f.resultUrl),
+            templateId: selectedLayout.id,
+          }),
+        });
+        const stripData = await stripRes.json();
+        if (!stripRes.ok) throw new Error(stripData.error || 'Strip creation failed');
+        setResultUrl(stripData.stripUrl);
+        setCapturedFrames([]);
+        setScreen('strip-preview');
       } catch (err) {
         console.error('[PhotoBooth] Two-mode capture error:', err);
         setProcessingError(err?.response?.data?.error || err.message || 'Processing failed');
         setScreen('preview');
       }
     },
-    [flowMode, selectedTemplate, config.eventId]
+    [flowMode, selectedTemplate, selectedLayout, capturedFrames, config.eventId]
   );
 
   // ─── Handle photo capture ─────────────────────────────────────────────────
@@ -560,11 +603,11 @@ export default function PhotoBooth({ eventCodeOverride }) {
               lang={lang}
               onCapture={flowMode ? handleTwoModeCapture : handleCapture}
               onBack={() => setScreen(
-                flowMode ? 'theme-picker' : (availableLayouts.length > 1 ? 'layout-picker' : 'theme-picker')
+                availableLayouts.length > 1 ? 'layout-picker' : 'theme-picker'
               )}
               captureMode={captureMode}
               onModeChange={flowMode ? undefined : handleModeChange}
-              photoCount={flowMode ? 1 : (selectedLayout?.photoCount || 1)}
+              photoCount={selectedLayout?.photoCount || 1}
               frameIndex={capturedFrames.length}
               faceGuide={flowMode === 'character'}
             />
