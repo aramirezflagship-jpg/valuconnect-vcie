@@ -128,141 +128,17 @@
             Leak Engine helps small business owners stop losing leads from unanswered phone calls. Capture missed-call opportunities, trigger instant follow-up, and turn more callers into real customers.
           </p>
           <div class="hero-actions">
-            <a href="#leak-calculator" class="btn btn-primary" data-i18n="hero.btn1">See Leak Engine</a>
+            <a href="calculator.html" class="btn btn-primary" data-i18n="hero.btn1">See Leak Engine</a>
             <a href="https://calendar.app.google/1Yjhmfe37T4gFvLk7" target="_blank" rel="noopener" class="btn btn-outline-light" data-i18n="hero.btn2">Book a Demo</a>
           </div>
         </div>
 
-        <!-- Rebuilt in markup rather than shipped as a photo: stays sharp at any
-             size, and the captured number matches the calculator below. -->
         <div class="hero-visual">
-          <div class="le-stage">
-            <div class="le-phone" aria-hidden="true">
-              <div class="le-phone-time">10:32</div>
-              <div class="le-phone-body">
-                <div class="le-phone-label" data-i18n="hero.incoming">Incoming Call</div>
-                <div class="le-phone-name" data-i18n="hero.localbiz">Local Business</div>
-                <div class="le-phone-num">(555) 867-5309</div>
-                <div class="le-decline">
-                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
-                    <path d="M21 15.46l-5.27-.61-2.52 2.52a15.05 15.05 0 0 1-6.59-6.59l2.53-2.53L8.54 3H3.03A18 18 0 0 0 21 20.97z"/>
-                  </svg>
-                </div>
-                <div class="le-phone-missed" data-i18n="hero.missedcall">Missed Call</div>
-              </div>
-            </div>
-
-            <div class="le-flow" aria-hidden="true"><span></span><span></span><span></span></div>
-
-            <div class="le-panel" role="img" aria-label="Leak Engine capturing a missed call and following up automatically">
-              <div class="le-panel-bar">
-                <span class="le-dot"></span><span class="le-brand">Leak Engine</span>
-              </div>
-              <div class="le-panel-body">
-                <div class="le-capture">
-                  <div class="le-capture-top">
-                    <span data-i18n="hero.captured">Missed Call Captured</span>
-                    <span class="le-chip" data-i18n="hero.newlead">New Lead</span>
-                  </div>
-                  <div class="le-capture-num">(555) 867-5309</div>
-                </div>
-                <ul class="le-steps">
-                  <li>
-                    <span class="le-check">&#10003;</span>
-                    <span class="le-step-txt"><b data-i18n="hero.s1t">Lead Captured</b><i data-i18n="hero.s1s">Missed call saved</i></span>
-                    <span class="le-time">10:32 AM</span>
-                  </li>
-                  <li>
-                    <span class="le-check">&#10003;</span>
-                    <span class="le-step-txt"><b data-i18n="hero.s2t">Auto Follow-Up</b><i data-i18n="hero.s2s">SMS sent instantly</i></span>
-                    <span class="le-time">10:33 AM</span>
-                  </li>
-                  <li>
-                    <span class="le-check le-check-call">&#9990;</span>
-                    <span class="le-step-txt"><b data-i18n="hero.s3t">Callback Scheduled</b><i data-i18n="hero.s3s">Today at 2:00 PM</i></span>
-                    <span class="le-time">10:34 AM</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <img src="assets/images/leak-engine-hero.jpg"
+               alt="A missed call on a phone flowing into the Leak Engine dashboard, which captures the lead, sends an instant follow-up SMS and schedules a callback"
+               class="hero-shot" width="1049" height="635" fetchpriority="high" decoding="async">
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ── Revenue leak calculator ── -->
-  <section class="leakcalc" id="leak-calculator">
-    <div class="container">
-      <div class="lc-head">
-        <div class="lc-eyebrow" data-i18n="lc.eyebrow">Revenue Leak Audit</div>
-        <h2 data-i18n="lc.h1">How much is your business <em>leaking</em> every month?</h2>
-        <p class="lc-sub" data-i18n="lc.sub">Roughly 62% of calls to small businesses go unanswered — and 85% of those callers never call back. Enter your real numbers and watch the leak.</p>
-      </div>
-
-      <div class="lc-grid">
-        <div class="lc-card">
-          <h3 data-i18n="lc.yourNumbers">Your numbers</h3>
-
-          <div class="lc-field">
-            <label for="lcIndustry" data-i18n="lc.industry">Your industry</label>
-            <select id="lcIndustry"></select>
-          </div>
-
-          <div class="lc-field">
-            <label for="lcMissed" data-i18n="lc.missed">Missed calls per week</label>
-            <div class="lc-sliderrow">
-              <input type="range" id="lcMissed" min="1" max="80" value="12">
-              <output class="lc-val" id="lcMissedVal" for="lcMissed">12</output>
-            </div>
-            <div class="lc-hint" data-i18n="lc.missedHint">Check your phone logs — most owners underestimate this by half.</div>
-          </div>
-
-          <div class="lc-field">
-            <label for="lcValue" data-i18n="lc.avgValue">Average customer value ($)</label>
-            <input type="number" id="lcValue" min="20" step="10" value="450">
-            <div class="lc-hint" data-i18n="lc.valueHint">What one new customer is worth to you (first job, not lifetime).</div>
-          </div>
-
-          <div class="lc-field">
-            <label for="lcClose" data-i18n="lc.closeRate">Your close rate on answered calls</label>
-            <div class="lc-sliderrow">
-              <input type="range" id="lcClose" min="10" max="60" value="30">
-              <output class="lc-val" id="lcCloseVal" for="lcClose">30%</output>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="lc-meter">
-            <div class="lc-pipe"></div>
-            <span class="lc-drop" style="left:22%"></span>
-            <span class="lc-drop d2" style="left:52%"></span>
-            <span class="lc-drop d3" style="left:78%"></span>
-            <div class="lc-lbl" data-i18n="lc.meterLbl">Estimated revenue leak</div>
-            <div class="lc-big" id="lcLeakMo" aria-live="polite">$0</div>
-            <div class="lc-per" data-i18n="lc.perMonth">per month, walking out the door</div>
-            <div class="lc-row2">
-              <div class="lc-stat"><div class="lc-lbl2" data-i18n="lc.perYear">Per year</div><div class="lc-n red" id="lcLeakYr">$0</div></div>
-              <div class="lc-stat"><div class="lc-lbl2" data-i18n="lc.recoverable">Recoverable with AI*</div><div class="lc-n green" id="lcRecov">$0</div></div>
-            </div>
-            <div class="lc-formula" id="lcFormula"></div>
-          </div>
-
-          <div class="lc-reco">
-            <div class="lc-tag" data-i18n="lc.recoTag">Recommended fix</div>
-            <h4 id="lcPkgName"></h4>
-            <p id="lcPkgLine"></p>
-          </div>
-
-          <div class="lc-cta">
-            <a class="btn btn-primary" id="lcCta" href="#">Book your Leak Audit</a>
-            <span class="lc-ctanote" data-i18n="lc.ctaNote">$497 Leak Audit — credited toward any install.</span>
-          </div>
-        </div>
-      </div>
-
-      <p class="lc-foot" data-i18n="lc.foot">*Assumes AI systems capture ~60% of currently missed opportunities. Estimates based on industry research (411 Locals, Invoca, BIA/Kelsey): 62% of calls unanswered, 85% of missed callers never call back. Your audit uses your actual 30-day call data.</p>
     </div>
   </section>
 
