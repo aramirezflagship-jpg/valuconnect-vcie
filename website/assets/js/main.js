@@ -479,9 +479,17 @@ function setLang(lang) {
    this is just the door. Injected from here rather than pasted into all 11
    pages so the URL and the label live in exactly one place.
 ──────────────────────────────── */
-var CRM_URL = 'https://crm.vcsolutions.us/crm';
+/* Same-origin: vercel.json proxies /crm through to the engine on Render, so no
+   subdomain and no new DNS record are involved.
+
+   Leave this EMPTY until the engine is actually deployed — an empty value hides
+   the Log In link everywhere rather than shipping a dead link on every page.
+   To switch it on: set it to '/crm'. That is the whole change. */
+var CRM_URL = '';
 
 function addTeamLogin() {
+  if (!CRM_URL) return;
+
   var navLinks = document.querySelector('.nav-links');
   if (navLinks && !navLinks.querySelector('.nav-login')) {
     var li = document.createElement('li');

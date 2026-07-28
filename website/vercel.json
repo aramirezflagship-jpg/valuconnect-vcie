@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/crm", "destination": "https://ENGINE-HOST/crm/" },
+    { "source": "/crm/", "destination": "https://ENGINE-HOST/crm/" },
+    { "source": "/crm/:path*", "destination": "https://ENGINE-HOST/crm/:path*" },
+
+    { "source": "/api/crm-login", "destination": "https://ENGINE-HOST/api/crm-login" },
+    { "source": "/api/crm-logout", "destination": "https://ENGINE-HOST/api/crm-logout" },
+    { "source": "/api/crm-auth-mode", "destination": "https://ENGINE-HOST/api/crm-auth-mode" },
+    { "source": "/api/crm/:path*", "destination": "https://ENGINE-HOST/api/crm/:path*" },
+    { "source": "/api/sales/:path*", "destination": "https://ENGINE-HOST/api/sales/:path*" }
+  ],
+  "headers": [
+    {
+      "source": "/crm/:path*",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}
