@@ -17,6 +17,7 @@ const { researchCustomer } = require('./src/customer-researcher');
 const { exportToDocx } = require('./src/brief-exporter');
 const { createProspectItem } = require('./src/monday-connector');
 const { saveProspect, fromIntake } = require('./src/valuconnect-crm');
+const crawlerScheduler = require('./src/crawler-scheduler');
 const { discoverLeads } = require('./src/lead-discovery');
 const { generateWebsite }   = require('./src/website-generator');
 const { generateOnepager }  = require('./src/onepager-generator');
@@ -565,6 +566,16 @@ async function saveDiscoveredLead(req, res) {
   res.status(500).json({ error: result.reason });
 }
 
+// POST /api/crawler/run — trigger a discovery sweep immediately
+app.post('/api/crawler/run', async (_req, res) => {
+  try {
+    await crawlerScheduler.runNow();
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/leads/save', saveDiscoveredLead);
 app.post('/api/leads/save-monday', saveDiscoveredLead);
 
@@ -1019,6 +1030,13 @@ function oauthErrorPage(msg, hint) {
 
 app.listen(PORT, () => {
   console.log(`\n  VCIE Dashboard running at http://localhost:${PORT}`);
+
+  // Scheduled lead discovery. The cadence is set in the CRM; this process runs
+  // the crawl because it holds the Firecrawl key.
+  if (process.env.LEAK_ENGINE_URL && process.env.INTERNAL_API_TOKEN) {
+    crawlerScheduler.start();
+    console.log('  Crawler scheduler active — schedule read from the ValuConnect CRM');
+  }
 
   // Auto-start email sequence engine if both keys are present
   if (process.env.MONDAY_API_KEY && process.env.SENDGRID_API_KEY && process.env.MONDAY_CRM_BOARD_ID) {

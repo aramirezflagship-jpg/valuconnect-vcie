@@ -6,7 +6,7 @@ var vcStrings = {
     /* ── Navigation ── */
     'nav.services': 'Services', 'nav.industries': 'Industries',
     'nav.monday': 'monday.com', 'nav.insights': 'Industry Insights',
-    'nav.about': 'About', 'nav.cta': 'Book Free Call', 'nav.login': 'Team Log In',
+    'nav.about': 'About', 'nav.cta': 'Book Free Call', 'nav.login': 'Log In',
     'nav.calc': 'Leak Calculator',
     'nav.s1': 'Paper-to-Digital', 'nav.s2': 'Workflow Automation',
     'nav.s3': 'AI Agent Creation', 'nav.s4': 'monday.com Setup',
@@ -215,7 +215,7 @@ var vcStrings = {
     /* ── Navigation ── */
     'nav.services': 'Servicios', 'nav.industries': 'Industrias',
     'nav.monday': 'monday.com', 'nav.insights': 'Perspectivas del Sector',
-    'nav.about': 'Sobre Nosotros', 'nav.cta': 'Llamada Gratis', 'nav.login': 'Acceso Equipo',
+    'nav.about': 'Sobre Nosotros', 'nav.cta': 'Llamada Gratis', 'nav.login': 'Iniciar Sesión',
     'nav.calc': 'Calculadora de Fugas',
     'nav.s1': 'Papel a Digital', 'nav.s2': 'Automatización',
     'nav.s3': 'Agentes de IA', 'nav.s4': 'Configuración monday.com',
@@ -490,11 +490,10 @@ function addTeamLogin() {
     a.href = CRM_URL;
     a.rel = 'noopener nofollow';
     a.setAttribute('data-i18n', 'nav.login');
-    a.textContent = 'Team Log In';
+    a.textContent = 'Log In';
     li.appendChild(a);
-    /* sits just before the EN/ES picker, so the teal "Book Free Call" stays the loudest thing */
-    var langLi = navLinks.querySelector('.lang-li');
-    if (langLi) navLinks.insertBefore(li, langLi); else navLinks.appendChild(li);
+    /* takes the slot the Book Free Call CTA used to hold, at the end of the bar */
+    navLinks.appendChild(li);
   }
 
   var footLinks = document.querySelector('.footer-bottom-links');
@@ -503,7 +502,7 @@ function addTeamLogin() {
     fa.href = CRM_URL;
     fa.rel = 'noopener nofollow';
     fa.setAttribute('data-i18n', 'nav.login');
-    fa.textContent = 'Team Log In';
+    fa.textContent = 'Log In';
     footLinks.appendChild(fa);
   }
 
