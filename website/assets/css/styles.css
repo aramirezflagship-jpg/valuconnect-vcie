@@ -105,6 +105,10 @@ nav {
 .nav-links a:hover { color: var(--teal); }
 .nav-cta { background: var(--teal) !important; color: var(--white) !important; padding: 10px 20px; border-radius: 6px; font-weight: 600 !important; }
 .nav-cta:hover { background: var(--teal-dark) !important; color: var(--white) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,168,150,.3); }
+/* Team log in — internal CRM. Deliberately quieter than the teal booking CTA:
+   it is for staff, so it must not compete with the customer call-to-action. */
+.nav-login { display: inline-flex; align-items: center; border: 1px solid var(--border); color: var(--text-gray) !important; padding: 7px 14px; border-radius: 6px; font-size: .8rem !important; font-weight: 600 !important; transition: border-color .2s, color .2s; }
+.nav-login:hover { border-color: var(--navy); color: var(--navy) !important; }
 .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--navy); font-size: 1.6rem; line-height: 1; }
 
 /* ── Nav dropdowns ── */
@@ -361,6 +365,174 @@ body.lang-es .industry-name-es { display: block; }
 }
 .hero h1 { font-size: 3rem; color: var(--white); margin-bottom: 20px; line-height: 1.15; }
 .hero h1 span { color: var(--gold); }
+
+/* ── Hero: Leak Engine badge + outline CTA ── */
+.hero-badge {
+  display: inline-block;
+  color: var(--teal);
+  padding: 7px 20px;
+  border-radius: 100px;
+  font-size: .85rem;
+  font-weight: 600;
+  margin-bottom: 26px;
+  border: 1px solid rgba(0,168,150,.45);
+}
+.btn-outline-light {
+  background: transparent;
+  color: var(--white);
+  border: 1.5px solid rgba(255,255,255,.55);
+}
+.btn-outline-light:hover { background: rgba(255,255,255,.08); border-color: var(--white); color: var(--white); }
+
+/* ── Hero visual: missed call flowing into Leak Engine ──
+   Built in markup instead of a photo so it stays sharp and the numbers
+   stay consistent with the calculator below. */
+.le-stage { position: relative; display: flex; align-items: center; justify-content: flex-end; min-height: 340px; }
+
+.le-phone {
+  position: absolute; left: 0; bottom: 6px; z-index: 2;
+  width: 168px; border-radius: 22px; padding: 10px 12px 16px;
+  background: linear-gradient(170deg, #10233f, #0a1730);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 22px 46px rgba(0,0,0,.46);
+}
+.le-phone-time { font-size: .6rem; color: rgba(255,255,255,.5); font-weight: 600; margin-bottom: 14px; }
+.le-phone-body { text-align: center; }
+.le-phone-label { font-size: .68rem; color: rgba(255,255,255,.62); }
+.le-phone-name  { font-size: .78rem; color: #fff; font-weight: 600; }
+.le-phone-num   { font-size: .68rem; color: rgba(255,255,255,.55); margin-bottom: 16px; }
+.le-decline {
+  width: 42px; height: 42px; margin: 0 auto 9px; border-radius: 50%;
+  background: #e0483f; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(224,72,63,.42);
+}
+.le-decline svg { transform: rotate(135deg); }
+.le-phone-missed { font-size: .74rem; color: rgba(255,255,255,.82); font-weight: 500; }
+
+/* the signal travelling from the phone to the dashboard */
+.le-flow { position: absolute; left: 150px; right: 300px; top: 50%; height: 2px; z-index: 1; }
+.le-flow span {
+  position: absolute; top: 0; width: 26px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  animation: le-travel 2.8s linear infinite; opacity: 0;
+}
+.le-flow span:nth-child(2) { animation-delay: .95s; }
+.le-flow span:nth-child(3) { animation-delay: 1.9s; }
+@keyframes le-travel {
+  0%   { left: 0;    opacity: 0; }
+  12%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+.le-panel {
+  width: 100%; max-width: 340px; border-radius: 14px; overflow: hidden;
+  background: #fff; box-shadow: 0 24px 54px rgba(0,0,0,.42);
+}
+.le-panel-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #f3f5f9; border-bottom: 1px solid var(--border); }
+.le-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--teal); flex: none; }
+.le-brand { font-size: .78rem; font-weight: 700; color: var(--text-dark); }
+.le-panel-body { padding: 14px; }
+
+.le-capture { border: 1px solid var(--border); border-radius: 9px; padding: 11px 12px; margin-bottom: 12px; }
+.le-capture-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .8rem; font-weight: 700; color: var(--text-dark); }
+.le-chip { background: #d9f5ec; color: #0e7a5f; font-size: .62rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; white-space: nowrap; }
+.le-capture-num { font-size: .74rem; color: var(--text-gray); margin-top: 3px; }
+
+.le-steps { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.le-steps li { display: flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 9px; padding: 9px 11px; }
+.le-check {
+  width: 19px; height: 19px; border-radius: 50%; flex: none;
+  background: #17a673; color: #fff; font-size: .66rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.le-check-call { background: #1f8f6f; }
+.le-step-txt { display: flex; flex-direction: column; line-height: 1.28; flex: 1; min-width: 0; }
+.le-step-txt b { font-size: .76rem; color: var(--text-dark); }
+.le-step-txt i { font-size: .67rem; color: var(--text-gray); font-style: normal; }
+.le-time { font-size: .62rem; color: var(--text-gray); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) { .le-flow span { animation: none; opacity: .55; } }
+
+/* Between tablet and desktop the two pieces would collide edge-to-edge; shrink
+   both so the phone overlaps the panel as a deliberate layer instead. */
+@media (max-width: 1080px) {
+  .le-stage { min-height: 300px; }
+  .le-phone { width: 138px; }
+  .le-panel { max-width: 286px; }
+  .le-flow { left: 122px; right: 248px; }
+}
+
+/* ── Revenue leak calculator ── */
+.leakcalc { background: var(--light-bg); padding: 76px 0; }
+.lc-head { max-width: 700px; margin-bottom: 34px; }
+.lc-eyebrow { font-size: .74rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); }
+.leakcalc h2 { font-size: 2.3rem; line-height: 1.12; margin: 12px 0 12px; color: var(--navy); }
+.leakcalc h2 em { font-style: normal; color: #D6453D; }
+.lc-sub { color: var(--text-gray); font-size: 1.02rem; }
+
+.lc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
+
+.lc-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 26px; }
+.lc-card h3 { font-size: 1.05rem; margin-bottom: 20px; color: var(--navy); }
+.lc-field { margin-bottom: 22px; }
+.lc-field:last-child { margin-bottom: 0; }
+.lc-field label { display: block; font-weight: 600; font-size: .86rem; margin-bottom: 8px; color: var(--text-dark); }
+.lc-field select,
+.lc-field input[type=number] {
+  width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px;
+  font-family: var(--font-body); font-size: .95rem; background: var(--light-bg); color: var(--text-dark);
+}
+.lc-field select:focus, .lc-field input:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+.lc-sliderrow { display: flex; align-items: center; gap: 14px; }
+.lc-sliderrow input[type=range] { flex: 1; accent-color: var(--teal); height: 4px; }
+.lc-val {
+  font-family: var(--font-body); font-weight: 700; font-size: .95rem; min-width: 64px; text-align: right;
+  background: var(--light-bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.lc-hint { font-size: .76rem; color: var(--text-gray); margin-top: 6px; }
+
+/* the leak meter - the one element that must feel like money escaping */
+.lc-meter { position: relative; background: var(--navy); color: #fff; border-radius: 16px; padding: 28px 26px 26px; overflow: hidden; }
+.lc-pipe { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #1B4650, #2A6B70); }
+.lc-drop {
+  position: absolute; top: 6px; width: 9px; height: 13px; background: #D6453D; opacity: .9;
+  border-radius: 50% 50% 55% 55% / 40% 40% 62% 62%; animation: lc-drip 1.6s linear infinite;
+}
+.lc-drop.d2 { animation-delay: .55s; }
+.lc-drop.d3 { animation-delay: 1.1s; }
+@keyframes lc-drip {
+  0%   { transform: translateY(0) scale(.7); opacity: 0; }
+  12%  { opacity: .95; transform: translateY(6px) scale(1); }
+  88%  { opacity: .95; }
+  100% { transform: translateY(210px) scale(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .lc-drop { animation: none; opacity: 0; } }
+.lc-lbl { font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #8FB8B4; }
+.lc-big { font-weight: 800; font-size: clamp(2.4rem, 6vw, 3.4rem); letter-spacing: -.02em; color: #FF6E64; margin: 6px 0 2px; font-variant-numeric: tabular-nums; }
+.lc-per { font-size: .85rem; color: #B9D2CF; margin-bottom: 20px; }
+.lc-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; border-top: 1px solid #24505A; padding-top: 16px; }
+.lc-lbl2 { font-size: .64rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #8FB8B4; }
+.lc-n { font-weight: 700; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.lc-n.red { color: #FF6E64; }
+.lc-n.green { color: #5FD3A0; }
+.lc-formula { margin-top: 14px; font-size: .68rem; color: #7FA8A4; }
+
+.lc-reco { margin-top: 22px; background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; padding: 20px 22px; }
+.lc-tag { font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); }
+.lc-reco h4 { font-size: 1.3rem; margin: 6px 0 4px; color: var(--navy); }
+.lc-reco p { font-size: .9rem; color: var(--text-gray); }
+
+.lc-cta { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.lc-ctanote { font-size: .8rem; color: var(--text-gray); }
+.lc-foot { margin-top: 30px; font-size: .78rem; color: var(--text-gray); line-height: 1.7; }
+
+@media (max-width: 900px) {
+  .lc-grid { grid-template-columns: 1fr; }
+  .leakcalc h2 { font-size: 1.85rem; }
+  .leakcalc { padding: 56px 0; }
+}
 .hero-subtitle { font-size: 1.1rem; color: rgba(255,255,255,.8); margin-bottom: 10px; line-height: 1.75; }
 .hero-subtitle-es { font-size: .9rem; color: rgba(255,255,255,.45); font-style: italic; margin-bottom: 36px; }
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
@@ -690,6 +862,11 @@ body.lang-es .industry-kw-es { display: inline-block; }
   white-space: nowrap;
   display: block;
   margin-top: 4px;
+}
+/* On a phone this label is wider than the screen, and nowrap forced the badge
+   to ~474px - which made the whole page scroll sideways. Let it wrap instead. */
+@media (max-width: 640px) {
+  .about-badge .badge-label { white-space: normal; }
 }
 
 

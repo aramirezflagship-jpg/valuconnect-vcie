@@ -1,9 +1,12 @@
-var i18n = {
+/* Renamed from `i18n`: the 8 industry pages also load assets/js/translations.js,
+   which declares `const i18n`. Two top-level declarations of the same name is a
+   SyntaxError that killed this whole file on those pages. See vcI18n below. */
+var vcStrings = {
   en: {
     /* ── Navigation ── */
     'nav.services': 'Services', 'nav.industries': 'Industries',
     'nav.monday': 'monday.com', 'nav.insights': 'Industry Insights',
-    'nav.about': 'About', 'nav.cta': 'Book Free Call',
+    'nav.about': 'About', 'nav.cta': 'Book Free Call', 'nav.login': 'Team Log In',
     'nav.s1': 'Paper-to-Digital', 'nav.s2': 'Workflow Automation',
     'nav.s3': 'AI Agent Creation', 'nav.s4': 'monday.com Setup',
     'nav.s5': 'Ongoing Support',
@@ -104,9 +107,34 @@ var i18n = {
 
     /* ── Homepage ── */
     'hero.tag': 'Trusted by 100+ small business owners',
-    'hero.h1': 'Your Business Runs on <span>Paper.</span><br>Let\'s Change That.',
-    'hero.subtitle': 'ValuConnect Solutions helps small business owners go digital — without the tech headaches. Practical systems, hands-on support, and a partner who truly gets it.',
-    'hero.btn1': 'Book Your Free Assessment', 'hero.btn2': 'See How It Works',
+    'hero.badge': 'Introducing Leak Engine',
+    'hero.h1': 'Every Missed Call<br>Could Be a <span>Client.</span>',
+    'hero.subtitle': 'Leak Engine helps small business owners stop losing leads from unanswered phone calls. Capture missed-call opportunities, trigger instant follow-up, and turn more callers into real customers.',
+    'hero.btn1': 'See Leak Engine', 'hero.btn2': 'Book a Demo',
+    'hero.incoming': 'Incoming Call', 'hero.localbiz': 'Local Business', 'hero.missedcall': 'Missed Call',
+    'hero.captured': 'Missed Call Captured', 'hero.newlead': 'New Lead',
+    'hero.s1t': 'Lead Captured',      'hero.s1s': 'Missed call saved',
+    'hero.s2t': 'Auto Follow-Up',     'hero.s2s': 'SMS sent instantly',
+    'hero.s3t': 'Callback Scheduled', 'hero.s3s': 'Today at 2:00 PM',
+
+    'lc.eyebrow': 'Revenue Leak Audit',
+    'lc.h1': 'How much is your business <em>leaking</em> every month?',
+    'lc.sub': 'Roughly 62% of calls to small businesses go unanswered — and 85% of those callers never call back. Enter your real numbers and watch the leak.',
+    'lc.yourNumbers': 'Your numbers',
+    'lc.industry': 'Your industry',
+    'lc.missed': 'Missed calls per week',
+    'lc.missedHint': 'Check your phone logs — most owners underestimate this by half.',
+    'lc.avgValue': 'Average customer value ($)',
+    'lc.valueHint': 'What one new customer is worth to you (first job, not lifetime).',
+    'lc.closeRate': 'Your close rate on answered calls',
+    'lc.meterLbl': 'Estimated revenue leak',
+    'lc.perMonth': 'per month, walking out the door',
+    'lc.perYear': 'Per year',
+    'lc.recoverable': 'Recoverable with AI*',
+    'lc.recoTag': 'Recommended fix',
+    'lc.ctaNote': '$497 Leak Audit — credited toward any install.',
+    'lc.cta': 'Book your Leak Audit',
+    'lc.foot': '*Assumes AI systems capture ~60% of currently missed opportunities. Estimates based on industry research (411 Locals, Invoca, BIA/Kelsey): 62% of calls unanswered, 85% of missed callers never call back. Your audit uses your actual 30-day call data.',
     'hero.m1v': '6+ hrs saved',      'hero.m1l': 'per week, on average',
     'hero.m2v': 'Zero lost files',   'hero.m2l': 'after going digital',
     'hero.m3v': '80% fewer errors',  'hero.m3l': 'in daily operations',
@@ -204,7 +232,7 @@ var i18n = {
     /* ── Navigation ── */
     'nav.services': 'Servicios', 'nav.industries': 'Industrias',
     'nav.monday': 'monday.com', 'nav.insights': 'Perspectivas del Sector',
-    'nav.about': 'Sobre Nosotros', 'nav.cta': 'Llamada Gratis',
+    'nav.about': 'Sobre Nosotros', 'nav.cta': 'Llamada Gratis', 'nav.login': 'Acceso Equipo',
     'nav.s1': 'Papel a Digital', 'nav.s2': 'Automatización',
     'nav.s3': 'Agentes de IA', 'nav.s4': 'Configuración monday.com',
     'nav.s5': 'Soporte Continuo',
@@ -309,7 +337,34 @@ var i18n = {
 
     /* ── Homepage ── */
     'hero.tag': 'De confianza de más de 100 dueños de negocios',
-    'hero.h1': 'Tu Negocio Funciona en <span>Papel.</span><br>Cambiemos Eso.',
+    'hero.badge': 'Presentamos Leak Engine',
+    'hero.h1': 'Cada Llamada Perdida<br>Puede Ser un <span>Cliente.</span>',
+    'hero.subtitle': 'Leak Engine ayuda a los dueños de negocios pequeños a dejar de perder clientes por llamadas sin contestar. Captura las llamadas perdidas, activa el seguimiento inmediato y convierte más llamadas en clientes reales.',
+    'hero.btn1': 'Ver Leak Engine', 'hero.btn2': 'Agendar Demo',
+    'hero.incoming': 'Llamada Entrante', 'hero.localbiz': 'Negocio Local', 'hero.missedcall': 'Llamada Perdida',
+    'hero.captured': 'Llamada Perdida Capturada', 'hero.newlead': 'Nuevo Lead',
+    'hero.s1t': 'Lead Capturado',     'hero.s1s': 'Llamada perdida guardada',
+    'hero.s2t': 'Seguimiento Automático', 'hero.s2s': 'SMS enviado al instante',
+    'hero.s3t': 'Llamada Agendada',   'hero.s3s': 'Hoy a las 2:00 PM',
+
+    'lc.eyebrow': 'Auditoría de Fugas de Ingresos',
+    'lc.h1': '¿Cuánto dinero está <em>fugando</em> tu negocio cada mes?',
+    'lc.sub': 'Cerca del 62% de las llamadas a negocios pequeños no se contestan — y el 85% de esos clientes nunca vuelve a llamar. Ingresa tus números reales y mira la fuga.',
+    'lc.yourNumbers': 'Tus números',
+    'lc.industry': 'Tu industria',
+    'lc.missed': 'Llamadas perdidas por semana',
+    'lc.missedHint': 'Revisa tu registro de llamadas — la mayoría lo subestima a la mitad.',
+    'lc.avgValue': 'Valor promedio por cliente ($)',
+    'lc.valueHint': 'Lo que vale un cliente nuevo (primer trabajo, no de por vida).',
+    'lc.closeRate': 'Tu tasa de cierre en llamadas contestadas',
+    'lc.meterLbl': 'Fuga estimada de ingresos',
+    'lc.perMonth': 'por mes, saliendo por la puerta',
+    'lc.perYear': 'Por año',
+    'lc.recoverable': 'Recuperable con IA*',
+    'lc.recoTag': 'Solución recomendada',
+    'lc.ctaNote': 'Auditoría de Fugas $497 — se acredita a cualquier instalación.',
+    'lc.cta': 'Agenda tu Auditoría de Fugas',
+    'lc.foot': '*Asume que los sistemas de IA capturan ~60% de las oportunidades perdidas. Estimados basados en investigación de la industria (411 Locals, Invoca, BIA/Kelsey): 62% de llamadas sin contestar, 85% de clientes que no vuelven a llamar. Tu auditoría usa tus datos reales de 30 días.',
     'hero.subtitle': 'ValuConnect Solutions ayuda a dueños de pequeños negocios a digitalizarse — sin complicaciones tecnológicas. Sistemas prácticos, apoyo personalizado y un socio que realmente lo entiende.',
     'hero.btn1': 'Agenda tu Evaluación Gratis', 'hero.btn2': 'Cómo Funciona',
     'hero.m1v': '6+ hrs ahorradas',         'hero.m1l': 'por semana, en promedio',
@@ -407,10 +462,32 @@ var i18n = {
 };
 
 /* ────────────────────────────────
+   Merged string table
+   Industry pages get their page-specific keys (i.*, page.*) from
+   assets/js/translations.js; every page gets the shared nav/footer/chat keys
+   from this file. Merge both so no page is missing either half. On conflict
+   this file wins, since it carries the canonical shared strings.
+──────────────────────────────── */
+var vcI18n = (function () {
+  var merged = { en: {}, es: {} };
+  /* typeof guard: `i18n` simply does not exist on index/monday/packages */
+  var external = (typeof i18n !== 'undefined' && i18n) ? i18n : null;
+  ['en', 'es'].forEach(function (l) {
+    if (external && external[l]) {
+      Object.keys(external[l]).forEach(function (k) { merged[l][k] = external[l][k]; });
+    }
+    if (vcStrings[l]) {
+      Object.keys(vcStrings[l]).forEach(function (k) { merged[l][k] = vcStrings[l][k]; });
+    }
+  });
+  return merged;
+})();
+
+/* ────────────────────────────────
    i18n engine
 ──────────────────────────────── */
 function setLang(lang) {
-  var t = i18n[lang] || {};
+  var t = vcI18n[lang] || {};
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) el.innerHTML = t[key];
@@ -428,12 +505,203 @@ function setLang(lang) {
 
   /* refresh chatbot quick replies if open */
   if (typeof renderChatQR === 'function') renderChatQR(lang);
+
+  /* industry list, CTA label and formula text are language-dependent */
+  if (typeof vcCalcRender === 'function') vcCalcRender(lang);
+}
+
+/* ────────────────────────────────
+   Team log in → internal CRM
+   Staff-only entry point. Cloudflare Access does the actual authentication;
+   this is just the door. Injected from here rather than pasted into all 11
+   pages so the URL and the label live in exactly one place.
+──────────────────────────────── */
+var CRM_URL = 'https://crm.vcsolutions.us/crm';
+
+function addTeamLogin() {
+  var navLinks = document.querySelector('.nav-links');
+  if (navLinks && !navLinks.querySelector('.nav-login')) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.className = 'nav-login';
+    a.href = CRM_URL;
+    a.rel = 'noopener nofollow';
+    a.setAttribute('data-i18n', 'nav.login');
+    a.textContent = 'Team Log In';
+    li.appendChild(a);
+    /* sits just before the EN/ES picker, so the teal "Book Free Call" stays the loudest thing */
+    var langLi = navLinks.querySelector('.lang-li');
+    if (langLi) navLinks.insertBefore(li, langLi); else navLinks.appendChild(li);
+  }
+
+  var footLinks = document.querySelector('.footer-bottom-links');
+  if (footLinks && !footLinks.querySelector('[data-i18n="nav.login"]')) {
+    var fa = document.createElement('a');
+    fa.href = CRM_URL;
+    fa.rel = 'noopener nofollow';
+    fa.setAttribute('data-i18n', 'nav.login');
+    fa.textContent = 'Team Log In';
+    footLinks.appendChild(fa);
+  }
+}
+
+/* ────────────────────────────────
+   Revenue leak calculator
+   Ported from valuconnect-leak-calculator.html. The math is unchanged:
+     missed/month = missed/week × 4.33
+     leak/month   = missed/month × customer value × close rate × 0.85
+                    (0.85 = the share of missed callers who never call back)
+     recoverable  = leak/month × 0.60   (what AI capture is assumed to recover)
+   Flat labels live in vcStrings as lc.* keys; the nested package copy and the
+   formula template live here because the i18n engine only does flat keys.
+──────────────────────────────── */
+var LC_INDUSTRIES = [
+  { id: 'hvac',   en: 'HVAC / Home services',    es: 'HVAC / Servicios del hogar', value: 450 },
+  { id: 'dental', en: 'Dental practice',         es: 'Consultorio dental',         value: 250 },
+  { id: 'medspa', en: 'Med spa / Aesthetics',    es: 'Med spa / Estética',         value: 300 },
+  { id: 'auto',   en: 'Auto repair shop',        es: 'Taller mecánico',            value: 250 },
+  { id: 'law',    en: 'Law firm (intake)',       es: 'Bufete de abogados',         value: 2000 },
+  { id: 'clean',  en: 'Cleaning company',        es: 'Empresa de limpieza',        value: 180 },
+  { id: 'salon',  en: 'Salon / Barbershop',      es: 'Salón / Barbería',           value: 75 },
+  { id: 'other',  en: 'Other service business',  es: 'Otro negocio de servicios',  value: 200 }
+];
+
+var LC_COPY = {
+  en: {
+    formula: '{m} missed/mo × ${v} × {c}% close × 0.85 never call back',
+    pkgs: {
+      t1: { name: 'Leak Stopper', line: 'AI receptionist 24/7 + missed-call text-back + speed-to-lead. $2,500 setup + $597/mo — recovering ~{R}/mo is a {X}× return on the retainer.' },
+      t2: { name: 'Revenue Recovery System', line: 'Everything in Leak Stopper plus quote follow-ups, no-show recovery, database reactivation and a review engine. $5,500 setup + $1,197/mo — recovering ~{R}/mo is a {X}× return.' },
+      t3: { name: 'AI Operations Partner', line: 'Full install: AI intake, dispatch optimization, custom workflows, bilingual engagement. From $8,500 setup + $1,997/mo — recovering ~{R}/mo is a {X}× return.' }
+    },
+    mailSubject: 'I want my Leak Audit',
+    mailBody: "Hi ValuConnect, my estimated leak is {L}/month. I'd like to book my audit."
+  },
+  es: {
+    formula: '{m} perdidas/mes × ${v} × {c}% cierre × 0.85 no vuelven a llamar',
+    pkgs: {
+      t1: { name: 'Tapa Fugas', line: 'Recepcionista IA 24/7 + texto automático por llamada perdida + respuesta inmediata a leads. $2,500 instalación + $597/mes — recuperar ~{R}/mes es un retorno de {X}× sobre la mensualidad.' },
+      t2: { name: 'Sistema de Recuperación de Ingresos', line: 'Todo lo del Tapa Fugas más seguimiento de cotizaciones, recuperación de citas perdidas, reactivación de clientes y motor de reseñas. $5,500 + $1,197/mes — recuperar ~{R}/mes es un retorno de {X}×.' },
+      t3: { name: 'Socio de Operaciones IA', line: 'Instalación completa: intake con IA, optimización de agenda, flujos personalizados, atención bilingüe. Desde $8,500 + $1,997/mes — recuperar ~{R}/mes es un retorno de {X}×.' }
+    },
+    mailSubject: 'Quiero mi Auditoría de Fugas',
+    mailBody: 'Hola ValuConnect, mi fuga estimada es {L}/mes. Quiero agendar mi auditoría.'
+  }
+};
+
+var lcLang = 'en', lcShown = 0, lcRaf = null;
+
+function lcMoney(n) {
+  return '$' + Math.round(n).toLocaleString(lcLang === 'es' ? 'es-US' : 'en-US');
+}
+
+function lcAnimateTo(target) {
+  var el = document.getElementById('lcLeakMo');
+  if (!el) return;
+  if (lcRaf) cancelAnimationFrame(lcRaf);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    lcShown = target; el.textContent = lcMoney(target); return;
+  }
+  var start = lcShown, t0 = performance.now();
+  (function step(t) {
+    var p = Math.min(1, (t - t0) / 600), e = 1 - Math.pow(1 - p, 3);
+    lcShown = start + (target - start) * e;
+    el.textContent = lcMoney(lcShown);
+    if (p < 1) lcRaf = requestAnimationFrame(step);
+  })(t0);
+}
+
+function lcCalc() {
+  var missed = document.getElementById('lcMissed');
+  if (!missed) return; /* not on this page */
+  var wk = +missed.value,
+      v  = +document.getElementById('lcValue').value || 0,
+      c  = +document.getElementById('lcClose').value;
+
+  document.getElementById('lcMissedVal').textContent = wk;
+  document.getElementById('lcCloseVal').textContent = c + '%';
+
+  var perMonth = wk * 4.33;
+  var leakMo   = perMonth * v * (c / 100) * 0.85;
+  var recov    = leakMo * 0.6;
+
+  lcAnimateTo(leakMo);
+  document.getElementById('lcLeakYr').textContent = lcMoney(leakMo * 12);
+  document.getElementById('lcRecov').textContent  = lcMoney(recov);
+
+  var copy = LC_COPY[lcLang] || LC_COPY.en;
+  document.getElementById('lcFormula').textContent = copy.formula
+    .replace('{m}', Math.round(perMonth))
+    .replace('{v}', v.toLocaleString())
+    .replace('{c}', c);
+
+  /* tier by leak size, ROI against that tier's monthly retainer */
+  var pkg, retainer;
+  if (leakMo < 1500)      { pkg = copy.pkgs.t1; retainer = 597; }
+  else if (leakMo < 5000) { pkg = copy.pkgs.t2; retainer = 1197; }
+  else                    { pkg = copy.pkgs.t3; retainer = 1997; }
+  var roi = recov > 0 ? Math.max(1, recov / retainer).toFixed(1) : '—';
+
+  document.getElementById('lcPkgName').textContent = pkg.name;
+  document.getElementById('lcPkgLine').textContent = pkg.line
+    .replace('{R}', lcMoney(recov))
+    .replace('{X}', roi);
+
+  var cta = document.getElementById('lcCta');
+  if (cta) {
+    var leak = document.getElementById('lcLeakMo').textContent;
+    cta.href = 'mailto:info@vcsolutions.us'
+      + '?subject=' + encodeURIComponent(copy.mailSubject)
+      + '&body='    + encodeURIComponent(copy.mailBody.replace('{L}', leak));
+  }
+}
+
+/* Called by setLang: refills the industry list and CTA in the new language. */
+function vcCalcRender(lang) {
+  var sel = document.getElementById('lcIndustry');
+  if (!sel) return;
+  lcLang = lang === 'es' ? 'es' : 'en';
+
+  var current = sel.value || 'hvac';
+  sel.innerHTML = '';
+  LC_INDUSTRIES.forEach(function (ind) {
+    var o = document.createElement('option');
+    o.value = ind.id;
+    o.textContent = ind[lcLang];
+    sel.appendChild(o);
+  });
+  sel.value = current;
+
+  var cta = document.getElementById('lcCta');
+  if (cta) cta.textContent = (vcI18n[lcLang] && vcI18n[lcLang]['lc.cta']) || 'Book your Leak Audit';
+
+  lcCalc();
+}
+
+function initLeakCalculator() {
+  var missed = document.getElementById('lcMissed');
+  if (!missed) return;
+
+  missed.addEventListener('input', lcCalc);
+  document.getElementById('lcValue').addEventListener('input', lcCalc);
+  document.getElementById('lcClose').addEventListener('input', lcCalc);
+
+  /* picking an industry pre-fills a typical ticket, which the owner then corrects */
+  document.getElementById('lcIndustry').addEventListener('change', function (e) {
+    var ind = LC_INDUSTRIES.filter(function (i) { return i.id === e.target.value; })[0];
+    if (ind) document.getElementById('lcValue').value = ind.value;
+    lcCalc();
+  });
 }
 
 /* ────────────────────────────────
    DOMContentLoaded
 ──────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
+
+  /* before setLang, so the injected links get translated on first paint */
+  addTeamLogin();
+  initLeakCalculator();
 
   var currentLang = localStorage.getItem('vc-lang') || 'en';
   setLang(currentLang);
@@ -594,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
         addMsg(item.label, 'user');
         chatQR.innerHTML = '';
         setTimeout(function() {
-          var t = i18n[chatLangChosen] || i18n['en'];
+          var t = vcI18n[chatLangChosen] || vcI18n['en'];
           addMsg(t['chat.welcome'] || 'Hi! How can I help?', 'bot');
           renderChatQR(chatLangChosen);
         }, 380);
@@ -608,7 +876,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!chatQR) return;
     chatQR.innerHTML = '';
     if (chatInputArea) chatInputArea.style.display = 'none';
-    var t = i18n[lang] || i18n['en'];
+    var t = vcI18n[lang] || vcI18n['en'];
 
     quickReplies.forEach(function(key) {
       var btn = document.createElement('button');
