@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" id="theme-color-meta" content="#060610" />
+  <title>Lead Discovery — ValuConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #00A896; --gold: #F2A900; --red: #f85149; --green: #3fb950;
+      --purple: #a78bfa; --blue: #60a5fa;
+    }
+    :root, :root.dark {
+      --bg: #060610; --surface: #0e0e1c; --surface2: #14142a; --border: #1c1c38;
+      --text: #f1f5f9; --muted: #64748b; --muted2: #94a3b8;
+      --teal-dim: rgba(0,168,150,.12); --gold-dim: rgba(242,169,0,.12);
+      --red-dim: rgba(248,81,73,.12); --green-dim: rgba(63,185,80,.12);
+      --shadow: rgba(0,0,0,.4);
+    }
+    :root.light {
+      --bg: #f4f7ff; --surface: #ffffff; --surface2: #edf0fb; --border: #d8ddf0;
+      --text: #0d0f24; --muted: #64748b; --muted2: #475569;
+      --teal-dim: rgba(0,168,150,.08); --gold-dim: rgba(242,169,0,.10);
+      --red-dim: rgba(248,81,73,.08); --green-dim: rgba(63,185,80,.08);
+      --shadow: rgba(0,0,0,.10);
+    }
+
+    html, body { height: 100%; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; overflow: hidden; transition: background .25s, color .25s; }
+
+    /* Header */
+    header { height: 52px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--border); background: var(--bg); z-index: 20; }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; flex-shrink: 0; }
+    .logo-badge { background: var(--teal); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 5px; letter-spacing: .8px; }
+    .logo-name { font-size: 14px; font-weight: 800; }
+    .header-center { flex: 1; display: flex; justify-content: center; }
+    .page-badge { background: var(--teal-dim); border: 1px solid rgba(0,168,150,.3); color: var(--teal); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; transition: border-color .2s; }
+    .icon-btn:hover { border-color: var(--teal); background: var(--teal-dim); }
+
+    /* Main */
+    main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    @media (min-width: 600px) { main { padding: 20px 24px; gap: 20px; } }
+
+    /* Panel */
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); }
+    .panel-head { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--surface2); }
+    .panel-icon { font-size: 16px; }
+    .panel-title { font-size: 13px; font-weight: 700; }
+    .panel-sub { font-size: 11px; color: var(--muted); margin-left: auto; }
+    .panel-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+    /* Search form */
+    .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (min-width: 700px) { .search-grid { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 11px; font-weight: 600; color: var(--muted2); letter-spacing: .4px; text-transform: uppercase; }
+    input, select { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; outline: none; width: 100%; -webkit-appearance: none; appearance: none; transition: border-color .2s; }
+    input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-dim); }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+    select option { background: var(--surface2); }
+    ::placeholder { color: var(--muted); }
+
+    /* Buttons */
+    .btn-search { background: var(--teal); color: #fff; font-weight: 800; font-size: 14px; padding: 11px 32px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px; transition: opacity .2s; box-shadow: 0 4px 16px rgba(0,168,150,.25); }
+    .btn-search:hover { opacity: .88; }
+    .btn-search:disabled { opacity: .4; cursor: not-allowed; }
+    .spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+    .btn-search.loading .spin { display: block; }
+    .btn-search.loading .search-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Progress log */
+    .progress-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--muted2); min-height: 44px; display: flex; align-items: center; gap: 8px; }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* Stats bar */
+    .stats-bar { display: flex; gap: 16px; flex-wrap: wrap; }
+    .stat-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .stat-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-high { background: var(--green); }
+    .dot-medium { background: var(--gold); }
+    .dot-low { background: var(--muted); }
+
+    /* Lead cards grid */
+    .leads-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 700px) { .leads-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1100px) { .leads-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    /* Lead card */
+    .lead-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, box-shadow .2s; }
+    .lead-card:hover { border-color: rgba(0,168,150,.35); box-shadow: 0 4px 20px rgba(0,168,150,.08); }
+    .lead-card-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+    .lead-card-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lead-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .score-badge { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+    .score-HIGH   { background: var(--green-dim); color: var(--green); border: 1px solid rgba(63,185,80,.25); }
+    .score-MEDIUM { background: var(--gold-dim);  color: var(--gold);  border: 1px solid rgba(242,169,0,.25); }
+    .score-LOW    { background: var(--surface2);  color: var(--muted); border: 1px solid var(--border); }
+    .lead-industry { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+    .lead-card-body { padding: 12px 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .lead-row { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; color: var(--muted2); }
+    .lead-row-icon { flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+    .lead-why { font-size: 12px; color: var(--text); line-height: 1.5; background: var(--teal-dim); border: 1px solid rgba(0,168,150,.2); border-radius: 6px; padding: 8px 10px; }
+    .lead-hook { font-size: 12px; color: var(--muted2); font-style: italic; line-height: 1.5; }
+    .signals-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .signal-tag { font-size: 10px; background: var(--red-dim); border: 1px solid rgba(248,81,73,.2); color: var(--red); padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+    .lead-card-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-sm { font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 7px; border: 1px solid; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: opacity .2s; white-space: nowrap; }
+    .btn-sm:hover { opacity: .8; }
+    .btn-monday { background: var(--gold-dim); border-color: rgba(242,169,0,.3); color: var(--gold); }
+    .btn-brief  { background: var(--teal-dim); border-color: rgba(0,168,150,.3); color: var(--teal); }
+    .btn-copy   { background: var(--surface2); border-color: var(--border); color: var(--muted2); }
+    .btn-sm.saved { background: var(--green-dim); border-color: rgba(63,185,80,.3); color: var(--green); cursor: default; }
+
+    .empty-state { color: var(--muted); font-size: 13px; padding: 40px; text-align: center; }
+    .section-title { font-size: 12px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: .5px; display: flex; align-items: center; gap: 8px; }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* Warning banner */
+    .warn-banner { background: var(--gold-dim); border: 1px solid rgba(242,169,0,.25); border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--gold); display: flex; gap: 8px; align-items: flex-start; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/">
+    <span class="logo-badge">VC</span>
+    <span class="logo-name">ValuConnect</span>
+  </a>
+  <div class="header-center">
+    <span class="page-badge">🔍 Lead Discovery</span>
+  </div>
+  <div class="header-right">
+    <a class="icon-btn" href="/brief.html" title="Brief Generator">⚡</a>
+    <button class="icon-btn" id="theme-toggle" onclick="toggleTheme()">☀️</button>
+    <a class="icon-btn" href="/" title="Dashboard">🏠</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Search panel -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-icon">🎯</span>
+      <span class="panel-title">Find Qualified Leads</span>
+      <span class="panel-sub">Powered by Firecrawl + Claude</span>
+    </div>
+    <div class="panel-body">
+
+      <div id="no-key-banner" class="warn-banner hidden">
+        ⚠️ <span><strong>FIRECRAWL_API_KEY not set.</strong> Get a free key at <a href="https://firecrawl.dev" target="_blank" style="color:var(--gold)">firecrawl.dev</a> → Sign up → API Keys → paste into .env → restart the server.</span>
+      </div>
+
+      <div class="search-grid">
+        <div class="field">
+          <label>Industry</label>
+          <select id="industryId">
+            <option value="">— Select —</option>
+            <option value="restaurants">Restaurants & Food Service</option>
+            <option value="retail">Retail & Boutiques</option>
+            <option value="construction">Construction & Contracting</option>
+            <option value="health-wellness">Health & Wellness</option>
+            <option value="real-estate">Real Estate & Property Management</option>
+            <option value="professional-services">Professional Services</option>
+            <option value="salons-beauty">Salons & Beauty</option>
+            <option value="logistics">Logistics & Delivery</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>City</label>
+          <input type="text" id="city" placeholder="e.g. Miami" />
+        </div>
+        <div class="field">
+          <label>Country</label>
+          <input type="text" id="country" placeholder="e.g. USA" />
+        </div>
+        <div class="field">
+          <label>Max Leads</label>
+          <select id="limit">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="btn-search" id="btn-search" onclick="startDiscovery()">
+          <div class="spin"></div>
+          <span class="search-icon">🔍</span>
+          Discover Leads
+        </button>
+        <div style="font-size:11px;color:var(--muted)">Takes 1–3 minutes per search. Results appear as they are found.</div>
+      </div>
+
+      <div class="progress-box" id="progress-box" style="display:none">
+        <div class="pulse-dot"></div>
+        <span id="progress-text">Starting…</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results-section" style="display:none;flex-direction:column;gap:14px">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div class="section-title" id="results-title">Results</div>
+      <div class="stats-bar" id="stats-bar"></div>
+    </div>
+
+    <div class="leads-grid" id="leads-grid"></div>
+
+  </div>
+
+</main>
+
+<script>
+// ── Theme ──────────────────────────────────────────────────────────────────────
+let theme = localStorage.getItem('vc-theme') || 'dark';
+function applyTheme() {
+  document.documentElement.classList.toggle('dark',  theme === 'dark');
+  document.documentElement.classList.toggle('light', theme === 'light');
+  document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('theme-color-meta').content = theme === 'dark' ? '#060610' : '#00A896';
+}
+function toggleTheme() { theme = theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('vc-theme', theme); applyTheme(); }
+applyTheme();
+
+// ── State ──────────────────────────────────────────────────────────────────────
+let allLeads = [];
+let counts = { HIGH: 0, MEDIUM: 0, LOW: 0 };
+
+// ── Discovery ──────────────────────────────────────────────────────────────────
+async function startDiscovery() {
+  const industryId = document.getElementById('industryId').value;
+  const city       = document.getElementById('city').value.trim();
+  const country    = document.getElementById('country').value.trim();
+  const limit      = document.getElementById('limit').value;
+
+  if (!industryId) { alert('Please select an industry.'); return; }
+  if (!city)       { alert('Please enter a city.'); return; }
+
+  // Reset
+  allLeads = []; counts = { HIGH: 0, MEDIUM: 0, LOW: 0 };
+  document.getElementById('leads-grid').innerHTML = '';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('stats-bar').innerHTML = '';
+
+  const btn = document.getElementById('btn-search');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  const prog = document.getElementById('progress-box');
+  prog.style.display = 'flex';
+  document.getElementById('progress-text').textContent = 'Starting search…';
+
+  try {
+    const resp = await fetch('/api/leads/discover', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ industryId, city, country, limit: Number(limit) })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      if (err.error?.includes('FIRECRAWL_API_KEY')) {
+        document.getElementById('no-key-banner').classList.remove('hidden');
+      }
+      throw new Error(err.error || 'Server error');
+    }
+
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split('\n'); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        try { onEvent(JSON.parse(line.slice(6))); } catch {}
+      }
+    }
+  } catch (err) {
+    document.getElementById('progress-text').textContent = '✗ ' + err.message;
+  }
+
+  btn.classList.remove('loading'); btn.disabled = false;
+}
+
+function onEvent(e) {
+  if (e.type === 'progress') {
+    document.getElementById('progress-text').textContent = e.message || '';
+  }
+  if (e.type === 'lead' && e.lead) {
+    allLeads.push(e.lead);
+    counts[e.lead.lead_quality] = (counts[e.lead.lead_quality] || 0) + 1;
+    appendLeadCard(e.lead);
+    document.getElementById('results-section').style.display = 'flex';
+    updateStats();
+  }
+  if (e.type === 'done') {
+    document.getElementById('progress-text').textContent =
+      `✓ Discovery complete — ${e.count || allLeads.length} qualified leads found`;
+    updateStats();
+  }
+  if (e.type === 'error') {
+    document.getElementById('progress-text').textContent = '✗ ' + e.message;
+  }
+}
+
+// ── Render a single lead card ──────────────────────────────────────────────────
+function appendLeadCard(lead) {
+  const grid = document.getElementById('leads-grid');
+  const q    = lead.lead_quality || 'MEDIUM';
+  const score = lead.lead_score  || 0;
+  const id    = 'lead-' + allLeads.length;
+
+  const signals = (lead.challenge_signals || []).slice(0, 4)
+    .map(s => `<span class="signal-tag">${s}</span>`).join('');
+
+  const contactRow = [
+    lead.phone    && `📞 ${lead.phone}`,
+    lead.email    && `✉️ ${lead.email}`,
+    lead.location && `📍 ${lead.location}`,
+    lead.digital_presence && `🌐 ${lead.digital_presence} site`,
+  ].filter(Boolean).map(r => `<div class="lead-row"><span>${r}</span></div>`).join('');
+
+  grid.insertAdjacentHTML('beforeend', `
+    <div class="lead-card" id="${id}">
+      <div class="lead-card-head">
+        <div class="lead-card-name" title="${esc(lead.businessName)}">${esc(lead.businessName)}</div>
+        <div class="lead-card-meta">
+          <span class="score-badge score-${q}">${q} · ${score}/100</span>
+          <span class="lead-industry">${esc(lead.industryId || '')}</span>
+        </div>
+      </div>
+      <div class="lead-card-body">
+        ${contactRow}
+        ${signals ? `<div class="signals-list">${signals}</div>` : ''}
+        ${lead.why_valuconnect ? `<div class="lead-why">💡 ${esc(lead.why_valuconnect)}</div>` : ''}
+        ${lead.opening_message ? `<div class="lead-hook">"${esc(lead.opening_message)}"</div>` : ''}
+      </div>
+      <div class="lead-card-footer">
+        <button class="btn-sm btn-monday" onclick="saveToMonday('${id}', this)">📋 Save to Monday</button>
+        <button class="btn-sm btn-brief"  onclick="openBrief('${id}')">⚡ Generate Brief</button>
+        <button class="btn-sm btn-copy"   onclick="copyHook('${id}', this)">📋 Copy Hook</button>
+      </div>
+    </div>`);
+}
+
+function updateStats() {
+  const bar = document.getElementById('stats-bar');
+  const title = document.getElementById('results-title');
+  title.textContent = `${allLeads.length} Lead${allLeads.length !== 1 ? 's' : ''} Found`;
+  bar.innerHTML = [
+    counts.HIGH   && `<div class="stat-chip"><span class="dot dot-high"></span>${counts.HIGH} HIGH</div>`,
+    counts.MEDIUM && `<div class="stat-chip"><span class="dot dot-medium"></span>${counts.MEDIUM} MEDIUM</div>`,
+    counts.LOW    && `<div class="stat-chip"><span class="dot dot-low"></span>${counts.LOW} LOW</div>`,
+  ].filter(Boolean).join('');
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function getLeadByCardId(cardId) {
+  const idx = parseInt(cardId.replace('lead-', '')) - 1;
+  return allLeads[idx];
+}
+
+async function saveToMonday(cardId, btn) {
+  const lead = getLeadByCardId(cardId);
+  if (!lead) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Saving…';
+  try {
+    const res  = await fetch('/api/leads/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      btn.className = 'btn-sm saved';
+      btn.textContent = '✓ Saved';
+      if (data.itemUrl) btn.onclick = () => window.open(data.itemUrl, '_blank');
+    } else {
+      btn.textContent = '✗ Failed';
+      btn.disabled = false;
+      alert(data.error || 'Monday.com push failed');
+    }
+  } catch (err) {
+    btn.textContent = '✗ Error';
+    btn.disabled = false;
+  }
+}
+
+function openBrief(cardId) {
+  const lead = getLeadByCardId(cardId);
+  if (!lead) return;
+  // Pre-fill brief.html via URL params
+  const params = new URLSearchParams({
+    businessName: lead.businessName || '',
+    ownerName:    lead.ownerName    || '',
+    industryId:   lead.industryId   || '',
+    city:         lead.city         || (lead.location?.split(',')[0] || ''),
+    country:      lead.country      || '',
+    phone:        lead.phone        || '',
+    email:        lead.email        || '',
+    website:      lead.website      || lead.sourceUrl || '',
+    challenges:   (lead.challenge_signals || []).join('|'),
+  });
+  window.open('/brief.html?' + params.toString(), '_blank');
+}
+
+function copyHook(cardId, btn) {
+  const lead = getLeadByCardId(cardId);
+  if (!lead?.opening_message) return;
+  navigator.clipboard.writeText(lead.opening_message).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  });
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
