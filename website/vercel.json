@@ -1,15 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/crm", "destination": "https://ENGINE-HOST/crm/" },
-    { "source": "/crm/", "destination": "https://ENGINE-HOST/crm/" },
-    { "source": "/crm/:path*", "destination": "https://ENGINE-HOST/crm/:path*" },
+    { "source": "/crm", "destination": "https://valuconnect-leak-engine.onrender.com/crm/" },
+    { "source": "/crm/", "destination": "https://valuconnect-leak-engine.onrender.com/crm/" },
+    { "source": "/crm/:path*", "destination": "https://valuconnect-leak-engine.onrender.com/crm/:path*" },
 
-    { "source": "/api/crm-login", "destination": "https://ENGINE-HOST/api/crm-login" },
-    { "source": "/api/crm-logout", "destination": "https://ENGINE-HOST/api/crm-logout" },
-    { "source": "/api/crm-auth-mode", "destination": "https://ENGINE-HOST/api/crm-auth-mode" },
-    { "source": "/api/crm/:path*", "destination": "https://ENGINE-HOST/api/crm/:path*" },
-    { "source": "/api/sales/:path*", "destination": "https://ENGINE-HOST/api/sales/:path*" }
+    { "source": "/api/crm-login", "destination": "https://valuconnect-leak-engine.onrender.com/api/crm-login" },
+    { "source": "/api/crm-logout", "destination": "https://valuconnect-leak-engine.onrender.com/api/crm-logout" },
+    { "source": "/api/crm-auth-mode", "destination": "https://valuconnect-leak-engine.onrender.com/api/crm-auth-mode" },
+    { "source": "/api/crm/:path*", "destination": "https://valuconnect-leak-engine.onrender.com/api/crm/:path*" },
+    { "source": "/api/sales/:path*", "destination": "https://valuconnect-leak-engine.onrender.com/api/sales/:path*" }
   ],
   "headers": [
     {

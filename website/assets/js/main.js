@@ -485,7 +485,7 @@ function setLang(lang) {
    Leave this EMPTY until the engine is actually deployed — an empty value hides
    the Log In link everywhere rather than shipping a dead link on every page.
    To switch it on: set it to '/crm'. That is the whole change. */
-var CRM_URL = '';
+var CRM_URL = '/crm';
 
 function addTeamLogin() {
   if (!CRM_URL) return;
