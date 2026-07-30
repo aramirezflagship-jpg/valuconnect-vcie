@@ -99,10 +99,35 @@ async function runAll(schedule) {
   }
 }
 
+/**
+ * Claim a "Run now" queued from the CRM.
+ *
+ * The engine cannot call this service - it is not publicly reachable - so the
+ * button leaves a request and we pick it up here. Claiming clears it on the
+ * engine BEFORE the crawl starts, so a long run cannot be triggered twice by
+ * the next poll landing while it is still going.
+ */
+async function claimManualRun(schedule) {
+  if (!schedule.runRequestedAt) return false;
+  try {
+    await axios.post(`${engineUrl()}/api/sales/import/run-claimed`, {}, { headers: auth(), timeout: 12000 });
+  } catch (err) {
+    logger.warn(`[CrawlerScheduler] could not claim the manual run: ${err.message}`);
+    return false; // leave it queued rather than run it and lose the record
+  }
+  logger.info(`[CrawlerScheduler] manual run requested by ${schedule.runRequestedBy || 'the CRM'}`);
+  return true;
+}
+
 /** Rebuild the cron task whenever the CRM's schedule changes. */
 async function sync() {
   const schedule = await fetchSchedule();
   if (!schedule) return;
+
+  // A manual run happens regardless of whether the cron is enabled.
+  if (await claimManualRun(schedule)) {
+    runAll(schedule).catch(e => logger.warn(`[CrawlerScheduler] manual run failed: ${e.message}`));
+  }
 
   if (!schedule.enabled) {
     if (task) { task.stop(); task = null; appliedCron = null; logger.info('[CrawlerScheduler] disabled'); }
@@ -130,8 +155,9 @@ function start() {
     return;
   }
   sync();
-  // Re-check every 5 minutes so a change made in the CRM takes effect without a restart.
-  setInterval(sync, 5 * 60 * 1000);
+  // Poll every 60s. It is one small authenticated GET, and it is also how a
+  // "Run now" from the CRM reaches this service - five minutes would feel broken.
+  setInterval(sync, 60 * 1000);
 }
 
 /** Manual trigger, for the "Run now" path. */
