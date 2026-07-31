@@ -112,4 +112,17 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vcsolutions.us/calculator.html"/>
   </url>
 
+
+  <url>
+    <loc>https://vcsolutions.us/privacy.html</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://vcsolutions.us/terms.html</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
